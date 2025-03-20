@@ -1,0 +1,36 @@
+vite-plugin-electron+0.29.0.patch补丁说明：
+当点击应用的X关闭应用时，控制台会报错(ERROR: The process "10304" not found.),
+我通过降级electron版本发现可以解决这个问题，但是降级不太好
+排查后发现是vite-plugin-electron插件中的代码抛出的错误；
+其中的一个方法原始代码如下(在node_modules对应库的index.js寻找)：
+function treeKillSync(pid) {
+  if (process.platform === "win32") {
+    cp.execSync(`taskkill /pid ${pid} /T /F`);
+  } else {
+    killTree(pidTree({ pid, ppid: process.pid }));
+  }
+}
+是`cp.execSync(`taskkill /pid ${pid} /T /F`);`报的错，不清楚为何低版本正常。总而言之，进程不存在，杀死进程的报错就让他静默就好
+所以修改如下，
+function treeKillSync(pid) {
+  if (process.platform === "win32") {
+    const output = cp.execSync(`tasklist /FI "PID eq ${pid}"`).toString()
+    if(output.includes(`${pid}`)){
+      // 如果指定进程不在，去执行下面的命令会报错
+      cp.execSync(`taskkill /pid ${pid} /T /F`);
+    }
+  } else {
+    killTree(pidTree({ pid, ppid: process.pid }));
+  }
+}
+---
+补丁使用步骤,
+1. npm install patch-package --save-dev
+2. 直接到node_modules中插件的index.js中修改对应的代码
+3. npx patch-package <package-name>  生成补丁
+4. 配置自动应用补丁
+{
+  "scripts": {
+    "postinstall": "patch-package"
+  }
+}

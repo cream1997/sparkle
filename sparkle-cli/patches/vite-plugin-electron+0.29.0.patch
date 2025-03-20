@@ -1,0 +1,17 @@
+diff --git a/node_modules/vite-plugin-electron/dist/index.js b/node_modules/vite-plugin-electron/dist/index.js
+index 29bc897..8c3dc0d 100644
+--- a/node_modules/vite-plugin-electron/dist/index.js
++++ b/node_modules/vite-plugin-electron/dist/index.js
+@@ -169,7 +169,11 @@ async function mockIndexHtml(config) {
+ }
+ function treeKillSync(pid) {
+   if (process.platform === "win32") {
+-    cp.execSync(`taskkill /pid ${pid} /T /F`);
++    const output = cp.execSync(`tasklist /FI "PID eq ${pid}"`).toString()
++    if(output.includes(`${pid}`)){
++      // 如果指定进程不在，去执行下面的命令会报错
++      cp.execSync(`taskkill /pid ${pid} /T /F`);
++    }
+   } else {
+     killTree(pidTree({ pid, ppid: process.pid }));
+   }
