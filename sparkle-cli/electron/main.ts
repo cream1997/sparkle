@@ -1,6 +1,7 @@
-import {app, BrowserWindow, ipcMain} from 'electron'
+import {app, BrowserWindow} from 'electron'
 import * as path from "node:path";
 import {electronApp, is, optimizer} from '@electron-toolkit/utils'
+import mainIpcSetup from "./mainIpc";
 
 let win: BrowserWindow;
 
@@ -15,7 +16,6 @@ function createWin() {
             sandbox: false,
         }
     })
-
     win.on("ready-to-show", () => {
         win.show();
         win.webContents.openDevTools()
@@ -40,9 +40,8 @@ app.whenReady().then(() => {
         optimizer.watchWindowShortcuts(window)
     })
 
-    ipcMain.on('ping', () => console.log('pong'))
-
     createWin();
+    mainIpcSetup(win)
     app.on('activate', function () {
         // mac特定处理
         if (BrowserWindow.getAllWindows().length === 0) createWin()
@@ -53,6 +52,7 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
+        win = null;
     }
 })
 
