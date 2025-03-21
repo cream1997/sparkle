@@ -1,7 +1,5 @@
-import {BrowserWindow, ipcMain} from "electron";
-import IpcChannels from "../common/IpcChannels";
+import {BrowserWindow} from "electron";
 
 export default function mainIpcSetup(mainWin: BrowserWindow) {
-    ipcMain.on(IpcChannels.Ping, () => console.log('pong'))
 }
 

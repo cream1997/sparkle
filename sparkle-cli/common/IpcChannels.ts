@@ -1,5 +1,5 @@
 enum IpcChannels {
-    Ping = "Ping"
+    SelectRootDir = "SelectRootDir",
 }
 
 export default IpcChannels;

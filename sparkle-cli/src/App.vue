@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import IpcChannels from "../common/IpcChannels.ts";
+import {onMounted} from "vue";
 
-const testIpc = () => {
-  window.electron.ipcRenderer.send(IpcChannels.Ping, "hello")
-}
+
+onMounted(() => {
+  window.electron.ipcRenderer.on(IpcChannels.SelectRootDir, () => {
+    console.log("please select root dir")
+  })
+})
 </script>
 
 <template>
-  <button @click="testIpc">test</button>
 
 </template>
 
