@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "patch-package",
     "dev": "chcp 65001 && vite",
+    "dev2": "chcp 65001 && vite 2>&1 | node ./filter-log.js",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview"
   },
