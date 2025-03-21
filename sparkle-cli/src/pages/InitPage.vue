@@ -20,9 +20,23 @@ async function selectRootDir() {
 </script>
 
 <template>
-  <button @click="selectRootDir" ref="btnRef">请选择应用根文件夹</button>
+  <div class="init-page-container">
+    <button @click="selectRootDir" ref="btnRef">请选择应用根文件夹</button>
+  </div>
+
 </template>
 
 <style scoped>
+.init-page-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+button {
+  display: inline-block;
+  line-height: 1.6;
+}
 </style>
