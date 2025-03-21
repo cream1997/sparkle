@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  home
+  主页
 </template>
 
 <style scoped>

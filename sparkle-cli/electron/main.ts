@@ -2,9 +2,9 @@ import {app, BrowserWindow} from 'electron'
 import * as path from "node:path";
 import {electronApp, is, optimizer} from '@electron-toolkit/utils'
 import mainIpcSetup from "./mainIpc";
-import Store from "electron-store";
-import {ConfigName} from "./constant/AppConstant";
+import {AppRootDirKey} from "./constant/AppConstant";
 import IpcChannels from "../common/IpcChannels";
+import {AppCfgStore} from "./config/AppStore";
 
 let win: BrowserWindow;
 
@@ -23,13 +23,9 @@ function createWin() {
         win.show();
         win.webContents.openDevTools()
 
-        const store = new Store({
-            cwd: app.getAppPath(),
-            name: ConfigName
-        })
-        const rootDir = store.get("rootDir");
+        const rootDir = AppCfgStore.get(AppRootDirKey);
         if (!rootDir) {
-            win.webContents.send(IpcChannels.SelectRootDir);
+            win.webContents.send(IpcChannels.ToInitPage);
         }
     })
 
