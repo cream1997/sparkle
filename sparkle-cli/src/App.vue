@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const testIpc = () => {
-  window.api.ipc.send("ping", "hello")
+  window.electron.ipcRenderer.send("ping", "hello")
 }
 </script>
 
