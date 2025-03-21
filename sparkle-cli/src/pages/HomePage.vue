@@ -1,11 +1,30 @@
 <script setup lang="ts">
 
+import ToolBar from "@/components/ToolBar.vue";
 </script>
 
 <template>
-  主页
+  <div class="container-home">
+    <aside>
+      <ToolBar></ToolBar>
+    </aside>
+    <main>主要内容栏</main>
+  </div>
 </template>
 
 <style scoped>
+.container-home {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+}
 
+aside {
+  width: 32px;
+  border-right: 1px solid black;
+}
+
+main {
+  flex: 1;
+}
 </style>
