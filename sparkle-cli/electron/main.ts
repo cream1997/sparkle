@@ -1,15 +1,46 @@
-import { app, BrowserWindow } from 'electron'
+import {app, BrowserWindow, ipcMain} from 'electron'
+import * as path from "node:path";
 
-app.whenReady().then(() => {
+function createWin() {
     const win = new BrowserWindow({
-        title: 'Main window',
+        width: 800,
+        height: 600,
+        show: false,
+        autoHideMenuBar: true,
+        webPreferences: {
+            preload: path.join(__dirname, './preload.js'),
+            sandbox: false,
+        }
     })
 
-    // You can use `process.env.VITE_DEV_SERVER_URL` when the vite command is called `serve`
+    win.on("ready-to-show", () => {
+        win.show();
+        win.webContents.openDevTools()
+    })
+
     if (process.env.VITE_DEV_SERVER_URL) {
         win.loadURL(process.env.VITE_DEV_SERVER_URL)
     } else {
-        // Load your file
         win.loadFile('dist/index.html');
     }
+}
+
+
+app.whenReady().then(() => {
+    ipcMain.on('ping', () => console.log('pong'))
+
+    createWin();
+    app.on('activate', function () {
+        // mac特定处理
+        if (BrowserWindow.getAllWindows().length === 0) createWin()
+    })
 })
+
+// mac特定处理
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit()
+    }
+})
+
+// 下面可以包括主进程特定代码的其余部分。也可以将它们放在单独的文件中，并在这里引入。
