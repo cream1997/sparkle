@@ -1,8 +1,11 @@
 import {app, BrowserWindow, ipcMain} from 'electron'
 import * as path from "node:path";
+import {electronApp, is, optimizer} from '@electron-toolkit/utils'
+
+let win: BrowserWindow;
 
 function createWin() {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
         width: 800,
         height: 600,
         show: false,
@@ -18,7 +21,7 @@ function createWin() {
         win.webContents.openDevTools()
     })
 
-    if (process.env.VITE_DEV_SERVER_URL) {
+    if (is.dev && process.env.VITE_DEV_SERVER_URL) {
         win.loadURL(process.env.VITE_DEV_SERVER_URL)
     } else {
         win.loadFile('dist/index.html');
@@ -27,6 +30,16 @@ function createWin() {
 
 
 app.whenReady().then(() => {
+    // Set app user model id for windows
+    electronApp.setAppUserModelId('com.cream.sparkle')
+
+    // Default open or close DevTools by F12 in development
+    // and ignore CommandOrControl + R in production.
+    // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+    app.on('browser-window-created', (_, window) => {
+        optimizer.watchWindowShortcuts(window)
+    })
+
     ipcMain.on('ping', () => console.log('pong'))
 
     createWin();
