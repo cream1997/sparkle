@@ -3,6 +3,10 @@ import {createRouter, createWebHashHistory} from "vue-router";
 export enum PagePath {
     Home = "/Home",
     Init = "/Init",
+    Music = "/Music",
+    Note = "/Note",
+    Chat = "/Chat",
+    Setting = "/Setting",
 }
 
 const routes = [
@@ -12,7 +16,25 @@ const routes = [
     },
     {
         path: PagePath.Home,
-        component: () => import("@/pages/HomePage.vue")
+        component: () => import("@/pages/HomePage.vue"),
+        children: [
+            {
+                path: PagePath.Music,
+                component: () => import("@/pages/homeSub/MusicPage.vue")
+            },
+            {
+                path: PagePath.Note,
+                component: () => import("@/pages/homeSub/NotePage.vue")
+            },
+            {
+                path: PagePath.Chat,
+                component: () => import("@/pages/homeSub/ChatPage.vue")
+            },
+            {
+                path: PagePath.Setting,
+                component: () => import("@/pages/homeSub/SettingPage.vue")
+            }
+        ]
     },
     {
         path: PagePath.Init,

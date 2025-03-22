@@ -1,33 +1,46 @@
 <script setup lang="ts">
+import {useRouter} from "vue-router";
+import {PagePath} from "@/router/router.ts";
+
+const router = useRouter();
 
 const tools = [
   {
     title: "music",
-    icon: "music.svg"
+    icon: "music.svg",
+    pagePath: PagePath.Music
   },
   {
     title: "note",
-    icon: "note.svg"
+    icon: "note.svg",
+    pagePath: PagePath.Note
   },
   {
     title: "chat",
-    icon: "chat.svg"
+    icon: "chat.svg",
+    pagePath: PagePath.Chat
   },
   {
     title: "setting",
-    icon: "setting.svg"
+    icon: "setting.svg",
+    pagePath: PagePath.Setting
   }
 ]
-const computeIconPath = (item: any) => {
-  return new URL(`../assets/icon/${item.icon}`, import.meta.url).href;
+const computeIconPath = (iconName: string) => {
+  return new URL(`../assets/icon/${iconName}`, import.meta.url).href;
+}
+
+const selectTool = (item: any) => {
+  // todo 检查当前是否已经在此页面
+  router.push(item.pagePath)
 }
 </script>
 
 <template>
   <div class="all-item-container">
     <div v-for="item in tools" :title="item.title" class="tool-item"
-         :class="[item.title==='setting'?'setting-item':'']">
-      <img class="item-icon" :src="computeIconPath(item)" :alt="item.title">
+         :class="[item.title==='setting'?'setting-item':'']" @click="selectTool(item)">
+      <img class="item-icon" :src="computeIconPath(item.icon)" :alt="item.title">
     </div>
   </div>
 </template>

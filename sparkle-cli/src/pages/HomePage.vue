@@ -8,7 +8,9 @@ import ToolBar from "@/components/ToolBar.vue";
     <aside>
       <ToolBar></ToolBar>
     </aside>
-    <main>主要内容栏</main>
+    <main>
+      <router-view></router-view>
+    </main>
   </div>
 </template>
 
