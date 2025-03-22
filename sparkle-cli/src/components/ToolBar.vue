@@ -21,6 +21,11 @@ const tools = [
     pagePath: PagePath.Chat
   },
   {
+    title: "tool",
+    icon: "tool.svg",
+    pagePath: PagePath.Tool
+  },
+  {
     title: "setting",
     icon: "setting.svg",
     pagePath: PagePath.Setting
@@ -50,6 +55,9 @@ const selectTool = (item: any) => {
   height: 32px;
   transition: background-color 0.3s ease;
   padding: 2px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .tool-item:hover {
@@ -68,9 +76,7 @@ const selectTool = (item: any) => {
 }
 
 .item-icon {
-  display: block;
-  width: 25px;
-  height: 25px;
-  margin: 0 auto;
+  width: 20px;
+  height: 20px;
 }
 </style>
