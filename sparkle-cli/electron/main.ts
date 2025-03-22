@@ -14,7 +14,7 @@ function createWin() {
     height: 600,
     show: false,
     autoHideMenuBar: true,
-    icon: path.join(__dirname, "../public/fire.ico"),
+    icon: path.join(__dirname, "../public/fire.png"),
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
       sandbox: false
