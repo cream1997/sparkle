@@ -26,3 +26,4 @@ dist-ssr
 /sparkle-config.json
 /appTmp/
 /release/
+/build/
