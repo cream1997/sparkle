@@ -7,7 +7,6 @@ export enum PagePath {
     Note = "/Note",
     Chat = "/Chat",
     Tool = "/Tool",
-    Setting = "/Setting",
 }
 
 const routes = [
@@ -34,10 +33,6 @@ const routes = [
             {
                 path: PagePath.Tool,
                 component: () => import("@/pages/homeSub/ToolPage.vue")
-            },
-            {
-                path: PagePath.Setting,
-                component: () => import("@/pages/homeSub/SettingPage.vue")
             }
         ]
     },

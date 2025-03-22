@@ -23,7 +23,7 @@ import ToolBar from "@/components/ToolBar.vue";
 
 aside {
   width: 32px;
-  border-right: 1px solid black;
+  border-right: 1px solid lightgray;
 }
 
 main {

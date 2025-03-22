@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import {useRouter} from "vue-router";
 import {PagePath} from "@/router/router.ts";
+import ModalComponent from "@/components/ModalComponent.vue";
+import SettingComponent from "@/components/SettingComponent.vue";
+import {ref} from "vue";
 
 const router = useRouter();
 
@@ -24,13 +27,12 @@ const tools = [
     title: "tool",
     icon: "tool.svg",
     pagePath: PagePath.Tool
-  },
-  {
-    title: "setting",
-    icon: "setting.svg",
-    pagePath: PagePath.Setting
   }
 ]
+const settingItem = {
+  title: "Setting",
+  icon: "setting.svg",
+}
 const computeIconPath = (iconName: string) => {
   return new URL(`../assets/icon/${iconName}`, import.meta.url).href;
 }
@@ -39,15 +41,27 @@ const selectTool = (item: any) => {
   // todo 检查当前是否已经在此页面
   router.push(item.pagePath)
 }
+const modalRef = ref()
+const openSettingModal = () => {
+  modalRef.value.open();
+}
 </script>
 
 <template>
   <div class="all-item-container">
     <div v-for="item in tools" :title="item.title" class="tool-item"
-         :class="[item.title==='setting'?'setting-item':'']" @click="selectTool(item)">
+         @click="selectTool(item)">
       <img class="item-icon" :src="computeIconPath(item.icon)" :alt="item.title">
     </div>
+
+    <div :title="settingItem.title" class="tool-item setting-item"
+         @click="openSettingModal">
+      <img class="item-icon" :src="computeIconPath(settingItem.icon)" :alt="settingItem.title">
+    </div>
   </div>
+  <ModalComponent ref="modalRef">
+    <SettingComponent></SettingComponent>
+  </ModalComponent>
 </template>
 
 <style scoped>
