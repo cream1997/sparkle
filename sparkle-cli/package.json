@@ -13,8 +13,8 @@
     "fix": "eslint --fix .",
     "format": "prettier . --write",
     "generate-icons": "electron-icon-builder --input=./public/icon.png --output=./build/ --flatten",
-    "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win"
+    "build:unpack": "npm run build && npm run generate-icons && electron-builder --dir",
+    "build:win": "npm run build && npm run generate-icons && electron-builder --win"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
