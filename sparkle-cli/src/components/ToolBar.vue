@@ -3,11 +3,18 @@ import {useRouter} from "vue-router";
 import {PagePath} from "@/router/router.ts";
 import ModalComponent from "@/components/ModalComponent.vue";
 import SettingComponent from "@/components/SettingComponent.vue";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 
 const router = useRouter();
 
-const tools = [
+interface ToolItem {
+  title: string;
+  icon: string;
+  pagePath?: PagePath;
+  active?: boolean;
+}
+
+const allTool: ToolItem[] = reactive([
   {
     title: "music",
     icon: "music.svg",
@@ -28,10 +35,10 @@ const tools = [
     icon: "tool.svg",
     pagePath: PagePath.Tool
   }
-]
-const settingItem = {
+]);
+const settingItem: ToolItem = {
   title: "Setting",
-  icon: "setting.svg",
+  icon: "setting.svg"
 }
 const computeIconPath = (iconName: string) => {
   return new URL(`../assets/icon/${iconName}`, import.meta.url).href;
@@ -39,7 +46,14 @@ const computeIconPath = (iconName: string) => {
 
 const selectTool = (item: any) => {
   // todo 检查当前是否已经在此页面
+  if (item.active) {
+    return
+  }
+  allTool.forEach((item) => {
+    item.active = false;
+  })
   router.push(item.pagePath)
+  item.active = true;
 }
 const modalRef = ref()
 const openSettingModal = () => {
@@ -49,7 +63,9 @@ const openSettingModal = () => {
 
 <template>
   <div class="all-item-container">
-    <div v-for="item in tools" :title="item.title" class="tool-item"
+    <div v-for="item in allTool" :title="item.title"
+         class="tool-item"
+         :class="[item.active?'active-tool-item':'']"
          @click="selectTool(item)">
       <img class="item-icon" :src="computeIconPath(item.icon)" :alt="item.title">
     </div>
@@ -72,10 +88,15 @@ const openSettingModal = () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 1px;
 }
 
 .tool-item:hover {
   background-color: rgba(0, 0, 0, 0.2); /* 背景变深 */
+}
+
+.active-tool-item {
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 .all-item-container {
