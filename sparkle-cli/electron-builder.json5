@@ -1,7 +1,17 @@
 {
   "appId": "com.cream.sparkle",
   // 不然unpack打包后，资源等都压缩成一个文件了
+  // fixme 后续改成true试试
   "asar": false,
+  //--start todo 待验证,似乎下面注释的部分是代替asar:false的更好选择(打包时控制告诉的)，当然测试时具体值可能还要改改
+  /*"directories": {
+    buildResources: "build"
+  },
+  asarUnpack: [
+    "resources*/
+  /**"
+    ],*/
+  //--end
   "productName": "Sparkle",
   "copyright": "Copyright © 2025 ${author}",
   "directories": {
@@ -27,6 +37,7 @@
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
+    // fixme 目前这个写成false, 实测卸载时也会删除应用安装目录的所有文件；所以这里写成true，不知道还会多删哪些东西，后续再测试
     "deleteAppDataOnUninstall": false,
     "installerIcon": "build/icons/icon.ico",
     "uninstallerIcon": "build/icons/icon.ico"

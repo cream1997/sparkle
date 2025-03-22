@@ -6,7 +6,7 @@ import pluginVue from "eslint-plugin-vue";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 export default defineConfig([
-  { ignores: ["dist*/*", "**/node_modules", "build/*"] },
+  { ignores: ["dist*/*", "**/node_modules", "build/*", "release/*"] },
   { files: ["**/*.{js,mjs,cjs,ts,vue}"] },
   {
     files: ["**/*.{js,mjs,cjs,ts,vue}"],
