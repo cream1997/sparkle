@@ -16,28 +16,28 @@ interface ToolItem {
 
 const allTool: ToolItem[] = reactive([
   {
-    title: "music",
+    title: "音乐",
     icon: "music.svg",
     pagePath: PagePath.Music
   },
   {
-    title: "note",
+    title: "笔记",
     icon: "note.svg",
     pagePath: PagePath.Note
   },
   {
-    title: "chat",
+    title: "聊天",
     icon: "chat.svg",
     pagePath: PagePath.Chat
   },
   {
-    title: "tool",
+    title: "工具",
     icon: "tool.svg",
     pagePath: PagePath.Tool
   }
 ]);
 const settingItem: ToolItem = {
-  title: "Setting",
+  title: "设置",
   icon: "setting.svg"
 }
 const computeIconPath = (iconName: string) => {
