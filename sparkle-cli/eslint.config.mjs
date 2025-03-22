@@ -3,7 +3,7 @@ import globals from "globals";
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginVue from "eslint-plugin-vue";
-
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 export default defineConfig([
     {ignores: ["dist*/*", "**/node_modules"]},
@@ -29,5 +29,7 @@ export default defineConfig([
             // todo 要确认v-for少了key具体有什么影响，这条配置后面可能需要去掉（视影响大小）
             "vue/require-v-for-key": "off"
         }
-    }
+    },
+    // 关闭所有不必要的或可能与Prettier冲突的规则(所以放在最后，总的来说就是让prettier来决定格式)
+    eslintConfigPrettier
 ]);
