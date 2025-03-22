@@ -5,3 +5,5 @@ vite整合electron使用vite-plugin-electron(https://github.com/electron-vite/vi
 
 vite-plugin-electron还有问题，就是dist-electron目录多出来的内容在
 重新构建时不会删除，只是单纯的覆盖；也就是多出来的文件不会被删除，不过影响不大
+
+windows打包需要管理员权限，不然一些链接可能无法创建(用管理员权限打开idea,idea的终端也就有管理员权限了)
