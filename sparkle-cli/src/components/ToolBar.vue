@@ -39,26 +39,26 @@ const allTool: ToolItem[] = reactive([
 const settingItem: ToolItem = {
   title: "设置",
   icon: "setting.svg"
-}
+};
 const computeIconPath = (iconName: string) => {
   return new URL(`../assets/icon/${iconName}`, import.meta.url).href;
-}
+};
 
 const selectTool = (item: any) => {
   // todo 检查当前是否已经在此页面
   if (item.active) {
-    return
+    return;
   }
   allTool.forEach((item) => {
     item.active = false;
-  })
-  router.push(item.pagePath)
+  });
+  router.push(item.pagePath);
   item.active = true;
-}
-const modalRef = ref()
+};
+const modalRef = ref();
 const openSettingModal = () => {
   modalRef.value.open();
-}
+};
 </script>
 
 <template>

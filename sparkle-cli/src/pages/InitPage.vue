@@ -10,9 +10,9 @@ const btnRef = ref();
 
 async function selectRootDir() {
   btnRef.value.disabled = true;
-  let ok = await window.electron.ipcRenderer.invoke(IpcChannels.SelectRootDir)
+  let ok = await window.electron.ipcRenderer.invoke(IpcChannels.SelectRootDir);
   if (ok) {
-    router.push(PagePath.Home)
+    router.push(PagePath.Home);
   } else { // 取消了
     btnRef.value.disabled = false;
   }

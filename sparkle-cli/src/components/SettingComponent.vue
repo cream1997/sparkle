@@ -34,25 +34,24 @@ const menuItems = reactive<Item[]>([
     title: "工具",
     component: markRaw(ToolSetting)
   },
-])
+]);
 
 const selectItem = (item: Item) => {
   if (item.active) {
-    return
+    return;
   }
   menuItems.forEach((item) => {
-    delete item.active
-  })
+    delete item.active;
+  });
   item.active = true;
-}
+};
 </script>
 
 <template>
   <div class="container-SettingComponent">
     <aside class="sidebar-SettingComponent">
       <ul class="menu-ul-SettingComponent">
-        <li v-for="item in menuItems" :class="[item.active?'li-active-SettingComponent':'']"
-            @click="selectItem(item)">
+        <li v-for="item in menuItems" :class="[item.active?'li-active-SettingComponent':'']" @click="selectItem(item)">
           <a>{{ item.title }}</a>
         </li>
       </ul>

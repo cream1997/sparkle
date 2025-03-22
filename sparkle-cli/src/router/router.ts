@@ -40,12 +40,12 @@ const routes = [
         path: PagePath.Init,
         component: () => import("@/pages/InitPage.vue")
     }
-]
+];
 
 
 const router = createRouter({
     history: createWebHashHistory(),
     routes
-})
+});
 export default router;
 

@@ -13,19 +13,19 @@ const props = withDefaults(defineProps<Props>(), {
   bottom: "3em",
   right: "15%",
   left: "15%"
-})
-const show = ref(false)
+});
+const show = ref(false);
 const modalRef = ref();
 
 const closeModal = () => {
   show.value = false;
-}
+};
 const open = () => {
   show.value = true;
-}
+};
 defineExpose({
   open
-})
+});
 </script>
 
 <template>

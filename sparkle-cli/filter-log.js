@@ -1,4 +1,4 @@
-process.stdin.setEncoding('utf8');
+process.stdin.setEncoding("utf8");
 
 /**
  * 这个脚本算是一个无奈之举；
@@ -10,10 +10,10 @@ process.stdin.setEncoding('utf8');
  * 在package.json中的dev2会调用这个脚本，dev就是原始，可以分别调用查看它们的细微差异
  * 将来项目如果日志出现了一些诡异问题，可以调用npm run dev(非dev2),来排除这个脚本的影响
  */
-process.stdin.on('data', (chunk) => {
+process.stdin.on("data", (chunk) => {
     // 要加这行，否则会多出一行空行
-    chunk = chunk.slice(0, -1)
-    if (!chunk.includes('Request Autofill') && !chunk.includes('libpng warning')) {
+    chunk = chunk.slice(0, -1);
+    if (!chunk.includes("Request Autofill") && !chunk.includes("libpng warning")) {
         console.log(chunk);
     }
 });

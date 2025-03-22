@@ -8,9 +8,9 @@ const router = useRouter();
 
 onMounted(() => {
   window.electron.ipcRenderer.on(IpcChannels.ToInitPage, () => {
-    router.push(PagePath.Init)
-  })
-})
+    router.push(PagePath.Init);
+  });
+});
 </script>
 
 <template>
