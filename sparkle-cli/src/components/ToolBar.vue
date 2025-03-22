@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {useRouter} from "vue-router";
-import {PagePath} from "@/router/router.ts";
+import { useRouter } from "vue-router";
+import { PagePath } from "@/router/router.ts";
 import ModalComponent from "@/components/ModalComponent.vue";
 import SettingComponent from "@/components/SettingComponent.vue";
-import {reactive, ref} from "vue";
+import { reactive, ref } from "vue";
 
 const router = useRouter();
 
@@ -63,16 +63,30 @@ const openSettingModal = () => {
 
 <template>
   <div class="all-item-container">
-    <div v-for="item in allTool" :title="item.title"
-         class="tool-item"
-         :class="[item.active?'active-tool-item':'']"
-         @click="selectTool(item)">
-      <img class="item-icon" :src="computeIconPath(item.icon)" :alt="item.title">
+    <div
+      v-for="item in allTool"
+      :title="item.title"
+      class="tool-item"
+      :class="[item.active ? 'active-tool-item' : '']"
+      @click="selectTool(item)"
+    >
+      <img
+        class="item-icon"
+        :src="computeIconPath(item.icon)"
+        :alt="item.title"
+      />
     </div>
 
-    <div :title="settingItem.title" class="tool-item setting-item"
-         @click="openSettingModal">
-      <img class="item-icon" :src="computeIconPath(settingItem.icon)" :alt="settingItem.title">
+    <div
+      :title="settingItem.title"
+      class="tool-item setting-item"
+      @click="openSettingModal"
+    >
+      <img
+        class="item-icon"
+        :src="computeIconPath(settingItem.icon)"
+        :alt="settingItem.title"
+      />
     </div>
   </div>
   <ModalComponent ref="modalRef">

@@ -1,11 +1,5 @@
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
+<template>音乐设置</template>
 
-<template>
-  音乐设置
-</template>
-
-<style scoped>
-
-</style>
+<style scoped></style>

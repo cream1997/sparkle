@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import IpcChannels from "../common/IpcChannels.ts";
-import {onMounted} from "vue";
-import {useRouter} from "vue-router";
-import {PagePath} from "@/router/router.ts";
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { PagePath } from "@/router/router.ts";
 
 const router = useRouter();
 
@@ -17,5 +17,4 @@ onMounted(() => {
   <router-view></router-view>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

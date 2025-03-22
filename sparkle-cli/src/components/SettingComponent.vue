@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {markRaw, reactive} from "vue";
+import { markRaw, reactive } from "vue";
 import AboutSetting from "@/components/settingSub/AboutSetting.vue";
 import MusicSetting from "@/components/settingSub/MusicSetting.vue";
 import NoteSetting from "@/components/settingSub/NoteSetting.vue";
@@ -7,9 +7,9 @@ import ChatSetting from "@/components/settingSub/ChatSetting.vue";
 import ToolSetting from "@/components/settingSub/ToolSetting.vue";
 
 interface Item {
-  title: string,
-  component: any,
-  active?: boolean,
+  title: string;
+  component: any;
+  active?: boolean;
 }
 
 const menuItems = reactive<Item[]>([
@@ -33,7 +33,7 @@ const menuItems = reactive<Item[]>([
   {
     title: "工具",
     component: markRaw(ToolSetting)
-  },
+  }
 ]);
 
 const selectItem = (item: Item) => {
@@ -51,7 +51,11 @@ const selectItem = (item: Item) => {
   <div class="container-SettingComponent">
     <aside class="sidebar-SettingComponent">
       <ul class="menu-ul-SettingComponent">
-        <li v-for="item in menuItems" :class="[item.active?'li-active-SettingComponent':'']" @click="selectItem(item)">
+        <li
+          v-for="item in menuItems"
+          :class="[item.active ? 'li-active-SettingComponent' : '']"
+          @click="selectItem(item)"
+        >
           <a>{{ item.title }}</a>
         </li>
       </ul>
@@ -60,7 +64,7 @@ const selectItem = (item: Item) => {
       <div v-for="item in menuItems">
         <!-- 多一层div是因为下面的v-if无法放到上面,因为我需要给div设置width和height100%,如果没有v-if,无法达到显示效果 -->
         <div v-if="item.active">
-          <component :is="item.component"/>
+          <component :is="item.component" />
         </div>
       </div>
     </main>

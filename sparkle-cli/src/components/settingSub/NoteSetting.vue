@@ -1,11 +1,5 @@
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
+<template>笔记设置</template>
 
-<template>
-  笔记设置
-</template>
-
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import { ref } from "vue";
 
 interface Props {
   top?: string;
@@ -31,12 +31,15 @@ defineExpose({
 <template>
   <div v-if="show" ref="modalRef">
     <div class="backdrop-ModalCom"></div>
-    <div class="body--ModalCom" :style="{
+    <div
+      class="body--ModalCom"
+      :style="{
         top,
         bottom,
         right,
-        left,
-    }">
+        left
+      }"
+    >
       <button class="close-ModalCom" @click="closeModal">&times;</button>
       <slot></slot>
     </div>

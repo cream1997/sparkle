@@ -1,11 +1,5 @@
-<script setup lang="ts">
+<script setup lang="ts"></script>
 
-</script>
+<template>聊天设置</template>
 
-<template>
-  聊天设置
-</template>
-
-<style scoped>
-
-</style>
+<style scoped></style>
