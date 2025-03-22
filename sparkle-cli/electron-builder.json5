@@ -37,7 +37,13 @@
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
-    // fixme 目前这个写成false, 实测卸载时也会删除应用安装目录的所有文件；所以这里写成true，不知道还会多删哪些东西，后续再测试
+    /*
+      todo may be change
+      应该是以下逻辑(未测试):
+      true：卸载程序会删除应用程序在用户目录（例如C:\Users\<用户名>\AppData）,也就是app.getPath('userData')中存储的本地数据、缓存或配置文件。
+      false时（如当前配置）：卸载程序仅删除安装目录（$INSTDIR），但保留用户数据
+      目前就设置成false,因为后续我的更新实现可能需要卸载软件，然后保留一些数据，比如用户的配置等
+    */
     "deleteAppDataOnUninstall": false,
     "installerIcon": "build/icons/icon.ico",
     "uninstallerIcon": "build/icons/icon.ico"
