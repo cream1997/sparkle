@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: sparkle-server
+server:
+  port: 8888
+  servlet:
+    #可以定义成如/api
+    context-path: /
