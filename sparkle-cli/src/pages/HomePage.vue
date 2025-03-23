@@ -3,6 +3,7 @@ import ToolBar from "@/components/ToolBar.vue";
 import { onMounted } from "vue";
 import IpcChannels from "../../common/IpcChannels.ts";
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
+import BottomInfoPanel from "@/components/BottomInfoPanel.vue";
 
 const AppInfo = useAppInfoStore();
 onMounted(() => {
@@ -20,7 +21,12 @@ onMounted(() => {
       <ToolBar></ToolBar>
     </aside>
     <main>
-      <router-view></router-view>
+      <div class="main-content-home">
+        <router-view></router-view>
+      </div>
+      <div class="bottom-info-panel-home">
+        <bottom-info-panel></bottom-info-panel>
+      </div>
     </main>
   </div>
 </template>
@@ -30,14 +36,23 @@ onMounted(() => {
   width: 100%;
   height: 100vh;
   display: flex;
-}
 
-aside {
-  width: 32px;
-  border-right: 1px solid lightgray;
-}
+  aside {
+    width: 32px;
+    border-right: 1px solid lightgray;
+  }
 
-main {
-  flex: 1;
+  main {
+    flex: 1;
+
+    .main-content-home {
+      height: calc(100% - 1.25em);
+    }
+
+    .bottom-info-panel-home {
+      border-top: 1px solid lightgray;
+      height: 1.25em;
+    }
+  }
 }
 </style>

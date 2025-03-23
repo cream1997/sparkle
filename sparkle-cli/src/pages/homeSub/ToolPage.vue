@@ -25,7 +25,7 @@ const sendTestCmd = async () => {
 .tool-page-container {
   display: flex;
   width: 100%;
-  height: 100vh;
+  height: 100%;
 }
 
 .tool-page-sidebar {
