@@ -31,7 +31,7 @@ public class AppUpdateController {
     /**
      * todo Ret包装注意
      */
-    @GetMapping("/downloadVersion")
+    @GetMapping("/downloadLatestVersion")
     public ResponseEntity<Resource> downloadLatestVersion(String versionNumber) {
         return this.appUpdateService.downloadLatestVersion(versionNumber);
     }

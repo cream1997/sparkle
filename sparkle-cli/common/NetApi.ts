@@ -1,6 +1,7 @@
 enum NetApi {
   Test = "/test",
-  GetLatestVersionNumber = "latestVersionNumber"
+  GetLatestVersionNumber = "latestVersionNumber",
+  DownloadLatestVersion = "downloadLatestVersion"
 }
 
 export default NetApi;
