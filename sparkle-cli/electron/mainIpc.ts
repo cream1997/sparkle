@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog, ipcMain } from "electron";
+import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import IpcChannels from "../common/IpcChannels";
 import { AppCfgStore } from "./config/AppStore";
 import { AppRootDirKey } from "./constant/AppConstant";
@@ -6,6 +6,7 @@ import { AppRootDirKey } from "./constant/AppConstant";
 export default function mainIpcSetup(mainWin: BrowserWindow) {
   listenTest(mainWin);
   listenSelectRootDir();
+  listenAppInfo();
 }
 
 function listenTest(mainWin: BrowserWindow) {
@@ -27,5 +28,14 @@ function listenSelectRootDir() {
       return true;
     }
     return false;
+  });
+}
+
+function listenAppInfo() {
+  ipcMain.handle(IpcChannels.AskAppInfo, async (event, ...args) => {
+    return {
+      version: app.getVersion(),
+      rootDir: AppCfgStore.get(AppRootDirKey)
+    };
   });
 }

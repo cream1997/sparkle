@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import ToolBar from "@/components/ToolBar.vue";
+import { onMounted } from "vue";
+import IpcChannels from "../../common/IpcChannels.ts";
+import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
+
+const AppInfo = useAppInfoStore();
+onMounted(() => {
+  window.electron.ipcRenderer
+    .invoke(IpcChannels.AskAppInfo)
+    .then(({ version, rootDir }) => {
+      AppInfo.init(version, rootDir);
+    });
+});
 </script>
 
 <template>
