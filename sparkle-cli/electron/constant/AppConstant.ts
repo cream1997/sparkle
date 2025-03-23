@@ -1,2 +1,2 @@
-export const ConfigName = "sparkle-config";
+export const BasicCfgName = "sparkle-basic-cfg";
 export const AppRootDirKey = "rootDir";
