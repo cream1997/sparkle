@@ -22,7 +22,9 @@ function createWin() {
   });
   win.on("ready-to-show", () => {
     win.show();
-    win.webContents.openDevTools();
+    if (is.dev) {
+      win.webContents.openDevTools();
+    }
 
     const rootDir = AppCfgStore.get(AppRootDirKey);
     if (!rootDir) {
