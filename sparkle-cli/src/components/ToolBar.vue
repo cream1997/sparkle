@@ -95,38 +95,38 @@ const openSettingModal = () => {
 </template>
 
 <style scoped>
-.tool-item {
-  height: 32px;
-  transition: background-color 0.3s ease;
-  padding: 2px 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 1px;
-}
-
-.tool-item:hover {
-  background-color: rgba(0, 0, 0, 0.2); /* 背景变深 */
-}
-
-.active-tool-item {
-  background-color: rgba(0, 0, 0, 0.15);
-}
-
 .all-item-container {
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: whitesmoke;
-}
 
-.setting-item {
-  margin-top: auto;
-}
+  .tool-item {
+    height: 32px;
+    transition: background-color 0.3s ease;
+    padding: 2px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1px;
 
-.item-icon {
-  width: 20px;
-  height: 20px;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.2); /* 背景变深 */
+    }
+
+    > .item-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .active-tool-item {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .setting-item {
+    margin-top: auto;
+  }
 }
 </style>
