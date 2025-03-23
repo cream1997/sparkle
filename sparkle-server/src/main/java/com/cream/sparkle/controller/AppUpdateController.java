@@ -1,13 +1,12 @@
 package com.cream.sparkle.controller;
 
+import com.cream.sparkle.global.error.RunErr;
 import com.cream.sparkle.service.AppUpdateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
 
 @RestController
 public class AppUpdateController {
@@ -23,8 +22,7 @@ public class AppUpdateController {
     public String latestVersionNumber() {
         String latestVersionNumber = this.appUpdateService.getLatestVersionNumber();
         if (latestVersionNumber == null) {
-            // todo 自定义项目异常，以及全局异常处理
-            throw new RuntimeException("No latest version number found");
+            throw new RunErr("服务器错误");
         }
         return latestVersionNumber;
     }
@@ -34,7 +32,7 @@ public class AppUpdateController {
      * todo Ret包装注意
      */
     @GetMapping("/downloadVersion")
-    public ResponseEntity<Resource> downloadLatestVersion(String versionNumber) throws IOException {
+    public ResponseEntity<Resource> downloadLatestVersion(String versionNumber) {
         return this.appUpdateService.downloadLatestVersion(versionNumber);
     }
 }

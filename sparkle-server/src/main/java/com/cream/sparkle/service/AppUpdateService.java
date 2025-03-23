@@ -1,5 +1,6 @@
 package com.cream.sparkle.service;
 
+import com.cream.sparkle.global.error.RunErr;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -59,16 +60,20 @@ public class AppUpdateService {
         return null;
     }
 
-    public ResponseEntity<Resource> downloadLatestVersion(String versionNumber) throws IOException {
+    public ResponseEntity<Resource> downloadLatestVersion(String versionNumber) {
         FileSystemResource resource = getFileResource(versionNumber);
         if (resource != null && resource.exists()) {
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename());
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .contentLength(resource.contentLength())
-                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                    .body(resource);
+            try {
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .contentLength(resource.contentLength())
+                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .body(resource);
+            } catch (IOException e) {
+                throw new RunErr("下载出错");
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
