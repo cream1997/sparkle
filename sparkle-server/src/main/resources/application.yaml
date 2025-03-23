@@ -6,3 +6,6 @@ server:
   servlet:
     #可以定义成如/api
     context-path: /
+
+sparkle:
+  publish-dir: D:\Code\sparkle\sparkle-server\backTmp
