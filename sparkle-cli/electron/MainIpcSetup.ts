@@ -1,12 +1,31 @@
 import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import IpcChannels from "../common/IpcChannels";
 import { AppCfgStore } from "./config/AppStore";
-import { AppRootDirKey } from "./constant/AppConstant";
+import { AppRootDirKey, AppTmpDir } from "./constant/AppConstant";
+import { axios } from "../src/net/AxiosCfg";
+import NetApi from "../common/NetApi";
 
 export default function mainIpcSetup(mainWin: BrowserWindow) {
   listenTest(mainWin);
   listenSelectRootDir();
   listenAppInfo();
+  listenDownloadUpdate();
+}
+
+function listenDownloadUpdate() {
+  ipcMain.on(IpcChannels.DownloadUpdate, (event, versionNumber) => {
+    axios
+      .get(NetApi.DownloadLatestVersion, {
+        responseType: "stream",
+        params: { versionNumber }
+      })
+      .then((response) => {
+        console.log(AppTmpDir);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  });
 }
 
 function listenTest(mainWin: BrowserWindow) {

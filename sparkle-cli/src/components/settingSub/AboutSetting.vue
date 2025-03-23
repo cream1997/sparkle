@@ -2,6 +2,7 @@
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
 import { axios } from "@/net/AxiosCfg.ts";
 import NetApi from "../../../common/NetApi.ts";
+import IpcChannels from "../../../common/IpcChannels.ts";
 
 const AppInfo = useAppInfoStore();
 
@@ -9,13 +10,33 @@ function checkUpdate() {
   // 检查是否有新版本
   axios
     .get(NetApi.GetLatestVersionNumber)
-    .then(({ data: versionNumber }: { data: string }) => {
-      if (versionNumber == AppInfo.version) {
-        window.alert("已是最新版本");
-      } else {
+    .then(({ data: { data: versionNumber } }) => {
+      if (needUpdate(AppInfo.version, versionNumber)) {
         // todo 确认是否更新
+        const confirm = window.confirm(`是否下载新版本？(v${versionNumber})`);
+        if (confirm) {
+          downloadUpdate(versionNumber);
+        }
+      } else {
+        window.alert("已是最新版本");
       }
+    })
+    .catch((err) => {
+      window.alert(err);
     });
+}
+
+function needUpdate(currentVersion: string, latestVersion: string) {
+  if (!currentVersion) {
+    // 当前版本为空，说明应用有些异常
+    throw new Error("应用程序检测当前版本异常");
+  }
+  // 直接比较是否相等，而不是大小，简单但不严谨
+  return currentVersion != latestVersion;
+}
+
+function downloadUpdate(versionNumber: string) {
+  window.electron.ipcRenderer.send(IpcChannels.DownloadUpdate, versionNumber);
 }
 </script>
 
@@ -28,7 +49,7 @@ function checkUpdate() {
       </p>
       <p>
         <span class="label-aboutSetting">当前版本：</span>
-        {{ AppInfo.version }}
+        v{{ AppInfo.version }}
         <button @click="checkUpdate">检查更新</button>
       </p>
     </div>

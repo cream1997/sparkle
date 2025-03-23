@@ -1,8 +1,7 @@
 import Store from "electron-store";
 import { app } from "electron";
-import { BasicCfgName } from "../constant/AppConstant";
+import { AppTmpDir, BasicCfgName } from "../constant/AppConstant";
 import { is } from "@electron-toolkit/utils";
-import * as path from "node:path";
 
 /**
  * 这里解释说明一下,首先这个存储应用的一些根本性配置，卸载不删除(方便版本更新不丢失数据)
@@ -11,7 +10,7 @@ import * as path from "node:path";
  */
 function getBasicCfgPath(): string {
   if (is.dev) {
-    return path.resolve(app.getAppPath(), "appTmp");
+    return AppTmpDir;
   } else {
     return app.getPath("userData");
   }
