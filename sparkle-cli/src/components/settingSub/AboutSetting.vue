@@ -1,7 +1,22 @@
 <script setup lang="ts">
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
+import { axios } from "@/net/AxiosCfg.ts";
+import NetApi from "../../../common/NetApi.ts";
 
 const AppInfo = useAppInfoStore();
+
+function checkUpdate() {
+  // 检查是否有新版本
+  axios
+    .get(NetApi.GetLatestVersionNumber)
+    .then(({ data: versionNumber }: { data: string }) => {
+      if (versionNumber == AppInfo.version) {
+        window.alert("已是最新版本");
+      } else {
+        // todo 确认是否更新
+      }
+    });
+}
 </script>
 
 <template>
@@ -14,7 +29,7 @@ const AppInfo = useAppInfoStore();
       <p>
         <span class="label-aboutSetting">当前版本：</span>
         {{ AppInfo.version }}
-        <button>检查更新</button>
+        <button @click="checkUpdate">检查更新</button>
       </p>
     </div>
   </div>
