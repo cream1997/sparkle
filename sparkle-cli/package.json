@@ -2,7 +2,7 @@
   "name": "sparkle-cli",
   "private": true,
   "version": "0.0.0",
-  "main": "dist-electron/main.js",
+  "main": "build/main/main.js",
   "author": "cream",
   "scripts": {
     "postinstall": "patch-package && electron-builder install-app-deps",

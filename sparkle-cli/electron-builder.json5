@@ -15,11 +15,11 @@
   "productName": "Sparkle",
   "copyright": "Copyright © 2025 ${author}",
   "directories": {
-    "output": "release/${version}"
+    "output": "build/release/${version}"
   },
   "files": [
-    "dist",
-    "dist-electron"
+    "build/main",
+    "build/renderer"
   ],
   "win": {
     "target": [

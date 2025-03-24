@@ -8,10 +8,20 @@ export default defineConfig({
     vue(),
     electron({
       main: {
-        entry: "electron/main.ts"
+        entry: "electron/main.ts",
+        vite: {
+          build: {
+            outDir: "build/main"
+          }
+        }
       },
       preload: {
-        input: "electron/preload/preload.ts"
+        input: "electron/preload/preload.ts",
+        vite: {
+          build: {
+            outDir: "build/main"
+          }
+        }
       }
     })
   ],
@@ -19,5 +29,8 @@ export default defineConfig({
     alias: {
       "@": path.resolve(__dirname, "src")
     }
+  },
+  build: {
+    outDir: "build/renderer"
   }
 });
