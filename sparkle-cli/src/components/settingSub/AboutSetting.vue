@@ -3,6 +3,7 @@ import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
 import { axios } from "@/net/AxiosCfg.ts";
 import NetApi from "../../../common/NetApi.ts";
 import IpcChannels from "../../../common/IpcChannels.ts";
+import Tip from "@/tools/Tip.ts";
 
 const AppInfo = useAppInfoStore();
 
@@ -18,11 +19,11 @@ function checkUpdate() {
           downloadUpdate(versionNumber);
         }
       } else {
-        window.alert("已是最新版本");
+        Tip.info("已是最新版本");
       }
     })
     .catch((err) => {
-      window.alert(err);
+      Tip.err(err);
     });
 }
 

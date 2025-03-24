@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import IpcChannels from "../../../common/IpcChannels.ts";
 import { ref } from "vue";
+import Tip from "@/tools/Tip.ts";
 
 const testCmdResult = ref("");
 const sendTestCmd = async () => {
   testCmdResult.value = "waiting...";
   const result = await window.electron.ipcRenderer.invoke(IpcChannels.Test);
-  console.log("测试命令结果:", result);
+  Tip.info(result);
   testCmdResult.value = result;
 };
 </script>
