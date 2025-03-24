@@ -4,6 +4,7 @@ import { axios } from "@/net/AxiosCfg.ts";
 import NetApi from "../../../common/NetApi.ts";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
+import Confirm from "@/tools/Confirm.ts";
 
 const AppInfo = useAppInfoStore();
 
@@ -13,11 +14,14 @@ function checkUpdate() {
     .get(NetApi.GetLatestVersionNumber)
     .then(({ data: { data: versionNumber } }) => {
       if (needUpdate(AppInfo.version, versionNumber)) {
-        // todo 确认是否更新
-        const confirm = window.confirm(`是否下载新版本？(v${versionNumber})`);
-        if (confirm) {
-          downloadUpdate(versionNumber);
-        }
+        // 确认是否更新
+        Confirm.show({ msg: `是否下载新版本？(v${versionNumber})` }).then(
+          (confirmed) => {
+            if (confirmed) {
+              downloadUpdate(versionNumber);
+            }
+          }
+        );
       } else {
         Tip.info("已是最新版本");
       }
