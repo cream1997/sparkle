@@ -14,7 +14,7 @@ function createWin() {
     height: 600,
     show: false,
     autoHideMenuBar: true,
-    icon: path.join(__dirname, "../public/icon.png"),
+    icon: path.join(__dirname, "../../public/icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
       sandbox: false
@@ -62,7 +62,6 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
-    win = null;
   }
 });
 
