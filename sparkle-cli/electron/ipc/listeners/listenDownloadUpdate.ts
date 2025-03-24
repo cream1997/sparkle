@@ -32,7 +32,7 @@ export default function listenDownloadUpdate() {
       installUpdate(downloadPath);
     } catch (error) {
       console.error("下载失败", error);
-      onErr(error);
+      onErr(error as string);
     }
   });
 }
