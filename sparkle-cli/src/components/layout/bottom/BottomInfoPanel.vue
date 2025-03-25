@@ -18,6 +18,7 @@ import BottomMainArea from "@/components/layout/bottom/BottomMainArea.vue";
   padding: 1px;
   font-size: 0.8em;
   display: flex;
+  width: 100%;
 
   > aside {
     width: 100px;
@@ -25,6 +26,7 @@ import BottomMainArea from "@/components/layout/bottom/BottomMainArea.vue";
   }
 
   > main {
+    width: calc(100% - 200px);
     flex: 1;
   }
 
