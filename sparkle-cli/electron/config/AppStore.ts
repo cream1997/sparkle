@@ -3,6 +3,7 @@ import { app } from "electron";
 import { AppTmpDir, BasicCfgName, ServerAddressKey } from "../constant/MainConst.ts";
 import { is } from "@electron-toolkit/utils";
 import AppCfg from "../../common/AppCfg.ts";
+import { initBaseUrl } from "../../src/net/AxiosCfg.ts";
 
 /**
  * 这里解释说明一下,首先这个存储应用的一些根本性配置，卸载不删除(方便版本更新不丢失数据)
@@ -24,5 +25,6 @@ const AppCfgStore = new Store({
 if (!AppCfgStore.get(ServerAddressKey)) {
   AppCfgStore.set(ServerAddressKey, AppCfg.defaultServer);
 }
+initBaseUrl(AppCfgStore.get(ServerAddressKey) as string);
 
 export { AppCfgStore };
