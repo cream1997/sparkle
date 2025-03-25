@@ -46,10 +46,11 @@ export default function listenDownloadUpdate() {
 }
 
 function downloadInfoSync(downloadBytes: number, totalSize?: number) {
-  mainWin.webContents.send(IpcChannels.DownloadInfoSyn, {
+  mainWin.webContents.send(
+    IpcChannels.DownloadInfoSyn,
     downloadBytes,
     totalSize
-  });
+  );
 }
 
 function getDownloadPath(versionNumber: string) {

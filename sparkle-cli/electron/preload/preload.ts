@@ -10,13 +10,16 @@ const api = {};
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld("electron", electronAPI);
+    contextBridge.exposeInMainWorld("ipc", electronAPI.ipcRenderer);
     contextBridge.exposeInMainWorld("api", api);
   } catch (error) {
     console.error(error);
   }
 } else {
-  // @ts-expect-error (define in dts)
+  // @ts-expect-error (渲染进程定义了对应的dts)
   window.electron = electronAPI;
-  // @ts-expect-error (define in dts)
+  // @ts-expect-error (渲染进程定义了对应的dts)
+  window.ipc = electronAPI.ipcRenderer;
+  // @ts-expect-error (渲染进程定义了对应的dts)
   window.api = api;
 }

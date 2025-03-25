@@ -5,6 +5,7 @@ import NetApi from "../../../common/NetApi.ts";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
 import Confirm from "@/tools/Confirm.ts";
+import { onMounted, onUnmounted } from "vue";
 
 const AppInfo = useAppInfoStore();
 
@@ -41,8 +42,20 @@ function needUpdate(currentVersion: string, latestVersion: string) {
 }
 
 function downloadUpdate(versionNumber: string) {
-  window.electron.ipcRenderer.send(IpcChannels.DownloadUpdate, versionNumber);
+  window.ipc.send(IpcChannels.DownloadUpdate, versionNumber);
 }
+
+onMounted(() => {
+  window.ipc.on(
+    IpcChannels.DownloadInfoSyn,
+    (event, downloadBytes: number, totalSize?: number) => {
+      console.log(downloadBytes, totalSize);
+    }
+  );
+});
+onUnmounted(() => {
+  window.ipc.removeAllListeners(IpcChannels.DownloadInfoSyn);
+});
 </script>
 
 <template>

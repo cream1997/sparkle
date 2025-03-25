@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ToolBar from "@/components/ToolBar.vue";
+import ToolBar from "@/components/layout/ToolBar.vue";
 import { onMounted } from "vue";
 import IpcChannels from "../../common/IpcChannels.ts";
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
-import BottomInfoPanel from "@/components/BottomInfoPanel.vue";
+import BottomInfoPanel from "@/components/layout/bottom/BottomInfoPanel.vue";
 
 const AppInfo = useAppInfoStore();
 onMounted(() => {

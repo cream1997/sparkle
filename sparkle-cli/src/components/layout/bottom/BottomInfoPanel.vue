@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-const msg = ref("主要内容区");
-
-function showMsg(msg: string): void {}
+import BottomMainArea from "@/components/layout/bottom/BottomMainArea.vue";
 </script>
 
 <template>
   <div class="content-BottomInfoPanel">
-    <aside>左边固定区域</aside>
-    <main>{{ msg }}</main>
-    <aside>右边固定区域</aside>
+    <aside>...</aside>
+    <main>
+      <BottomMainArea></BottomMainArea>
+    </main>
+    <aside>...</aside>
   </div>
 </template>
 

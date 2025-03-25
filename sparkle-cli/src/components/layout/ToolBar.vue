@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { PagePath } from "@/router/router.ts";
-import ModalComponent from "@/components/ModalComponent.vue";
+import ModalComponent from "@/components/layout/ModalComponent.vue";
 import SettingComponent from "@/components/SettingComponent.vue";
 import { reactive, ref } from "vue";
 
