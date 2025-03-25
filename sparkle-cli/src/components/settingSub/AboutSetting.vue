@@ -5,7 +5,9 @@ import NetApi from "../../../common/NetApi.ts";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
 import Confirm from "@/tools/Confirm.ts";
-import { onMounted, onUnmounted } from "vue";
+import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
+
+const updateDownloadStore = useUpdateDownloadStore();
 
 const AppInfo = useAppInfoStore();
 
@@ -13,16 +15,20 @@ function checkUpdate() {
   // 检查是否有新版本
   axios
     .get(NetApi.GetLatestVersionNumber)
-    .then(({ data: { data: versionNumber } }) => {
+    .then(async ({ data: { data: versionNumber } }) => {
       if (needUpdate(AppInfo.version, versionNumber)) {
         // 确认是否更新
-        Confirm.show({ msg: `是否下载新版本？(v${versionNumber})` }).then(
-          (confirmed) => {
-            if (confirmed) {
-              downloadUpdate(versionNumber);
-            }
-          }
-        );
+        const confirmed = await Confirm.show({
+          msg: `是否下载新版本？(v${versionNumber})`
+        });
+        if (!confirmed) {
+          return;
+        }
+        if (updateDownloadStore.inDownload) {
+          Tip.err("正在下载中~");
+        } else {
+          downloadUpdate(versionNumber);
+        }
       } else {
         Tip.info("已是最新版本");
       }
@@ -42,20 +48,9 @@ function needUpdate(currentVersion: string, latestVersion: string) {
 }
 
 function downloadUpdate(versionNumber: string) {
+  updateDownloadStore.inDownload = true;
   window.ipc.send(IpcChannels.DownloadUpdate, versionNumber);
 }
-
-onMounted(() => {
-  window.ipc.on(
-    IpcChannels.DownloadInfoSyn,
-    (event, downloadBytes: number, totalSize?: number) => {
-      console.log(downloadBytes, totalSize);
-    }
-  );
-});
-onUnmounted(() => {
-  window.ipc.removeAllListeners(IpcChannels.DownloadInfoSyn);
-});
 </script>
 
 <template>

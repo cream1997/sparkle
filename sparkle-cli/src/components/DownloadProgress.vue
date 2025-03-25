@@ -1,33 +1,41 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
 
-interface Props {
-  totalSize: number;
-  downloadSize: number;
-}
+const updateDownloadStore = useUpdateDownloadStore();
 
-const props = defineProps<Props>();
+const totalSize = ref(0);
+const downloadSize = ref(0);
+const linking = computed(() => {
+  return updateDownloadStore.inDownload && totalSize.value === 0;
+});
 
-const percent = computed(() =>
-  ((props.downloadSize / props.totalSize) * 100).toFixed(1)
-);
+const percent = computed(() => {
+  if (totalSize.value === 0) {
+    return 0;
+  }
+  return parseInt(((downloadSize.value / totalSize.value) * 100).toFixed(1));
+});
 
 const jinHaoProgress = computed(() => {
-  const count = Math.floor(parseInt(percent.value) / 10);
+  const count = Math.floor(percent.value / 10);
   return "#".repeat(count);
 });
 </script>
 
 <template>
   <div class="container-DownloadProgress">
-    <div v-if="parseInt(percent) < 100">
-      下载中
-      <span class="progress-bar-container-DownloadProgress">{{
-        jinHaoProgress
-      }}</span>
-      {{ percent }}%
+    <div v-if="linking">下载连接中...</div>
+    <div v-else>
+      <div v-if="percent < 99.9">
+        下载中
+        <span class="progress-bar-container-DownloadProgress">{{
+          jinHaoProgress
+        }}</span>
+        {{ percent }}%
+      </div>
+      <div v-else>下载完成, 启动安装...</div>
     </div>
-    <div v-else>下载完成, 启动安装...</div>
   </div>
 </template>
 
