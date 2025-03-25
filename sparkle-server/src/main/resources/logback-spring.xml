@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--定义变量-->
+    <property name="LOG_DIR" value="D:\Code\sparkle\sparkle-server\backTmp\log\"/>
+    <property name="BASE_LOG_FILE_NAME" value="base.log"/>
+    <!--这个日志只包含错误日志-->
+    <property name="ERROR_LOG_FILE_NAME" value="error.log"/>
+
+    <!--控制台日志小于等于warn级别不打印调用路径信息-->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %logger{36} %M\(\) %L - %msg%n</pattern>
+        </encoder>
+        <filter class="com.cream.sparkle.config.log.LevelLessThanFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+    <!--控制台日志大于error级别的日志打印调用路径信息-->
+    <appender name="STDOUT_ERROR" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%cyan(%d{HH:mm:ss.SSS}) [%thread] %highlight(%-5level) %logger{36} %M\(\) %L - %msg%n %caller{10}%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <!--文件常规日志：打印debug级别以上所有日志-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}${BASE_LOG_FILE_NAME}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}${BASE_LOG_FILE_NAME}.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} %M\(\) %L - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+    </appender>
+    <!--文件错误特殊日志：大于warn级别的日志打印调用路径信息-->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}${ERROR_LOG_FILE_NAME}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}${ERROR_LOG_FILE_NAME}_ErrStack.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} %M\(\) %L - %msg%n %caller{10}%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <logger name="com.cream.sparkle" level="debug"/>
+    <!--    <logger name="io.netty" level="debug"/>-->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="STDOUT_ERROR"/>
+        <appender-ref ref="FILE_ERROR"/>
+    </root>
+</configuration>
