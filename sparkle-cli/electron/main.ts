@@ -5,11 +5,10 @@ import mainIpcSetup from "./ipc/MainIpcSetup";
 import { AppRootDirKey } from "./constant/MainConst.ts";
 import IpcChannels from "../common/IpcChannels";
 import { AppCfgStore } from "./config/AppStore";
-
-let win: BrowserWindow;
+import { destroyMainWindow, initMainWindow } from "./window/WindowManager.ts";
 
 function createWin() {
-  win = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 800,
     height: 600,
     show: false,
@@ -20,6 +19,8 @@ function createWin() {
       sandbox: false
     }
   });
+  initMainWindow(win);
+
   win.on("ready-to-show", () => {
     win.show();
     if (is.dev) {
@@ -51,7 +52,7 @@ app.whenReady().then(() => {
   });
 
   createWin();
-  mainIpcSetup(win);
+  mainIpcSetup();
   app.on("activate", function () {
     // mac特定处理
     if (BrowserWindow.getAllWindows().length === 0) createWin();
@@ -62,6 +63,7 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
+    destroyMainWindow();
   }
 });
 

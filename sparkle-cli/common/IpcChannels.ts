@@ -3,7 +3,8 @@ enum IpcChannels {
   ToInitPage = "ToInitPage",
   SelectRootDir = "SelectRootDir",
   AskAppInfo = "AskAppInfo",
-  DownloadUpdate = "DownloadUpdate"
+  DownloadUpdate = "DownloadUpdate",
+  DownloadInfoSyn = "DownloadInfoSyn"
 }
 
 export default IpcChannels;

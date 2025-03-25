@@ -7,6 +7,7 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 import { exec } from "child_process";
 import * as iconv from "iconv-lite";
+import { mainWin } from "../../window/WindowManager.ts";
 
 export default function listenDownloadUpdate() {
   ipcMain.on(IpcChannels.DownloadUpdate, async (event, versionNumber) => {
@@ -15,25 +16,39 @@ export default function listenDownloadUpdate() {
         responseType: "stream",
         params: { versionNumber }
       });
+      const lengthStr = response.headers["content-length"]?.toString() || "0";
+      const totalSize = parseInt(lengthStr, 10);
+      // 同步信息到渲染进程开始下载
+      downloadInfoSync(0, totalSize);
+      let downloadBytes = 0;
+      response.data.on("data", (chunk: any) => {
+        downloadBytes += chunk.length;
+        downloadInfoSync(downloadBytes);
+      });
       const downloadPath = getDownloadPath(versionNumber);
       const writeStream = fs.createWriteStream(downloadPath);
       response.data.pipe(writeStream);
-      writeStream.on("data", (chunk) => {
-        // 同步进度到主界面
-        // const progress = (writer.bytesWritten / contentLength).toFixed(2);
-      });
 
       await new Promise<void>((resolve, reject) => {
         writeStream.on("finish", resolve);
         writeStream.on("error", reject);
       });
       writeStream.close();
-      // 下载完成退出并安装
-      installUpdate(downloadPath);
+      setTimeout(() => {
+        // 下载完成退出并安装,延迟一会，因为到100的时候，页面要显示下载完成准备退出程序进行安装，需要让用户能看到
+        installUpdate(downloadPath);
+      }, 1000);
     } catch (error) {
       console.error("下载失败", error);
       onErr(error as string);
     }
+  });
+}
+
+function downloadInfoSync(downloadBytes: number, totalSize?: number) {
+  mainWin.webContents.send(IpcChannels.DownloadInfoSyn, {
+    downloadBytes,
+    totalSize
   });
 }
 
