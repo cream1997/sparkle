@@ -9,8 +9,8 @@ const AppInfo = useAppInfoStore();
 onMounted(() => {
   window.electron.ipcRenderer
     .invoke(IpcChannels.AskAppInfo)
-    .then(({ version, rootDir }) => {
-      AppInfo.init(version, rootDir);
+    .then(({ version, rootDir, serverAddress }) => {
+      AppInfo.init(version, rootDir, serverAddress);
     });
 });
 </script>

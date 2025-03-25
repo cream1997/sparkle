@@ -1,12 +1,15 @@
 import axios, { type AxiosRequestConfig } from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://127.0.0.1:8888/",
   timeout: 1000,
   headers: {
     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
   }
 });
+
+function initBaseUrl(serverAddress: string) {
+  axiosInstance.defaults.baseURL = serverAddress;
+}
 
 function post<T>(
   url: string,
@@ -27,4 +30,4 @@ function post<T>(
   return axiosInstance.post(url, data, config).then((res) => res.data.data);
 }
 
-export { axiosInstance as axios, post };
+export { axiosInstance as axios, post, initBaseUrl };

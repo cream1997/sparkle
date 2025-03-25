@@ -1,7 +1,8 @@
 import Store from "electron-store";
 import { app } from "electron";
-import { AppTmpDir, BasicCfgName } from "../constant/AppConstant";
+import { AppTmpDir, BasicCfgName, ServerAddressKey } from "../constant/MainConst.ts";
 import { is } from "@electron-toolkit/utils";
+import AppCfg from "../../common/AppCfg.ts";
 
 /**
  * 这里解释说明一下,首先这个存储应用的一些根本性配置，卸载不删除(方便版本更新不丢失数据)
@@ -16,7 +17,12 @@ function getBasicCfgPath(): string {
   }
 }
 
-export const AppCfgStore = new Store({
+const AppCfgStore = new Store({
   cwd: getBasicCfgPath(),
   name: BasicCfgName
 });
+if (!AppCfgStore.get(ServerAddressKey)) {
+  AppCfgStore.set(ServerAddressKey, AppCfg.defaultServer);
+}
+
+export { AppCfgStore };
