@@ -4,6 +4,11 @@ import { PagePath } from "@/router/router.ts";
 import ModalComponent from "@/components/layout/ModalComponent.vue";
 import SettingComponent from "@/components/SettingComponent.vue";
 import { reactive, ref } from "vue";
+import musicSvg from "@/assets/icon/music.svg";
+import noteSvg from "@/assets/icon/note.svg";
+import chatSvg from "@/assets/icon/chat.svg";
+import toolSvg from "@/assets/icon/tool.svg";
+import settingSvg from "@/assets/icon/setting.svg";
 
 const router = useRouter();
 
@@ -17,28 +22,28 @@ interface ToolItem {
 const allTool: ToolItem[] = reactive([
   {
     title: "音乐",
-    icon: "music.svg",
+    icon: musicSvg,
     pagePath: PagePath.Music
   },
   {
     title: "笔记",
-    icon: "note.svg",
+    icon: noteSvg,
     pagePath: PagePath.Note
   },
   {
     title: "聊天",
-    icon: "chat.svg",
+    icon: chatSvg,
     pagePath: PagePath.Chat
   },
   {
     title: "工具",
-    icon: "tool.svg",
+    icon: toolSvg,
     pagePath: PagePath.Tool
   }
 ]);
 const settingItem: ToolItem = {
   title: "设置",
-  icon: "setting.svg"
+  icon: settingSvg
 };
 const computeIconPath = (iconName: string) => {
   return new URL(`../assets/icon/${iconName}`, import.meta.url).href;
@@ -70,11 +75,7 @@ const openSettingModal = () => {
       :class="[item.active ? 'active-tool-item' : '']"
       @click="selectTool(item)"
     >
-      <img
-        class="item-icon"
-        :src="computeIconPath(item.icon)"
-        :alt="item.title"
-      />
+      <img class="item-icon" :src="item.icon" :alt="item.title" />
     </div>
 
     <div
@@ -82,11 +83,7 @@ const openSettingModal = () => {
       class="tool-item setting-item"
       @click="openSettingModal"
     >
-      <img
-        class="item-icon"
-        :src="computeIconPath(settingItem.icon)"
-        :alt="settingItem.title"
-      />
+      <img class="item-icon" :src="settingItem.icon" :alt="settingItem.title" />
     </div>
   </div>
   <ModalComponent ref="modalRef">
