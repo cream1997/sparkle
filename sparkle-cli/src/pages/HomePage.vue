@@ -33,9 +33,10 @@ onMounted(() => {
 
 <style scoped>
 .container-home {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   display: flex;
+  overflow: hidden;
 
   aside {
     width: 32px;
@@ -43,13 +44,16 @@ onMounted(() => {
   }
 
   main {
+    width: calc(100% - 32px);
     flex: 1;
 
     .main-content-home {
+      width: 100%;
       height: calc(100% - 1.25em);
     }
 
     .bottom-info-panel-home {
+      width: 100%;
       border-top: 1px solid lightgray;
       height: 1.25em;
     }
