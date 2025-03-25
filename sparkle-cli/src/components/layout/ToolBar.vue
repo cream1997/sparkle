@@ -45,9 +45,6 @@ const settingItem: ToolItem = {
   title: "设置",
   icon: settingSvg
 };
-const computeIconPath = (iconName: string) => {
-  return new URL(`../assets/icon/${iconName}`, import.meta.url).href;
-};
 
 const selectTool = (item: any) => {
   // todo 检查当前是否已经在此页面
