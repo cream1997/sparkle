@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { type Component, markRaw, onMounted, onUnmounted, reactive } from "vue";
+import { type Component, markRaw, reactive, watch } from "vue";
 import DownloadProgress from "@/components/DownloadProgress.vue";
-import IpcChannels from "../../../../common/IpcChannels.ts";
+import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
+
+const updateDownloadStore = useUpdateDownloadStore();
 
 interface Content {
   component: Component;
@@ -10,9 +12,7 @@ interface Content {
 
 // 定义类型守卫函数
 function isContent(it: any): it is Content {
-  return (
-    typeof it === "object" && it !== null && "component" in it && "props" in it
-  );
+  return typeof it === "object" && it !== null && "component" in it;
 }
 
 const allComponents: (Content | string)[] = reactive([]);
@@ -24,28 +24,16 @@ function pushComponent(it: Content | string) {
   allComponents.push(it);
 }
 
-onMounted(() => {
-  window.ipc.on(
-    IpcChannels.DownloadInfoSyn,
-    (event, downloadBytes: number, totalSize?: number) => {
-      if (totalSize) {
-        // 开始下载的第一次会发送totalSize
-        pushComponent({
-          component: DownloadProgress,
-          props: {
-            totalSize,
-            downloadSize: downloadBytes
-          }
-        });
-      } else {
-        // 更新数值
-      }
+watch(
+  () => updateDownloadStore.inDownload,
+  (value, oldValue, onCleanup) => {
+    if (value && !oldValue) {
+      pushComponent({
+        component: DownloadProgress
+      });
     }
-  );
-});
-onUnmounted(() => {
-  window.ipc.removeAllListeners(IpcChannels.DownloadInfoSyn);
-});
+  }
+);
 </script>
 
 <template>

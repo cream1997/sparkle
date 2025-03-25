@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
+import IpcChannels from "../../common/IpcChannels.ts";
 
 const updateDownloadStore = useUpdateDownloadStore();
 
@@ -20,6 +21,22 @@ const percent = computed(() => {
 const jinHaoProgress = computed(() => {
   const count = Math.floor(percent.value / 10);
   return "#".repeat(count);
+});
+
+onMounted(() => {
+  window.ipc.on(
+    IpcChannels.DownloadInfoSyn,
+    (event, _downloadBytes: number, _totalSize?: number) => {
+      console.log("bbb");
+      downloadSize.value = _downloadBytes;
+      if (_totalSize) {
+        totalSize.value = _totalSize;
+      }
+    }
+  );
+});
+onUnmounted(() => {
+  window.ipc.removeAllListeners(IpcChannels.DownloadInfoSyn);
 });
 </script>
 

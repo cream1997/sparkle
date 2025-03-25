@@ -6,6 +6,7 @@ import IpcChannels from "../../../common/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
 import Confirm from "@/tools/Confirm.ts";
 import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
+import { nextTick } from "vue";
 
 const updateDownloadStore = useUpdateDownloadStore();
 
@@ -49,7 +50,9 @@ function needUpdate(currentVersion: string, latestVersion: string) {
 
 function downloadUpdate(versionNumber: string) {
   updateDownloadStore.inDownload = true;
-  window.ipc.send(IpcChannels.DownloadUpdate, versionNumber);
+  nextTick(() => {
+    window.ipc.send(IpcChannels.DownloadUpdate, versionNumber);
+  });
 }
 </script>
 
