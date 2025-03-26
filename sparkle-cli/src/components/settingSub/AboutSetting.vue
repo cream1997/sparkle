@@ -20,7 +20,7 @@ function checkUpdate() {
       if (needUpdate(AppInfo.version, versionNumber)) {
         // 确认是否更新
         const confirmed = await Confirm.show({
-          msg: `是否下载新版本？(v${versionNumber})`
+          msg: `检测到新版本发布,是否下载更新？(v${versionNumber})`
         });
         if (!confirmed) {
           return;
