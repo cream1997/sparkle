@@ -7,6 +7,7 @@ function initMainWindow(mainWindow: BrowserWindow) {
 }
 
 function destroyMainWindow() {
+  mainWin.destroy();
   //@ts-expect-error 不给mainWin设置BrowserWindow|null，是因为一旦设置，外面导入的地方都需要判空
   mainWin = null;
 }

@@ -5,10 +5,10 @@ import mainIpcSetup from "./ipc/MainIpcSetup";
 import { AppRootDirKey } from "./constant/MainConst.ts";
 import IpcChannels from "../common/IpcChannels";
 import { AppCfgStore } from "./config/AppStore";
-import { destroyMainWindow, initMainWindow } from "./manager/WindowManager.ts";
+import { initMainWindow } from "./manager/WindowManager.ts";
 import createTray from "./manager/TrayManager.ts";
 
-let mainWin: BrowserWindow | null;
+let mainWin: BrowserWindow;
 
 function createWin() {
   mainWin = new BrowserWindow({
@@ -39,6 +39,15 @@ function createWin() {
     }
   });
 
+  mainWin.on("close", (e) => {
+    // 阻止窗口关闭
+    e.preventDefault();
+    // 从任务栏移除
+    mainWin.setSkipTaskbar(true);
+    // 隐藏窗口
+    mainWin.hide();
+  });
+
   if (is.dev && process.env.VITE_DEV_SERVER_URL) {
     mainWin.loadURL(process.env.VITE_DEV_SERVER_URL);
   } else {
@@ -49,12 +58,11 @@ function createWin() {
 const gotTheLock = app.requestSingleInstanceLock();
 if (gotTheLock || is.dev) {
   app.whenReady().then(() => {
-    // Set app user model id for windows
+    // 方便程序分组
     electronApp.setAppUserModelId("com.cream.sparkle");
 
     createTray();
-    // Default open or close DevTools by F12 in development
-    // and ignore CommandOrControl + R in production.
+    // Default open or close DevTools by F12 in development and ignore CommandOrControl + R in production.
     // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
     app.on("browser-window-created", (_, window) => {
       optimizer.watchWindowShortcuts(window);
@@ -69,21 +77,9 @@ if (gotTheLock || is.dev) {
         mainWin.focus();
       }
     });
-    app.on("activate", function () {
-      // mac特定处理
-      if (BrowserWindow.getAllWindows().length === 0) createWin();
-    });
-  });
-
-  // mac特定处理
-  app.on("window-all-closed", () => {
-    if (process.platform !== "darwin") {
-      app.quit();
-      mainWin = null;
-      destroyMainWindow();
-    }
   });
   // 下面可以包括主进程特定代码的其余部分。也可以将它们放在单独的文件中，并在这里引入。
+  // ...
 } else {
   app.quit();
 }

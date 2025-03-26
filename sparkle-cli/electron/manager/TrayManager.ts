@@ -1,5 +1,6 @@
 import { app, Menu, nativeImage, Tray } from "electron";
 import iconDataUrl from "../../public/icon.png?inline";
+import { destroyMainWindow, mainWin } from "./WindowManager.ts";
 
 function createTray() {
   // 托盘管理
@@ -16,12 +17,20 @@ function createTray() {
       type: "normal",
       click: () => {
         app.quit();
+        destroyMainWindow();
       }
     }
   ]);
   tray.setContextMenu(contextMenu);
 
   tray.setToolTip("Sparkle");
+
+  tray.on("click", (e) => {
+    if (!mainWin.isVisible()) {
+      mainWin.show();
+      mainWin.setSkipTaskbar(false);
+    }
+  });
 }
 
 export default createTray;
