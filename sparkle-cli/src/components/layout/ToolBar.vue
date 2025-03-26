@@ -18,7 +18,6 @@ interface ToolItem {
   icon: string;
   pagePath?: PagePath;
   active?: boolean;
-  itClass?: string;
 }
 
 const allTool: ToolItem[] = reactive([
@@ -33,15 +32,14 @@ const allTool: ToolItem[] = reactive([
     pagePath: PagePath.Note
   },
   {
-    title: "命令行",
-    icon: cmdSvg,
-    pagePath: PagePath.Cmd,
-    itClass: "cmd-item"
-  },
-  {
     title: "聊天",
     icon: chatSvg,
     pagePath: PagePath.Chat
+  },
+  {
+    title: "命令行",
+    icon: cmdSvg,
+    pagePath: PagePath.Cmd
   },
   {
     title: "工具",
@@ -77,7 +75,7 @@ const openSettingModal = () => {
       v-for="item in allTool"
       :title="item.title"
       class="tool-item"
-      :class="[item.active ? 'active-tool-item' : '', item.itClass]"
+      :class="[item.active ? 'active-tool-item' : '']"
       @click="selectTool(item)"
     >
       <img class="item-icon" :src="item.icon" :alt="item.title" />
@@ -125,9 +123,6 @@ const openSettingModal = () => {
 
   .active-tool-item {
     background-color: rgba(0, 0, 0, 0.15);
-  }
-
-  .cmd-item {
   }
 
   .setting-item {
