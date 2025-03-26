@@ -28,7 +28,8 @@ class Tip {
       fontSize: "16px"
     });
 
-    tipEl.style.color = options.type === "info" ? "green" : "red";
+    tipEl.style.color =
+      options.type === "info" ? "mediumseagreen" : "palevioletred";
     tipEl.style.backgroundColor = "transparent";
 
     document.body.appendChild(tipEl);

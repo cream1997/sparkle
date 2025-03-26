@@ -35,7 +35,7 @@ function checkUpdate() {
       }
     })
     .catch((err) => {
-      Tip.err(err);
+      Tip.err("网络异常");
     });
 }
 
@@ -49,7 +49,7 @@ function needUpdate(currentVersion: string, latestVersion: string) {
 }
 
 function downloadUpdate(versionNumber: string) {
-  updateDownloadStore.inDownload = true;
+  updateDownloadStore.changeInDownload(true);
   nextTick(() => {
     window.ipc.send(IpcChannels.DownloadUpdate, versionNumber);
   });

@@ -19,11 +19,11 @@ export default function listenDownloadUpdate() {
       const lengthStr = response.headers["content-length"]?.toString() || "0";
       const totalSize = parseInt(lengthStr, 10);
       // 同步信息到渲染进程开始下载
-      downloadInfoSync(0, totalSize);
+      downloadInfoSync({ totalSize: totalSize });
       let downloadBytes = 0;
       response.data.on("data", (chunk: any) => {
         downloadBytes += chunk.length;
-        downloadInfoSync(downloadBytes);
+        downloadInfoSync({ downloadBytes });
       });
       const downloadPath = getDownloadPath(versionNumber);
       const writeStream = fs.createWriteStream(downloadPath);
@@ -45,12 +45,12 @@ export default function listenDownloadUpdate() {
   });
 }
 
-function downloadInfoSync(downloadBytes: number, totalSize?: number) {
-  mainWin.webContents.send(
-    IpcChannels.DownloadInfoSyn,
-    downloadBytes,
-    totalSize
-  );
+function downloadInfoSync(param: {
+  downloadBytes?: number;
+  totalSize?: number;
+  err?: string;
+}) {
+  mainWin.webContents.send(IpcChannels.DownloadInfoSyn, param);
 }
 
 function getDownloadPath(versionNumber: string) {
@@ -68,9 +68,8 @@ function installUpdate(downloadPath: string) {
   exec(downloadPath, { encoding: "buffer" }, (error, stdout, stderr) => {
     if (error) {
       const decode = iconv.decode(stderr, "GBK");
-      console.error("安装更新时出错", decode);
       console.error(error);
-      onErr(decode);
+      onErr(`安装失败${decode}`);
     } else {
       app.quit();
     }
@@ -78,7 +77,8 @@ function installUpdate(downloadPath: string) {
 }
 
 /**
- * todo
  * 更新出错处理，删除临时文件、 发送更新信息到底部信息面板， 包括下载进度，过程是否异常等。
  */
-function onErr(err: string) {}
+function onErr(err: string) {
+  downloadInfoSync({ err });
+}

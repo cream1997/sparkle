@@ -5,20 +5,20 @@ import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
 
 const updateDownloadStore = useUpdateDownloadStore();
 
-interface Content {
+interface ComponentContent {
   component: Component;
   props?: any;
 }
 
 // 定义类型守卫函数
-function isContent(it: any): it is Content {
+function isComponentContent(it: any): it is ComponentContent {
   return typeof it === "object" && it !== null && "component" in it;
 }
 
-const allComponents: (Content | string)[] = reactive([]);
+const allComponents: (ComponentContent | string)[] = reactive([]);
 
-function pushComponent(it: Content | string) {
-  if (isContent(it)) {
+function pushComponent(it: ComponentContent | string) {
+  if (isComponentContent(it)) {
     it = markRaw(it);
   }
   allComponents.push(it);
@@ -34,17 +34,26 @@ watch(
     }
   }
 );
+
+function removeItem(item: ComponentContent | string) {
+  let index = allComponents.findIndex((it: ComponentContent | string) => {
+    return it === item;
+  });
+  allComponents.splice(index, 1);
+}
 </script>
 
 <template>
   <div class="container-BottomMainArea">
     <div v-for="(it, index) in allComponents" :key="index">
-      <component
-        v-if="isContent(it)"
-        :is="it.component"
-        v-bind="it.props"
-      ></component>
-      <div v-if="typeof it === 'string'">{{ it }}</div>
+      <span v-if="isComponentContent(it)">
+        <component
+          :is="it.component"
+          v-bind="it.props"
+          @finish="removeItem(it)"
+        ></component>
+      </span>
+      <span v-if="typeof it === 'string'">{{ it }}</span>
     </div>
   </div>
 </template>
