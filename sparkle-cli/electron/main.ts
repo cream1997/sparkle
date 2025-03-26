@@ -5,7 +5,7 @@ import mainIpcSetup from "./ipc/MainIpcSetup";
 import { AppRootDirKey } from "./constant/MainConst.ts";
 import IpcChannels from "../common/IpcChannels";
 import { AppCfgStore } from "./config/AppStore";
-import { destroyMainWindow, initMainWindow } from "./window/WindowManager.ts";
+import { destroyMainWindow, initMainWindow } from "./manager/WindowManager.ts";
 
 let mainWin: BrowserWindow | null;
 

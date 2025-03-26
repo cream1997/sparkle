@@ -7,7 +7,7 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 import { exec } from "child_process";
 import * as iconv from "iconv-lite";
-import { mainWin } from "../../window/WindowManager.ts";
+import { mainWin } from "../../manager/WindowManager.ts";
 
 export default function listenDownloadUpdate() {
   ipcMain.on(IpcChannels.DownloadUpdate, async (event, versionNumber) => {
