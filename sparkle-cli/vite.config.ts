@@ -2,12 +2,14 @@ import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import electron from "vite-plugin-electron/simple";
 import * as path from "node:path";
+import vueDevTools from "vite-plugin-vue-devtools";
 // https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
   const isDev = mode === "development" && command === "serve";
   return {
     plugins: [
       vue(),
+      vueDevTools(),
       electron({
         main: {
           entry: "electron/main.ts",
