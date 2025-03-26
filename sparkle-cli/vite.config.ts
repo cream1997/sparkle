@@ -4,7 +4,7 @@ import electron from "vite-plugin-electron/simple";
 import * as path from "node:path";
 // https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
-  const sourcemap = mode === "development" && command === "serve";
+  const isDev = mode === "development" && command === "serve";
   return {
     plugins: [
       vue(),
@@ -14,7 +14,23 @@ export default defineConfig(({ mode, command }) => {
           vite: {
             build: {
               outDir: "build/main",
-              sourcemap
+              sourcemap: isDev
+            }
+          },
+          /**
+           * 启动前做些事情...
+           * 主要就是配置渲染进程调试端口
+           */
+          onstart: (args) => {
+            // 启动electron 应用
+            if (isDev) {
+              args.startup([
+                ".",
+                "--no-sandbox",
+                "--remote-debugging-port=9222"
+              ]);
+            } else {
+              args.startup([".", "--no-sandbox"]);
             }
           }
         },
@@ -23,7 +39,7 @@ export default defineConfig(({ mode, command }) => {
           vite: {
             build: {
               outDir: "build/main",
-              sourcemap
+              sourcemap: isDev
             }
           }
         }
@@ -36,7 +52,7 @@ export default defineConfig(({ mode, command }) => {
     },
     build: {
       outDir: "build/renderer",
-      sourcemap
+      sourcemap: isDev
     }
   };
 });
