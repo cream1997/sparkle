@@ -6,6 +6,7 @@ import { AppRootDirKey } from "./constant/MainConst.ts";
 import IpcChannels from "../common/IpcChannels";
 import { AppCfgStore } from "./config/AppStore";
 import { destroyMainWindow, initMainWindow } from "./manager/WindowManager.ts";
+import createTray from "./manager/TrayManager.ts";
 
 let mainWin: BrowserWindow | null;
 
@@ -51,6 +52,7 @@ if (gotTheLock || is.dev) {
     // Set app user model id for windows
     electronApp.setAppUserModelId("com.cream.sparkle");
 
+    createTray();
     // Default open or close DevTools by F12 in development
     // and ignore CommandOrControl + R in production.
     // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
