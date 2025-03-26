@@ -1,7 +1,12 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>命令行工具</div>
+  <div class="container-cmdPage"></div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container-cmdPage {
+  width: 100%;
+  height: 100%;
+}
+</style>
