@@ -10,13 +10,29 @@ process.stdin.setEncoding("utf8");
  * 在package.json中的dev2会调用这个脚本，dev就是原始，可以分别调用查看它们的细微差异
  * 将来项目如果日志出现了一些诡异问题，可以调用npm run dev(非dev2),来排除这个脚本的影响
  */
+
+const strPattern = {
+  // 这个应该也可以安全过滤
+  chromeDevtoolErr: "Request Autofill.",
+  // 这个警告应该可以安全过滤
+  rgbWrong: "libpng warning",
+  // fixme 这个找不到原因，但也不确定过滤是否安全，后续再排查
+  unexpected:
+    ' "Uncaught (in promise) SyntaxError: Unexpected token \'H\', "HTTP/1.1 4"'
+};
 process.stdin.on("data", (chunk) => {
   // 要加这行，否则会多出一行空行
   chunk = chunk.slice(0, -1);
-  if (
-    !chunk.includes("Request Autofill") &&
-    !chunk.includes("libpng warning")
-  ) {
+  if (!needFilter(chunk)) {
     console.log(chunk);
   }
 });
+
+function needFilter(chunk) {
+  for (let key in strPattern) {
+    if (chunk.includes(strPattern[key])) {
+      return true;
+    }
+  }
+  return false;
+}
