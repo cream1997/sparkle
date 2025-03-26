@@ -7,6 +7,7 @@ import { reactive, ref } from "vue";
 import musicSvg from "@/assets/icon/music.svg";
 import noteSvg from "@/assets/icon/note.svg";
 import chatSvg from "@/assets/icon/chat.svg";
+import cmdSvg from "@/assets/icon/cmd.svg";
 import toolSvg from "@/assets/icon/tool.svg";
 import settingSvg from "@/assets/icon/setting.svg";
 
@@ -17,6 +18,7 @@ interface ToolItem {
   icon: string;
   pagePath?: PagePath;
   active?: boolean;
+  itClass?: string;
 }
 
 const allTool: ToolItem[] = reactive([
@@ -29,6 +31,12 @@ const allTool: ToolItem[] = reactive([
     title: "笔记",
     icon: noteSvg,
     pagePath: PagePath.Note
+  },
+  {
+    title: "命令行",
+    icon: cmdSvg,
+    pagePath: PagePath.Cmd,
+    itClass: "cmd-item"
   },
   {
     title: "聊天",
@@ -69,7 +77,7 @@ const openSettingModal = () => {
       v-for="item in allTool"
       :title="item.title"
       class="tool-item"
-      :class="[item.active ? 'active-tool-item' : '']"
+      :class="[item.active ? 'active-tool-item' : '', item.itClass]"
       @click="selectTool(item)"
     >
       <img class="item-icon" :src="item.icon" :alt="item.title" />
@@ -117,6 +125,9 @@ const openSettingModal = () => {
 
   .active-tool-item {
     background-color: rgba(0, 0, 0, 0.15);
+  }
+
+  .cmd-item {
   }
 
   .setting-item {
