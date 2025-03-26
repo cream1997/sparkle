@@ -4,7 +4,9 @@ enum IpcChannels {
   SelectRootDir = "SelectRootDir",
   AskAppInfo = "AskAppInfo",
   DownloadUpdate = "DownloadUpdate",
-  DownloadInfoSyn = "DownloadInfoSyn"
+  DownloadInfoSyn = "DownloadInfoSyn",
+  SshLogin = "SshLogin",
+  SshLogout = "SshLogout"
 }
 
 export default IpcChannels;
