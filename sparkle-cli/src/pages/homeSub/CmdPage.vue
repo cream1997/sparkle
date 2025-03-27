@@ -3,6 +3,7 @@ import "@xterm/xterm/css/xterm.css";
 import { onMounted, onUnmounted, ref } from "vue";
 import { Terminal } from "@xterm/xterm";
 import IpcChannels from "../../../common/IpcChannels.ts";
+import { FitAddon } from "@xterm/addon-fit";
 
 const host = ref("192.168.33.100");
 const port = ref(22);
@@ -17,7 +18,17 @@ onMounted(() => {
     cursorBlink: true,
     cursorStyle: "bar"
   });
+  const fitAddon = new FitAddon();
+  term.loadAddon(fitAddon);
   term.open(terminalRef.value);
+  fitAddon.fit();
+  const resizeObserver = new ResizeObserver(() => {
+    fitAddon.fit();
+  });
+  resizeObserver.observe(terminalRef.value);
+  onUnmounted(() => {
+    resizeObserver.disconnect();
+  });
   let currentLine = "";
   term.onData((data) => {
     if (data === "\x7f" || data === "\x08") {
@@ -81,9 +92,9 @@ const sendSshMsg = (msg: string) => {
         type="number"
       />
       用户名
-      <input disabled v-model="username" style="width: 100%" />
+      <input disabled v-model="username" />
       密码
-      <input v-model="password" type="password" style="width: 100%" />
+      <input v-model="password" type="password" />
       <button @click="login">登录</button>
       <button @click="logout">退出</button>
     </div>
@@ -103,6 +114,10 @@ const sendSshMsg = (msg: string) => {
   .menu {
     width: 150px;
     border-right: 2px solid lightgray;
+
+    > input {
+      width: 100%;
+    }
   }
 
   .content-area {
