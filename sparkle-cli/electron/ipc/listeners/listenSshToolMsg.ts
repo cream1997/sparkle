@@ -26,7 +26,7 @@ export default function listenSshToolMsg() {
   ipcMain.on(IpcChannels.SshSendData, async (event, msg) => {
     // clientChannel.end("ls -l\nexit\n");
     // fixme \n在这里加是否合适？
-    clientChannel?.write(msg + "\n");
+    clientChannel?.write(msg);
   });
 }
 

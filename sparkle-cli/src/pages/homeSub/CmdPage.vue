@@ -19,7 +19,7 @@ onMounted(() => {
     theme: { background: "#1a1a1a", foreground: "#ffffff" },
     fontSize: 16,
     cursorBlink: true,
-    cursorStyle: "bar"
+    cursorStyle: "block"
   });
   const fitAddon = new FitAddon();
   terminal.loadAddon(fitAddon);
@@ -42,26 +42,9 @@ onMounted(() => {
   onUnmounted(() => {
     resizeObserver.disconnect();
   });
-  let currentLine = "";
   terminal.onData((data) => {
-    if (data === "\x7f" || data === "\x08") {
-      // 退格键(Backspace)
-      if (currentLine.length > 0) {
-        currentLine = currentLine.slice(0, -1);
-        // 退格 + 空格 + 退格（覆盖前字符）
-        terminal.write("\b \b");
-      }
-    } else if (data === "\r") {
-      // 处理回车的情况
-      terminal.write("\r\n");
-      // 发送当前行
-      sendSshMsg(currentLine);
-      currentLine = "";
-    } else {
-      // 其他字符
-      currentLine += data;
-      terminal.write(data);
-    }
+    // 直接将所有输入数据发送到SSH服务器，让服务器端处理所有特殊字符
+    sendSshMsg(data);
   });
 
   window.ipc.on(IpcChannels.SshReceiveData, (event, chunk) => {
