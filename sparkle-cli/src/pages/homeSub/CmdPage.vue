@@ -4,12 +4,11 @@ import { onMounted, onUnmounted, ref } from "vue";
 import { Terminal } from "@xterm/xterm";
 import IpcChannels from "../../../common/IpcChannels.ts";
 
-const serverIp = ref("192.168.33.100");
+const host = ref("192.168.33.100");
 const port = ref(22);
-const username = ref("root");
-const password = ref("");
+const username = ref("test");
+const password = ref("123456");
 const terminalRef = ref();
-
 let term: Terminal;
 onMounted(() => {
   term = new Terminal({
@@ -20,39 +19,68 @@ onMounted(() => {
     cursorStyle: "bar"
   });
   term.open(terminalRef.value);
-  term.write("hello world");
+  let currentLine = "";
   term.onData((data) => {
     if (data === "\x7f" || data === "\x08") {
       // 退格键(Backspace)
-      term.write("\b \b"); // 退格 + 空格 + 退格（覆盖前字符）
+      if (currentLine.length > 0) {
+        currentLine = currentLine.slice(0, -1);
+        // 退格 + 空格 + 退格（覆盖前字符）
+        term.write("\b \b");
+      }
     } else if (data === "\r") {
+      // 处理回车的情况
       term.write("\r\n");
+      // 发送当前行
+      sendSshMsg(currentLine);
+      currentLine = "";
     } else {
       // 其他字符
+      currentLine += data;
       term.write(data);
     }
+  });
+
+  window.ipc.on(IpcChannels.SshReceiveData, (event, chunk) => {
+    term.write(chunk);
   });
 });
 
 onUnmounted(() => {
+  logout();
   if (term) {
     term.dispose();
   }
+  window.ipc.removeAllListeners(IpcChannels.SshReceiveData);
 });
 
 const login = () => {
-  window.ipc.send(IpcChannels.SshLogin, { serverIp, port, username, password });
+  window.ipc.send(IpcChannels.SshLogin, {
+    host: host.value,
+    port: port.value,
+    username: username.value,
+    password: password.value
+  });
 };
 const logout = () => {
   window.ipc.send(IpcChannels.SshLogout);
+};
+
+const sendSshMsg = (msg: string) => {
+  window.ipc.send(IpcChannels.SshSendData, msg);
 };
 </script>
 
 <template>
   <div class="container">
     <div class="menu">
-      <input disabled placeholder="服务器ip" v-model="serverIp" />
-      <input disabled placeholder="ssh端口" v-model="port" />
+      <input disabled placeholder="服务器ip" v-model="host" />
+      <input
+        disabled
+        placeholder="ssh端口"
+        v-model.number="port"
+        type="number"
+      />
       用户名
       <input disabled v-model="username" style="width: 100%" />
       密码

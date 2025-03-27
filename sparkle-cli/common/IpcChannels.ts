@@ -6,7 +6,9 @@ enum IpcChannels {
   DownloadUpdate = "DownloadUpdate",
   DownloadInfoSyn = "DownloadInfoSyn",
   SshLogin = "SshLogin",
-  SshLogout = "SshLogout"
+  SshLogout = "SshLogout",
+  SshReceiveData = "SshReceiveData",
+  SshSendData = "SshSendData"
 }
 
 export default IpcChannels;
