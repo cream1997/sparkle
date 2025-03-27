@@ -12,7 +12,6 @@ const terminalRef = ref();
 let term: Terminal;
 onMounted(() => {
   term = new Terminal({
-    rows: 30,
     theme: { background: "#1a1a1a", foreground: "#ffffff" },
     fontSize: 16,
     cursorBlink: true,
