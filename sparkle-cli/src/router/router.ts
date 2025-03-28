@@ -8,6 +8,7 @@ export enum PagePath {
   Chat = "/Chat",
   Cmd = "/Cmd",
   Tool = "/Tool",
+  Test = "/Test",
   IpcTestTool = "/IpcTestTool",
   ComponentTestTool = "/ComponentTestTool"
 }
@@ -41,6 +42,10 @@ const routes = [
         path: PagePath.Tool,
         component: () => import("@/pages/homeSub/ToolPage.vue"),
         children: [
+          {
+            path: PagePath.Test,
+            component: () => import("@/pages/homeSub/toolSub/TestPage.vue")
+          },
           {
             path: PagePath.IpcTestTool,
             component: () => import("@/pages/homeSub/toolSub/IpcTestPage.vue")

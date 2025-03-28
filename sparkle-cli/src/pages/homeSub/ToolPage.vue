@@ -5,7 +5,8 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 const allTools = reactive([
-  { title: "ipc通信", path: PagePath.IpcTestTool, active: true },
+  { title: "test", path: PagePath.Test, active: true },
+  { title: "ipc通信", path: PagePath.IpcTestTool },
   { title: "组件通信", path: PagePath.ComponentTestTool }
 ]);
 
