@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import "@xterm/xterm/css/xterm.css";
-import { onMounted, onUnmounted, reactive, ref, toRaw } from "vue";
+import { nextTick, onMounted, onUnmounted, reactive, ref, toRaw } from "vue";
 import { Terminal } from "@xterm/xterm";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import { FitAddon } from "@xterm/addon-fit";
@@ -13,7 +13,11 @@ const linkInfo = reactive({
 });
 
 const terminalContainerRef = ref();
+const vimTerminalContainerRef = ref();
+
+const vimTerminalShow = ref(false);
 let terminal: Terminal;
+let vimTerminal: Terminal | null = null;
 
 function logDecoderStr(chunk: any) {
   // 新增调试输出：将Buffer转换为带转义字符的字符串
@@ -47,23 +51,23 @@ function logDecoderStr(chunk: any) {
   console.log("接收到的数据(包含控制序列):", str);
 }
 
-onMounted(() => {
-  terminal = new Terminal({
+function createTerminal(mountEl: HTMLElement) {
+  const newTerminal = new Terminal({
     theme: { background: "#1a1a1a", foreground: "#ffffff" },
     fontSize: 16,
     cursorBlink: true,
     cursorStyle: "block"
   });
   const fitAddon = new FitAddon();
-  terminal.loadAddon(fitAddon);
-  terminal.open(terminalContainerRef.value);
+  newTerminal.loadAddon(fitAddon);
+  newTerminal.open(mountEl);
 
   function adjustSize() {
     fitAddon.fit();
     // 上面只设置了行列数，但是高度还可能有空隙
-    const el = terminalContainerRef.value.querySelector(".xterm-screen");
+    const el: HTMLElement | null = mountEl.querySelector(".xterm-screen");
     if (el) {
-      el.style.height = terminalContainerRef.value.offsetHeight + "px";
+      el.style.height = mountEl.offsetHeight + "px";
     }
   }
 
@@ -71,30 +75,48 @@ onMounted(() => {
   const resizeObserver = new ResizeObserver(() => {
     adjustSize();
   });
-  resizeObserver.observe(terminalContainerRef.value);
-  onUnmounted(() => {
-    resizeObserver.disconnect();
-  });
-  terminal.onData((data) => {
+  resizeObserver.observe(mountEl);
+  newTerminal.onData((data) => {
     // 直接将所有输入数据发送到SSH服务器，让服务器端处理所有特殊字符
     sendSshMsg(data);
   });
+  const originalDispose = newTerminal.dispose.bind(newTerminal);
+  newTerminal.dispose = () => {
+    resizeObserver.disconnect();
+    originalDispose();
+  };
+  return newTerminal;
+}
 
-  window.ipc.on(IpcChannels.SshReceiveData, (event, chunk) => {
-    terminal.write(chunk);
-
+onMounted(() => {
+  terminal = createTerminal(terminalContainerRef.value);
+  window.ipc.on(IpcChannels.SshReceiveData, async (event, chunk) => {
+    let writeTerminal = terminal;
+    let needCloseVimTerminal = false;
     const textDecoder = new TextDecoder();
     if (textDecoder.decode(chunk) === "\u001B[?1h\u001B=") {
-      // \e[?1h\e=
-      console.log("开启vim");
+      // \e[?1h\e=, 表示开启vim, 可能不够严谨
+      vimTerminalShow.value = true;
+      await nextTick(() => {
+        vimTerminal = createTerminal(vimTerminalContainerRef.value);
+        writeTerminal = vimTerminal;
+      });
+    } else if (textDecoder.decode(chunk).includes("\u001B[?1l\u001B>")) {
+      // \e[?1l\e>, 退出vim, 同样可能不严谨
+      writeTerminal = vimTerminal!;
+      needCloseVimTerminal = true;
+    } else if (vimTerminal) {
+      writeTerminal = vimTerminal;
     }
-    if (textDecoder.decode(chunk).includes("\u001B[?1l\u001B>")) {
-      // \e[?1l\e>
-      console.log("退出vim");
+    writeTerminal.write(chunk);
+    writeTerminal.focus();
+    if (needCloseVimTerminal) {
+      vimTerminal!.dispose();
+      vimTerminal = null;
+      vimTerminalShow.value = false;
     }
-
     // 输出到控制台
-    logDecoderStr(chunk);
+    // logDecoderStr(chunk);
   });
 });
 
@@ -102,6 +124,9 @@ onUnmounted(() => {
   logout();
   if (terminal) {
     terminal.dispose();
+  }
+  if (vimTerminal) {
+    vimTerminal.dispose();
   }
   window.ipc.removeAllListeners(IpcChannels.SshReceiveData);
 });
@@ -136,7 +161,16 @@ const sendSshMsg = (msg: string) => {
       <button @click="logout">退出</button>
     </div>
     <div class="content-area">
-      <div class="terminal" ref="terminalContainerRef"></div>
+      <div
+        v-show="!vimTerminalShow"
+        class="terminal"
+        ref="terminalContainerRef"
+      ></div>
+      <div
+        v-if="vimTerminalShow"
+        class="terminal"
+        ref="vimTerminalContainerRef"
+      ></div>
       <div class="terminal-bottom-info-panel">终端信息栏</div>
     </div>
   </div>
