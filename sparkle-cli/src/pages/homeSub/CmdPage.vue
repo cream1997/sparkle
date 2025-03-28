@@ -4,12 +4,13 @@ import { nextTick, onMounted, onUnmounted, reactive, ref, toRaw } from "vue";
 import { Terminal } from "@xterm/xterm";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import { FitAddon } from "@xterm/addon-fit";
+import Tip from "@/tools/Tip.ts";
 
 const linkInfo = reactive({
-  host: "192.168.33.100",
-  port: 22,
-  username: "test",
-  password: "123456"
+  host: "",
+  port: "",
+  username: "",
+  password: ""
 });
 
 const terminalContainerRef = ref();
@@ -132,7 +133,16 @@ onUnmounted(() => {
 });
 
 const login = () => {
-  window.ipc.send(IpcChannels.SshLogin, toRaw(linkInfo));
+  if (
+    linkInfo.host &&
+    linkInfo.port &&
+    linkInfo.username &&
+    linkInfo.password
+  ) {
+    window.ipc.send(IpcChannels.SshLogin, toRaw(linkInfo));
+  } else {
+    Tip.err("请输入连接信息");
+  }
 };
 const logout = () => {
   window.ipc.send(IpcChannels.SshLogout);
@@ -146,15 +156,14 @@ const sendSshMsg = (msg: string) => {
 <template>
   <div class="container">
     <div class="menu">
-      <input disabled placeholder="服务器ip" v-model="linkInfo.host" />
+      <input placeholder="服务器ip" v-model="linkInfo.host" />
       <input
-        disabled
         placeholder="ssh端口"
         v-model.number="linkInfo.port"
         type="number"
       />
       用户名
-      <input disabled v-model="linkInfo.username" />
+      <input v-model="linkInfo.username" />
       密码
       <input v-model="linkInfo.password" type="password" />
       <button @click="login">登录</button>
