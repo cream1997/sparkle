@@ -22,7 +22,11 @@ onMounted(() => {
     </aside>
     <main>
       <div class="main-content-home">
-        <router-view></router-view>
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component"></component>
+          </keep-alive>
+        </router-view>
       </div>
       <div class="bottom-info-panel-home">
         <bottom-info-panel></bottom-info-panel>
