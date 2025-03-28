@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ToolBar from "@/components/layout/ToolBar.vue";
+import AsideBar from "@/components/layout/AsideBar.vue";
 import { onMounted } from "vue";
 import IpcChannels from "../../common/IpcChannels.ts";
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
@@ -18,7 +18,7 @@ onMounted(() => {
 <template>
   <div class="container-home">
     <aside>
-      <ToolBar></ToolBar>
+      <AsideBar></AsideBar>
     </aside>
     <main>
       <div class="main-content-home">
