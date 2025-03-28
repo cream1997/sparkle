@@ -14,6 +14,39 @@ const linkInfo = reactive({
 
 const terminalContainerRef = ref();
 let terminal: Terminal;
+
+function logDecoderStr(chunk: any) {
+  // 新增调试输出：将Buffer转换为带转义字符的字符串
+  const decoder = new TextDecoder();
+  /*    const str = decoder
+        .decode(chunk)
+        .replace(/\x1B/g, "^[") // 替换ESC字符
+        .replace(/\n/g, "\\n") // 显示换行符
+        .replace(/\r/g, "\\r"); // 显示回车符*/
+  // 通过监听终端输出的特殊转义序列(\x1b[?1049h和\x1b[?1049l)来检测vim等全屏应用的启动和退出
+  const str = decoder
+    .decode(chunk)
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u0007/g, "\\a") // BEL (响铃)
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u0008/g, "\\b") // 退格
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u0009/g, "\\t") // 水平制表符
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u001B/g, "\\e") // ESC (建议使用更标准的表示)
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u000D/g, "\\r") // 回车
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u000A/g, "\\n") // 换行
+    .replace(
+      // eslint-disable-next-line no-control-regex
+      /[\u0000-\u001F]/g,
+      (c) => String.fromCharCode(0x2400 + c.charCodeAt(0)) // 显示为控制图形符号
+    );
+
+  console.log("接收到的数据(包含控制序列):", str);
+}
+
 onMounted(() => {
   terminal = new Terminal({
     theme: { background: "#1a1a1a", foreground: "#ffffff" },
@@ -49,6 +82,19 @@ onMounted(() => {
 
   window.ipc.on(IpcChannels.SshReceiveData, (event, chunk) => {
     terminal.write(chunk);
+
+    const textDecoder = new TextDecoder();
+    if (textDecoder.decode(chunk) === "\u001B[?1h\u001B=") {
+      // \e[?1h\e=
+      console.log("开启vim");
+    }
+    if (textDecoder.decode(chunk).includes("\u001B[?1l\u001B>")) {
+      // \e[?1l\e>
+      console.log("退出vim");
+    }
+
+    // 输出到控制台
+    logDecoderStr(chunk);
   });
 });
 
