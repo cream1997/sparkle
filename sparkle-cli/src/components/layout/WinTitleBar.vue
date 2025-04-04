@@ -109,7 +109,7 @@ const top = () => {
     display: flex;
 
     > div {
-      padding: 5px 10px 0 10px;
+      padding: 6px 10px 0 10px;
 
       &:hover {
         background-color: rgb(209, 230, 178);
@@ -128,7 +128,7 @@ const top = () => {
       }
 
       > img {
-        height: 18px;
+        height: 15px;
       }
     }
   }
