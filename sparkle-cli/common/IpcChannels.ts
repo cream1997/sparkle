@@ -8,7 +8,8 @@ enum IpcChannels {
   SshLogin = "SshLogin",
   SshLogout = "SshLogout",
   SshReceiveData = "SshReceiveData",
-  SshSendData = "SshSendData"
+  SshSendData = "SshSendData",
+  WinOption = "WinOption"
 }
 
 export default IpcChannels;

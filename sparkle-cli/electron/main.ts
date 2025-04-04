@@ -17,6 +17,8 @@ function createWin() {
     show: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../../public/icon.png"),
+    // 移除默认的title bar
+    titleBarStyle: "hidden",
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
       sandbox: false,
