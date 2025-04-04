@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import icon from "/public/icon.svg";
+import icon from "/icon.svg";
 import topSvg from "@/assets/icon/top.svg";
 import closeSvg from "@/assets/icon/close.svg";
 import maxSvg from "@/assets/icon/max.svg";
