@@ -74,8 +74,8 @@ const top = () => {
 .container-winTitleBar {
   /*添加可拖拽区域*/
   -webkit-app-region: drag;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 28px;
   /* 背景改为带透明度的浅青绿色 */
   /* 添加微质感纹理 */
   background: rgba(220, 242, 235, 0.9)

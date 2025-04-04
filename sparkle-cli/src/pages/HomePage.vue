@@ -17,59 +17,62 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="win-title-bar">
-    <WinTitleBar />
-  </header>
   <div class="container-home">
-    <aside>
-      <AsideBar></AsideBar>
-    </aside>
-    <main>
-      <div class="main-content-home">
-        <router-view v-slot="{ Component }">
-          <keep-alive>
-            <component :is="Component"></component>
-          </keep-alive>
-        </router-view>
-      </div>
-      <div class="bottom-info-panel-home">
-        <bottom-info-panel></bottom-info-panel>
-      </div>
-    </main>
+    <WinTitleBar />
+    <div class="mainArea-home">
+      <aside>
+        <AsideBar></AsideBar>
+      </aside>
+      <main>
+        <div class="main-content-home">
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component"></component>
+            </keep-alive>
+          </router-view>
+        </div>
+        <div class="bottom-info-panel-home">
+          <bottom-info-panel></bottom-info-panel>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.win-title-bar {
-  height: 28px;
-  width: 100%;
-}
-
 .container-home {
   width: 100vw;
-  height: calc(100vh - 28px);
+  height: 100vh;
   display: flex;
+  flex-direction: column;
   overflow: hidden;
 
-  aside {
-    width: 32px;
-    height: 100%;
-    border-right: 1px solid lightgray;
-  }
-
-  main {
-    width: calc(100% - 32px);
+  .mainArea-home {
     flex: 1;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
 
-    .main-content-home {
-      width: 100%;
-      height: calc(100% - 1.25em);
+    aside {
+      width: 32px;
+      height: 100%;
+      border-right: 1px solid lightgray;
     }
 
-    .bottom-info-panel-home {
-      width: 100%;
-      border-top: 1px solid lightgray;
-      height: 1.25em;
+    main {
+      flex: 1;
+      min-width: 0;
+
+      .main-content-home {
+        width: 100%;
+        height: calc(100% - 1.25em);
+      }
+
+      .bottom-info-panel-home {
+        width: 100%;
+        border-top: 1px solid lightgray;
+        height: 1.25em;
+      }
     }
   }
 }

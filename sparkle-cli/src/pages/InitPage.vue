@@ -3,6 +3,7 @@ import IpcChannels from "../../common/IpcChannels.ts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { PagePath } from "@/router/router.ts";
+import WinTitleBar from "@/components/layout/WinTitleBar.vue";
 
 const router = useRouter();
 
@@ -21,22 +22,33 @@ async function selectRootDir() {
 </script>
 
 <template>
-  <div class="init-page-container">
-    <button @click="selectRootDir" ref="btnRef">请选择应用根文件夹</button>
+  <div class="ctn-initPage">
+    <WinTitleBar :showTop="false" />
+    <div class="init-page-container">
+      <button @click="selectRootDir" ref="btnRef">请选择应用根文件夹</button>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.init-page-container {
-  width: 100%;
+.ctn-initPage {
+  width: 100vw;
   height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  flex-direction: column;
 
-button {
-  display: inline-block;
-  line-height: 1.6;
+  .init-page-container {
+    flex: 1;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      display: inline-block;
+      line-height: 1.6;
+    }
+  }
 }
 </style>
