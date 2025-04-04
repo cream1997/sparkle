@@ -4,6 +4,7 @@ import { onMounted } from "vue";
 import IpcChannels from "../../common/IpcChannels.ts";
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
 import BottomInfoPanel from "@/components/layout/bottom/BottomInfoPanel.vue";
+import WinTitleBar from "@/components/layout/WinTitleBar.vue";
 
 const AppInfo = useAppInfoStore();
 onMounted(() => {
@@ -16,6 +17,9 @@ onMounted(() => {
 </script>
 
 <template>
+  <header class="win-title-bar">
+    <WinTitleBar />
+  </header>
   <div class="container-home">
     <aside>
       <AsideBar></AsideBar>
@@ -36,14 +40,20 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.win-title-bar {
+  height: 28px;
+  width: 100%;
+}
+
 .container-home {
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 28px);
   display: flex;
   overflow: hidden;
 
   aside {
     width: 32px;
+    height: 100%;
     border-right: 1px solid lightgray;
   }
 
