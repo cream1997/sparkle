@@ -7,7 +7,7 @@
   "scripts": {
     "postinstall": "patch-package && electron-builder install-app-deps",
     "dev": "chcp 65001 && vite",
-    "dev2": "chcp 65001 && vite 2>&1 | node ./filter-log.js",
+    "dev2": "chcp 65001 && vite 2>&1 | node other/filter-log.js",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
     "fix": "eslint --fix .",
