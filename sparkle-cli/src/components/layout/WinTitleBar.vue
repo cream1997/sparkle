@@ -104,11 +104,12 @@ const top = () => {
 
   .winOption-WTB {
     -webkit-app-region: no-drag;
+    height: 100%;
     margin-left: auto;
     display: flex;
 
     > div {
-      padding: 3px 10px 0 10px;
+      padding: 5px 10px 0 10px;
 
       &:hover {
         background-color: rgb(209, 230, 178);
