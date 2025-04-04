@@ -19,7 +19,9 @@ function createWin() {
     icon: path.join(__dirname, "../../public/icon.png"),
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
-      sandbox: false
+      sandbox: false,
+      // todo 禁用后台节流，观察效果
+      backgroundThrottling: false
     }
   });
   initMainWindow(mainWin);
