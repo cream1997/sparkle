@@ -1,6 +1,7 @@
 enum IpcChannels {
   Test = "Test",
   ToInitPage = "ToInitPage",
+  ToFloatWinPage = "ToFloatWinPage",
   SelectRootDir = "SelectRootDir",
   AskAppInfo = "AskAppInfo",
   DownloadUpdate = "DownloadUpdate",
