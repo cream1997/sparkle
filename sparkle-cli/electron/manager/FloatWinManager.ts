@@ -2,7 +2,7 @@ import { BrowserWindow, ipcMain } from "electron";
 import { FloatWinVisibleChange } from "../constant/MainConst.ts";
 import * as path from "node:path";
 import { is } from "@electron-toolkit/utils";
-import IpcChannels from "../../common/IpcChannels.ts";
+import { FloatWinIpcChannels } from "../../common/IpcChannels.ts";
 
 let floatWin: BrowserWindow | null = null;
 
@@ -51,7 +51,7 @@ function createFloatWin() {
       return;
     }
     // 跳转到浮窗页面
-    floatWin.webContents.send(IpcChannels.ToFloatWinPage);
+    floatWin.webContents.send(FloatWinIpcChannels.ToFloatWinPage);
     floatWin.show();
   });
 

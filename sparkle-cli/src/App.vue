@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IpcChannels from "../common/IpcChannels.ts";
+import IpcChannels, { FloatWinIpcChannels } from "../common/IpcChannels.ts";
 import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import { PagePath } from "@/router/router.ts";
@@ -11,13 +11,13 @@ onMounted(() => {
     router.push(PagePath.Init);
   });
 
-  window.ipc.on(IpcChannels.ToFloatWinPage, () => {
+  window.ipc.on(FloatWinIpcChannels.ToFloatWinPage, () => {
     router.push(PagePath.FloatWin);
   });
 });
 onUnmounted(() => {
   window.ipc.removeAllListeners(IpcChannels.ToInitPage);
-  window.ipc.removeAllListeners(IpcChannels.ToFloatWinPage);
+  window.ipc.removeAllListeners(FloatWinIpcChannels.ToFloatWinPage);
 });
 </script>
 
