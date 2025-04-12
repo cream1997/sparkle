@@ -8,6 +8,7 @@ import musicSvg from "@/assets/icon/music.svg";
 import noteSvg from "@/assets/icon/note.svg";
 import chatSvg from "@/assets/icon/chat.svg";
 import cmdSvg from "@/assets/icon/cmd.svg";
+import swordSvg from "@/assets/icon/sword.svg";
 import toolSvg from "@/assets/icon/tool.svg";
 import settingSvg from "@/assets/icon/setting.svg";
 
@@ -40,6 +41,11 @@ const allTool: ToolItem[] = reactive([
     title: "命令行",
     icon: cmdSvg,
     pagePath: PagePath.Cmd
+  },
+  {
+    title: "hero",
+    icon: swordSvg,
+    pagePath: PagePath.Hero
   },
   {
     title: "工具",

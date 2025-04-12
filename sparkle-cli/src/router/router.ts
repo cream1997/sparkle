@@ -7,11 +7,16 @@ export enum PagePath {
   Note = "/Note",
   Chat = "/Chat",
   Cmd = "/Cmd",
+  Hero = "/Hero",
   Tool = "/Tool",
   Test = "/Test",
   IpcTestTool = "/IpcTestTool",
   ComponentTestTool = "/ComponentTestTool",
   FloatWin = "/FloatWin"
+}
+
+export enum HeroPagePath {
+  Login = "/Hero/Login"
 }
 
 const routes = [
@@ -38,6 +43,17 @@ const routes = [
       {
         path: PagePath.Cmd,
         component: () => import("@/pages/homeSub/CmdPage.vue")
+      },
+      {
+        path: PagePath.Hero,
+        component: () => import("@/hero/HeroPage.vue"),
+        redirect: HeroPagePath.Login,
+        children: [
+          {
+            path: HeroPagePath.Login,
+            component: () => import("@/hero/pages/LoginPage.vue")
+          }
+        ]
       },
       {
         path: PagePath.Tool,
