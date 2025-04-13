@@ -3,12 +3,12 @@
 <mapper namespace="com.cream.sparkle.hero.mapper.AccountMapper">
     <select id="selectCountByUsername" resultType="java.lang.Integer">
         select count(*)
-        from t_account
+        from hero_account
         where username = #{username}
     </select>
     <select id="selectByUsername" resultType="com.cream.sparkle.hero.obj.entity.Account">
         select *
-        from t_account
+        from hero_account
         where username = #{username}
     </select>
 </mapper>

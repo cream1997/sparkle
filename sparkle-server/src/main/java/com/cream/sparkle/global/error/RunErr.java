@@ -8,6 +8,10 @@ public class RunErr extends RuntimeException {
         super(message);
     }
 
+    public RunErr(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public RunErr(Err err) {
         super(err.getMessage());
     }

@@ -6,11 +6,11 @@ import lombok.Getter;
 public class Ret<T> {
 
     private final T data;
-    private final Status status;
+    private final int status;
     private final String info;
 
     private Ret(T data, Status status, String info) {
-        this.status = status;
+        this.status = status.value;
         this.data = data;
         this.info = info;
     }

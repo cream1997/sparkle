@@ -1,9 +1,11 @@
 package com.cream.sparkle.utils;
 
+import com.cream.sparkle.global.error.RunErr;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Base64;
 
 @Slf4j
@@ -33,5 +35,19 @@ public class Strings {
             result[i] = (byte) (inputBytes[i] ^ keyBytes[i % keyBytes.length]);
         }
         return result;
+    }
+
+    public static String md5(@NonNull String input) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digest = md.digest(input.getBytes());
+            StringBuilder sb = new StringBuilder();
+            for (byte b : digest) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            throw new RunErr("md5加密失败", e);
+        }
     }
 }
