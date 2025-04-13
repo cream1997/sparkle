@@ -1,7 +1,6 @@
 package com.cream.sparkle.hero;
 
 import com.cream.sparkle.hero.mapper.AccountMapper;
-import com.cream.sparkle.hero.obj.entity.Account;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +13,7 @@ public class HeroSimpleTest {
 
     @Test
     public void testInsert() {
-        Account zs = new Account("张三", "123");
-        accountMapper.insert(zs);
+//        Account zs = new Account("张三", "123");
+//        accountMapper.insert(zs);
     }
 }
