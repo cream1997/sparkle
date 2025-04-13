@@ -34,7 +34,7 @@ function createWin() {
     }
     mainWin.show();
     if (is.dev) {
-      mainWin.webContents.openDevTools();
+      // mainWin.webContents.openDevTools();
     }
 
     const rootDir = AppCfgStore.get(AppRootDirKey);
