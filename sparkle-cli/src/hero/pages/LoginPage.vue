@@ -3,21 +3,32 @@ import { ref } from "vue";
 import { post } from "@/net/AxiosCfg.ts";
 import HttpApiOfHero from "@/hero/net/HttpApiOfHero.ts";
 import swordPng from "@/assets/png/sword.png";
+import Tip from "@/tools/Tip.ts";
 
 const username = ref("123456");
 const password = ref(123456);
-const nickName = ref("小黑");
 
 function login(event: MouseEvent) {
   event.preventDefault();
+}
+
+function register(event: MouseEvent) {
+  event.preventDefault();
+  if (!checkForm()) {
+    return;
+  }
   post(HttpApiOfHero.Register, {
     username: username.value,
     password: password.value
   }).then((res) => {});
 }
 
-function register(event: MouseEvent) {
-  event.preventDefault();
+function checkForm(): boolean {
+  if (!(username.value && password.value)) {
+    Tip.err("有空值");
+    return false;
+  }
+  return true;
 }
 </script>
 
@@ -35,10 +46,6 @@ function register(event: MouseEvent) {
       <div class="row">
         <label for="password">密码</label>
         <input id="password" type="password" v-model="password" />
-      </div>
-      <div class="row">
-        <label for="nickname">昵称</label>
-        <input id="nickname" v-model="nickName" />
       </div>
       <div class="row btn-row">
         <button @click="login">登录</button>
