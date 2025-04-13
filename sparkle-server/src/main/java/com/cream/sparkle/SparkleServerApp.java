@@ -6,9 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @MapperScan({"com.cream.sparkle.mapper", "com.cream.sparkle.hero.mapper"})
 @SpringBootApplication
-public class SparkleServerApplication {
+public class SparkleServerApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(SparkleServerApplication.class, args);
+        SpringApplication.run(SparkleServerApp.class, args);
     }
 }
