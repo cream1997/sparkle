@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.obj.dto;
+package com.cream.sparkle.z.hero.obj.dto;
 
 import lombok.Getter;
 

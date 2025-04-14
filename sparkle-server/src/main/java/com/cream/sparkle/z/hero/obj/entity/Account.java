@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.obj.entity;
+package com.cream.sparkle.z.hero.obj.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;

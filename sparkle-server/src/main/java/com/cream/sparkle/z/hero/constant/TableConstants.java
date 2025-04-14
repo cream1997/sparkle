@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.constant;
+package com.cream.sparkle.z.hero.constant;
 
 public class TableConstants {
 

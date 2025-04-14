@@ -1,7 +1,7 @@
-package com.cream.sparkle.hero.controller;
+package com.cream.sparkle.z.hero.controller;
 
-import com.cream.sparkle.hero.obj.dto.LoginRes;
-import com.cream.sparkle.hero.service.AccountService;
+import com.cream.sparkle.z.hero.obj.dto.LoginRes;
+import com.cream.sparkle.z.hero.service.AccountService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

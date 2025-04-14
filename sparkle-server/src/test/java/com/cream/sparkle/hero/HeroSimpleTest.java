@@ -1,6 +1,6 @@
 package com.cream.sparkle.hero;
 
-import com.cream.sparkle.hero.mapper.AccountMapper;
+import com.cream.sparkle.z.hero.mapper.AccountMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
