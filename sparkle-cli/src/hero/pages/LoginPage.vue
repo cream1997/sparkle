@@ -10,6 +10,13 @@ const password = ref(123456);
 
 function login(event: MouseEvent) {
   event.preventDefault();
+  if (!checkForm()) {
+    return;
+  }
+  post(HttpApiOfHero.Login, {
+    username: username.value,
+    password: password.value
+  }).then(res => {});
 }
 
 function register(event: MouseEvent) {
@@ -20,7 +27,9 @@ function register(event: MouseEvent) {
   post(HttpApiOfHero.Register, {
     username: username.value,
     password: password.value
-  }).then(res => {});
+  }).then(_res => {
+    Tip.info("注册成功~");
+  });
 }
 
 function checkForm(): boolean {

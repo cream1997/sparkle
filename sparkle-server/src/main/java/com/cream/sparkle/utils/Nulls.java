@@ -24,4 +24,20 @@ public class Nulls {
         }
         return false;
     }
+
+    public static boolean isBlank(String str) {
+        return str == null || str.trim().isEmpty();
+    }
+
+    public static boolean anyBlank(String... allStr) {
+        if (allStr == null || allStr.length == 0) {
+            return true;
+        }
+        for (String str : allStr) {
+            if (isBlank(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

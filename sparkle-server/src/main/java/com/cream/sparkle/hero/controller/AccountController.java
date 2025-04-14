@@ -1,5 +1,6 @@
 package com.cream.sparkle.hero.controller;
 
+import com.cream.sparkle.hero.obj.dto.LoginRes;
 import com.cream.sparkle.hero.service.AccountService;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -21,5 +22,10 @@ public class AccountController {
     @PostMapping("/register")
     public void register(@NonNull String username, @NonNull String password) {
         this.accountService.register(username, password);
+    }
+
+    @PostMapping("/login")
+    public LoginRes login(String username, String password) {
+        return this.accountService.login(username, password);
     }
 }
