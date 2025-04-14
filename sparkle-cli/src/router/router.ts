@@ -16,7 +16,8 @@ export enum PagePath {
 }
 
 export enum HeroPagePath {
-  Login = "/Hero/Login"
+  Login = "/Hero/Login",
+  SelectRole = "/Hero/SelectRole"
 }
 
 const routes = [
@@ -52,6 +53,10 @@ const routes = [
           {
             path: HeroPagePath.Login,
             component: () => import("@/z/hero/pages/LoginPage.vue")
+          },
+          {
+            path: HeroPagePath.SelectRole,
+            component: () => import("@/z/hero/pages/SelectRolePage.vue")
           }
         ]
       },

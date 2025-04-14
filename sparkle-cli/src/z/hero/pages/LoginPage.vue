@@ -4,6 +4,14 @@ import { post } from "@/net/AxiosCfg.ts";
 import HttpApiOfHero from "@/z/hero/net/HttpApiOfHero.ts";
 import swordPng from "@/assets/png/sword.png";
 import Tip from "@/tools/Tip.ts";
+import { useRouter } from "vue-router";
+import { HeroPagePath } from "@/router/router.ts";
+import type { LoginRes } from "@/z/hero/types/GameTypes.ts";
+import useAccountStore from "@/store/useAccountStore.ts";
+
+const accountStore = useAccountStore();
+
+const router = useRouter();
 
 const username = ref("123456");
 const password = ref(123456);
@@ -13,10 +21,27 @@ function login(event: MouseEvent) {
   if (!checkForm()) {
     return;
   }
-  post(HttpApiOfHero.Login, {
+  post<LoginRes>(HttpApiOfHero.Login, {
     username: username.value,
     password: password.value
-  }).then(res => {});
+  }).then(res => {
+    const allRole = res.allRole;
+    // 服务器将long都转为了string,所以这里要处理一下
+    allRole.forEach(role => {
+      role.basic.createTime = parseInt(
+        role.basic.createTime as unknown as string
+      );
+      role.basic.loginTime = parseInt(
+        role.basic.loginTime as unknown as string
+      );
+      role.basic.logoutTime = parseInt(
+        role.basic.logoutTime as unknown as string
+      );
+    });
+    accountStore.init(res.id, res.token, res.allRole);
+    // 跳转角色页面，携带token建立ws连接
+    router.push(HeroPagePath.SelectRole);
+  });
 }
 
 function register(event: MouseEvent) {
@@ -27,9 +52,13 @@ function register(event: MouseEvent) {
   post(HttpApiOfHero.Register, {
     username: username.value,
     password: password.value
-  }).then(_res => {
-    Tip.info("注册成功~");
-  });
+  })
+    .then(_res => {
+      Tip.info("注册成功~");
+    })
+    .catch(err => {
+      Tip.err(err);
+    });
 }
 
 function checkForm(): boolean {
