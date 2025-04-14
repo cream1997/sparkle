@@ -4,10 +4,13 @@ import com.cream.sparkle.global.error.TipErr;
 import com.cream.sparkle.hero.mapper.AccountMapper;
 import com.cream.sparkle.hero.obj.dto.LoginRes;
 import com.cream.sparkle.hero.obj.entity.Account;
+import com.cream.sparkle.hero.obj.entity.AccountInfo;
+import com.cream.sparkle.hero.tools.AccountInfoDbTool;
 import com.cream.sparkle.utils.Nulls;
 import com.cream.sparkle.utils.Strings;
 import lombok.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -15,11 +18,14 @@ import java.util.UUID;
 public class AccountService {
 
     private final AccountMapper accountMapper;
+    private final AccountInfoDbTool accountInfoDbTool;
 
-    public AccountService(AccountMapper accountMapper) {
+    public AccountService(AccountMapper accountMapper, AccountInfoDbTool accountInfoDbTool) {
         this.accountMapper = accountMapper;
+        this.accountInfoDbTool = accountInfoDbTool;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void register(@NonNull String username, @NonNull String password) {
         if (Nulls.anyBlank(username, password)) {
             throw new TipErr("输入不合法");
@@ -32,6 +38,9 @@ public class AccountService {
         password = Strings.md5(password);
         Account account = new Account(username, password);
         this.accountMapper.insert(account);
+        // 插入之后会生成id
+        AccountInfo accountInfo = new AccountInfo(account.getId());
+        this.accountInfoDbTool.insertAccountInfo(accountInfo);
     }
 
     public LoginRes login(String username, String password) {
@@ -48,7 +57,8 @@ public class AccountService {
         // 生成token,客户端携带token建立ws/socket连接
         String token = UUID.randomUUID().toString();
         // todo token 放入缓存
-        // 查询角色列表
+        // todo 查询角色列表
+
 
         return new LoginRes(account.getId(), token);
     }

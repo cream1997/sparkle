@@ -13,6 +13,13 @@ CREATE TABLE IF NOT EXISTS `hero_account`
     DEFAULT CHARSET = utf8mb4
     COLLATE = utf8mb4_0900_ai_ci;
 
+-- 账户信息表
+CREATE TABLE IF NOT EXISTS `hero_account_info`(
+                                          `id`           bigint      NOT NULL,
+                                          `data`         blob    NOT NULL,
+                                          PRIMARY KEY (`id`)
+    ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+
 -- hero角色表
 CREATE TABLE IF NOT EXISTS `hero_role`(
                                        `id`           bigint      NOT NULL,
