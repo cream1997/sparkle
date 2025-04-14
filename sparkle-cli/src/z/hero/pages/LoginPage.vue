@@ -25,19 +25,6 @@ function login(event: MouseEvent) {
     username: username.value,
     password: password.value
   }).then(res => {
-    const allRole = res.allRole;
-    // 服务器将long都转为了string,所以这里要处理一下
-    allRole.forEach(role => {
-      role.basic.createTime = parseInt(
-        role.basic.createTime as unknown as string
-      );
-      role.basic.loginTime = parseInt(
-        role.basic.loginTime as unknown as string
-      );
-      role.basic.logoutTime = parseInt(
-        role.basic.logoutTime as unknown as string
-      );
-    });
     accountStore.init(res.id, res.token, res.allRole);
     // 跳转角色页面，携带token建立ws连接
     router.push(HeroPagePath.SelectRole);

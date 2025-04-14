@@ -19,8 +19,9 @@ public class RoleBasic {
     private long loginTime;
     private long logoutTime;
 
-    public RoleBasic(long id) {
+    public RoleBasic(long id, String name) {
         this.id = id;
+        this.name = name;
         this.level = 1;
         this.createTime = Times.now();
     }
