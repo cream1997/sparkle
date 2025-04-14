@@ -46,12 +46,12 @@ const routes = [
       },
       {
         path: PagePath.Hero,
-        component: () => import("@/hero/HeroPage.vue"),
+        component: () => import("@/z/hero/HeroPage.vue"),
         redirect: HeroPagePath.Login,
         children: [
           {
             path: HeroPagePath.Login,
-            component: () => import("@/hero/pages/LoginPage.vue")
+            component: () => import("@/z/hero/pages/LoginPage.vue")
           }
         ]
       },

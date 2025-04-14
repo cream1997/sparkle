@@ -24,6 +24,7 @@ function handleGlobalError(
   otherInfo: string
 ) {
   console.error(err, vm, otherInfo);
-  Tip.err(`${err.info}`);
+  const tipContent = err.info ? err.info : err;
+  Tip.err(tipContent);
   // todo 错误记录，比如记录本地日志或者发给服务器
 }

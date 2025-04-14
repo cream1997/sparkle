@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { post } from "@/net/AxiosCfg.ts";
-import HttpApiOfHero from "@/hero/net/HttpApiOfHero.ts";
+import HttpApiOfHero from "@/z/hero/net/HttpApiOfHero.ts";
 import swordPng from "@/assets/png/sword.png";
 import Tip from "@/tools/Tip.ts";
 
