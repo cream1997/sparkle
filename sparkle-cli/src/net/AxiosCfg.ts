@@ -20,7 +20,7 @@ axiosInstance.interceptors.response.use(
       case RetStatus.SUCCESS:
         return response;
       case RetStatus.ERROR:
-        return Promise.reject(res);
+        return Promise.reject(res.info);
       default:
         throw new Error("错误的状态码");
     }
