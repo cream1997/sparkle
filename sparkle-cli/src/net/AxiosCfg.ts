@@ -1,4 +1,5 @@
 import axios, { type AxiosRequestConfig } from "axios";
+import RetStatus from "@/net/RetStatus.ts";
 
 const axiosInstance = axios.create({
   timeout: 1000,
@@ -10,6 +11,30 @@ const axiosInstance = axios.create({
 function initBaseUrl(serverAddress: string) {
   axiosInstance.defaults.baseURL = serverAddress;
 }
+
+// 响应拦截器
+axiosInstance.interceptors.response.use(
+  response => {
+    const res = response.data;
+    switch (res.status) {
+      case RetStatus.SUCCESS:
+        return response;
+      case RetStatus.ERROR:
+        return Promise.reject(res);
+      default:
+        throw new Error("错误的状态码");
+    }
+  },
+  error => {
+    //处理http状态码错误(如4xx/5xx)
+    if (error.response) {
+      return Promise.reject(
+        new Error(`请求失败, HTTP状态码：${error.response.status}`)
+      );
+    }
+    return Promise.reject(error);
+  }
+);
 
 function post<T>(
   url: string,
@@ -27,7 +52,7 @@ function post<T>(
     config.headers = config.headers ? config.headers : {};
     config.headers["Content-Type"] = "application/json";
   }
-  return axiosInstance.post(url, data, config).then((res) => res.data.data);
+  return axiosInstance.post(url, data, config).then(res => res.data.data);
 }
 
 export { axiosInstance as axios, post, initBaseUrl };

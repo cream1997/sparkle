@@ -20,7 +20,7 @@ function register(event: MouseEvent) {
   post(HttpApiOfHero.Register, {
     username: username.value,
     password: password.value
-  }).then((res) => {});
+  }).then(res => {});
 }
 
 function checkForm(): boolean {
