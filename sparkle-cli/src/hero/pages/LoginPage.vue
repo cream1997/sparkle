@@ -40,12 +40,15 @@ function checkForm(): boolean {
     </h1>
     <form>
       <div class="row">
-        <label for="username">账号</label>
-        <input id="username" v-model.number="username" />
+        <input id="username" placeholder="账号" v-model.number="username" />
       </div>
       <div class="row">
-        <label for="password">密码</label>
-        <input id="password" type="password" v-model="password" />
+        <input
+          id="password"
+          placeholder="密码"
+          type="password"
+          v-model="password"
+        />
       </div>
       <div class="row btn-row">
         <button @click="login">登录</button>
@@ -62,25 +65,55 @@ function checkForm(): boolean {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 36px;
+  padding-top: 12%;
 
   .title {
+    font-size: 65px;
+    margin: 0 0 -20px 0;
+    font-family: "Gabriola", serif;
+    animation: /*添加淡入动画*/ fadeIn 2s ease-in-out;
+
     .sword-icon {
-      height: 25px;
+      height: 40px;
+      /*添加脉冲动画*/
+      animation: pulse 0.6s infinite alternate;
     }
   }
 
   .row {
-    height: 30px;
+    height: 35px;
 
-    > * {
-      line-height: 20px;
+    > input {
+      font-size: 16px;
+      line-height: 25px;
     }
   }
 
   .btn-row {
     display: flex;
     justify-content: center;
+  }
+}
+
+/* 定义淡入动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 定义脉冲动画 */
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.03);
   }
 }
 </style>
