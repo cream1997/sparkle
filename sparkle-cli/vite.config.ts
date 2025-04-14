@@ -9,7 +9,11 @@ export default defineConfig(({ mode, command }) => {
   return {
     plugins: [
       vue(),
-      vueDevTools(),
+      vueDevTools({
+        // 关闭Toggle Component Inspector功能，这样代码不会做额外转换；否则会影响webstorm中调试单文件组件(xxx.vue)
+        // 在需要使用Toggle Component Inspector时可以注释掉(默认就是true)，但是可能会影响webStorm的调试体验
+        componentInspector: false
+      }),
       electron({
         main: {
           entry: "electron/main.ts",
