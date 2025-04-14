@@ -6,6 +6,25 @@ vite整合electron使用vite-plugin-electron(https://github.com/electron-vite/vi
 vite-plugin-electron还有问题，就是dist-electron目录多出来的内容在
 重新构建时不会删除，只是单纯的覆盖；也就是多出来的文件不会被删除，不过影响不大
 
+### 关于在idea/webstorm中使用vueDevTools的Toggle Component Inspector的说明
+
+> 参考
+> - https://devtools.vuejs.org/getting-started/open-in-editor
+> - https://gist.github.com/moreta/d3989686b6a1f2416b5802cac8df16b4
+> - https://stackoverflow.com/questions/52759685/vue-dev-tools-does-not-working-open-in-editor-button-how-to-fix-this
+
+首先这个功能就是选中界面任何元素，能够在ide中跳转到对应的代码，它是vueDevTools集成了vite-plugin-vue-inspector实现的；
+在idea/webstorm想要正常使用这个功能需要几个配置
+首先是环境变量的配置，因为vite-plugin-vue-inspector是通过在命令行中使用环境变量，来
+打开ide和跳转的；对于Idea/webstorm，就可以遵照"Tools" -> "Create Command Line Launcher..."的提示来创建命令行启动器(
+就是配置环境变量，即将xxx\Idea\bin添加到%Path%中)
+然后就是在vite中配置插件,launchEditor填写idea/webstorm
+vueDevTools({
+componentInspector: true,
+launchEditor: "idea"
+})
+这样就可以正常使用Toggle Component Inspector了
+
 ### 打包
 
 使用electron-builder打包
@@ -47,12 +66,13 @@ windows打包需要管理员权限，不然一些链接可能无法创建(用管
 但是ai说这不影响调试，起初我也这么认为；因为有些完全正常的xxx.vue中也有很多地方被转换这种形式，也就是说尽管代码不完全对应，很多地方也是正常的
 但是折腾了很久解决不了，我不想跳到chrome的devtool去调试(在我眼里那太麻烦了，也许是强迫症！)；尝试性的猜测是不是代码不完全对应导致的webstorm或者
 debug工具无法处理映射，验证的方法就是我标签中的代码不要转换成data-v-inspector这种形式；查阅资料发现这个貌似是实现vite的devtools的Toggle
-Component Inspector功能所需要的转换，关于这个组件审查功能貌似就是选中元素然后打开本地源文件，感觉这功能本身就很鸡肋(
-你可以在vue的devtools中试试)
-
+Component Inspector功能所需要的转换，它为跳转指定了路径和行号等
 在引入插件的地方做如下配置，就可以关闭这个功能
 vueDevTools({
 // 配置为false
 componentInspector: false
 })
-这样代码就不会做额外的转换了；到目前为止webstorm中单文件组件的调试一切正常
+这样代码就不会做额外的转换了；webstorm中单文件组件的调试在关闭这个功能后测试正常(目前是这样)，但是这样就失去了Component
+Inspector的功能；
+在我没有找到更好的解决办法之前，只能二选一了
+目前的折中处理是，在debug模式下关闭Component Inspector

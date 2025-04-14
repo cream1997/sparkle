@@ -3,6 +3,15 @@ import vue from "@vitejs/plugin-vue";
 import electron from "vite-plugin-electron/simple";
 import * as path from "node:path";
 import vueDevTools from "vite-plugin-vue-devtools";
+
+/**
+ * 这个方法可能不够严谨，但是目前能达到效果
+ */
+function inDebug(): boolean {
+  const nodeOptions = process.env.NODE_OPTIONS;
+  return !!(nodeOptions && nodeOptions.includes("javascript-debugger"));
+}
+
 // https://vite.dev/config/
 export default defineConfig(({ mode, command }) => {
   const isDev = mode === "development" && command === "serve";
@@ -10,9 +19,10 @@ export default defineConfig(({ mode, command }) => {
     plugins: [
       vue(),
       vueDevTools({
-        // 关闭Toggle Component Inspector功能，这样代码不会做额外转换；否则会影响webstorm中调试单文件组件(xxx.vue)
-        // 在需要使用Toggle Component Inspector时可以注释掉(默认就是true)，但是可能会影响webStorm的调试体验
-        componentInspector: false
+        // 开启Toggle Component Inspector功能，代码会有额外的转换，会影响webstorm中调试单文件组件(xxx.vue)的调试
+        // 目前的折中处理是以debug启动，就关闭这个功能
+        componentInspector: !inDebug(),
+        launchEditor: "idea"
       }),
       electron({
         main: {
