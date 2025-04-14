@@ -37,9 +37,9 @@ function createRole() {
       <button class="back-ctn">返回</button>
     </div>
     <ol class="role-list">
-      <li v-for="role in accountStore.allRole">{{ role }}</li>
-      <li class="add-role" @click="createFormShow = true">
-        <strong>+</strong>
+      <li v-for="role in accountStore.allRole">{{ role.basic.name }}</li>
+      <li @click="createFormShow = true">
+        <strong class="add-role">+</strong>
       </li>
     </ol>
     <div v-if="createFormShow" class="ctn-createRole">
@@ -69,10 +69,16 @@ function createRole() {
   }
 
   .role-list {
+    display: flex;
+
     > li {
       background-color: lightskyblue;
       width: 150px;
       height: 300px;
+      margin-left: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       &:hover {
         background-color: skyblue;
@@ -82,11 +88,8 @@ function createRole() {
         background-color: deepskyblue;
       }
 
-      &.add-role {
-        display: flex;
-        font-size: 36px;
-        justify-content: center;
-        align-items: center;
+      > .add-role {
+        font-size: 45px;
       }
     }
   }
