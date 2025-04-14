@@ -4,7 +4,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@MapperScan({"com.cream.sparkle.mapper", "com.cream.sparkle.hero.mapper"})
+@MapperScan({"com.cream.sparkle.mapper", "com.cream.sparkle.z.hero.mapper"})
 @SpringBootApplication
 public class SparkleServerApp {
 
