@@ -7,11 +7,16 @@ import com.cream.sparkle.z.hero.mapper.AccountMapper;
 import com.cream.sparkle.z.hero.obj.dto.LoginRes;
 import com.cream.sparkle.z.hero.obj.entity.Account;
 import com.cream.sparkle.z.hero.obj.entity.AccountInfo;
+import com.cream.sparkle.z.hero.obj.game.Role;
 import com.cream.sparkle.z.hero.tools.AccountInfoDbTool;
+import com.cream.sparkle.z.hero.tools.RoleDbTool;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -19,10 +24,15 @@ public class AccountService {
 
     private final AccountMapper accountMapper;
     private final AccountInfoDbTool accountInfoDbTool;
+    private final RoleDbTool roleDbTool;
 
-    public AccountService(AccountMapper accountMapper, AccountInfoDbTool accountInfoDbTool) {
+    @Autowired
+    public AccountService(AccountMapper accountMapper,
+                          AccountInfoDbTool accountInfoDbTool,
+                          RoleDbTool roleDbTool) {
         this.accountMapper = accountMapper;
         this.accountInfoDbTool = accountInfoDbTool;
+        this.roleDbTool = roleDbTool;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -57,9 +67,14 @@ public class AccountService {
         // 生成token,客户端携带token建立ws/socket连接
         String token = UUID.randomUUID().toString();
         // todo token 放入缓存
-        // todo 查询角色列表
+        // 查询角色列表
+        AccountInfo accountInfo = this.accountInfoDbTool.selectAccountInfo(account.getId());
+        Objects.requireNonNull(accountInfo);
 
-
-        return new LoginRes(account.getId(), token);
+        List<Role> allRole = accountInfo.getAllRid().stream()
+                // fixme 循环查询改为批量查询，尽管这里数量不大
+                .map(this.roleDbTool::selectRole)
+                .toList();
+        return new LoginRes(account.getId(), token, allRole);
     }
 }

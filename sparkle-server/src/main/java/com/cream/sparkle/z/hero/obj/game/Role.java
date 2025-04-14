@@ -1,12 +1,9 @@
 package com.cream.sparkle.z.hero.obj.game;
 
-import lombok.Getter;
-
-@Getter
 public class Role {
-    private final RoleBasic roleBasic;
+    public final RoleBasic basic;
 
     public Role(long id) {
-        this.roleBasic = new RoleBasic(id);
+        this.basic = new RoleBasic(id);
     }
 }

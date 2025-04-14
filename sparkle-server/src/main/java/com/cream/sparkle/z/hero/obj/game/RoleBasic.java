@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RoleBasic {
-    private final long id;
+    public final long id;
     private String name;
     private int level;
     private int hp;
