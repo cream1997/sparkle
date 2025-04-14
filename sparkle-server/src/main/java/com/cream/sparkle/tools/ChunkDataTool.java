@@ -3,11 +3,13 @@ package com.cream.sparkle.tools;
 import com.alibaba.fastjson2.JSON;
 import com.cream.sparkle.mapper.ChunkDataMapper;
 import com.cream.sparkle.object.entity.ChunkData;
+import com.cream.sparkle.utils.Times;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 
 @Slf4j
 @Component
@@ -22,7 +24,7 @@ public class ChunkDataTool {
 
     public void insertChunkData(String tableName, long id, Object obj) {
         byte[] data = format(obj);
-        chunkDataMapper.insertChunkData(tableName, id, data);
+        chunkDataMapper.insertChunkData(tableName, id, data, new Timestamp(Times.now()));
     }
 
     public <T> T selectChunkData(String tableName, long id, Class<T> clazz) {
@@ -37,7 +39,7 @@ public class ChunkDataTool {
 
     public void updateChunkData(String tableName, long id, Object obj) {
         byte[] data = format(obj);
-        chunkDataMapper.updateChunkData(tableName, id, data);
+        chunkDataMapper.updateChunkData(tableName, id, data, new Timestamp(Times.now()));
     }
 
     private byte[] format(Object obj) {

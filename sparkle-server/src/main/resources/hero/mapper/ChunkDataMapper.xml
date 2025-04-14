@@ -2,13 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.cream.sparkle.mapper.ChunkDataMapper">
     <insert id="insertChunkData">
-        insert into ${tableName}(id, data)
-        values (#{id}, #{data})
+        insert into ${tableName}(id, data, createTime, updateTime)
+        values (#{id}, #{data}, #{createTime}, #{createTime})
     </insert>
 
     <update id="updateChunkData">
         update ${tableName}
-        set data = #{data}
+        set data      = #{data},
+            updateTime=#{updateTime}
         where id = #{id}
     </update>
 

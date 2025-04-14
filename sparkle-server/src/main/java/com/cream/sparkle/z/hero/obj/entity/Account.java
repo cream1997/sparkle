@@ -29,10 +29,10 @@ public class Account {
     @TableField("deleted")
     private boolean deleted;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "createTime", fill = FieldFill.INSERT)
     private Timestamp createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "updateTime", fill = FieldFill.INSERT_UPDATE)
     private Timestamp updateTime;
 
 
