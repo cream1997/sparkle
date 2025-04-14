@@ -14,7 +14,7 @@
     </update>
 
     <select id="selectChunkData" resultType="com.cream.sparkle.object.entity.ChunkData">
-        select data
+        select data, createTime, updateTime, deleted
         from ${tableName}
         where id = #{id}
     </select>

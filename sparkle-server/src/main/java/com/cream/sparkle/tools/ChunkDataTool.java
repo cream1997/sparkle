@@ -1,6 +1,7 @@
 package com.cream.sparkle.tools;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONReader;
 import com.cream.sparkle.mapper.ChunkDataMapper;
 import com.cream.sparkle.object.entity.ChunkData;
 import com.cream.sparkle.utils.Times;
@@ -48,6 +49,6 @@ public class ChunkDataTool {
 
     private <T> T parse(byte[] data, Class<T> tClass) {
         String jsonStr = new String(data, StandardCharsets.UTF_8);
-        return JSON.parseObject(jsonStr, tClass);
+        return JSON.parseObject(jsonStr, tClass, JSONReader.Feature.FieldBased);
     }
 }
