@@ -1,9 +1,9 @@
 import Store from "electron-store";
-import { app } from "electron";
-import { AppTmpDir, BasicCfgName, ServerAddressKey } from "../constant/MainConst.ts";
-import { is } from "@electron-toolkit/utils";
+import {app} from "electron";
+import {AppRootDirKey, AppTmpDir, BasicCfgName, ServerAddressKey} from "../constant/MainConst.ts";
+import {is} from "@electron-toolkit/utils";
 import AppCfg from "../../common/AppCfg.ts";
-import { initBaseUrl } from "../../src/net/AxiosCfg.ts";
+import {initBaseUrl} from "../../src/net/AxiosCfg.ts";
 
 /**
  * 这里解释说明一下,首先这个存储应用的一些根本性配置，卸载不删除(方便版本更新不丢失数据)
@@ -22,9 +22,17 @@ const AppCfgStore = new Store({
   cwd: getBasicCfgPath(),
   name: BasicCfgName
 });
-if (!AppCfgStore.get(ServerAddressKey)) {
+if (!getServerAddress()) {
   AppCfgStore.set(ServerAddressKey, AppCfg.defaultServer);
 }
-initBaseUrl(AppCfgStore.get(ServerAddressKey) as string);
+initBaseUrl(getServerAddress());
 
-export { AppCfgStore };
+function getAppRootDir(): string {
+  return AppCfgStore.get(AppRootDirKey) as string;
+}
+
+function getServerAddress(): string {
+  return AppCfgStore.get(ServerAddressKey) as string;
+}
+
+export { AppCfgStore, getAppRootDir, getServerAddress };

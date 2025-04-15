@@ -34,7 +34,7 @@ function createRole() {
   <div class="ctn-selectRolePage">
     <div class="title">
       选择/创建角色
-      <button class="back-ctn">返回</button>
+      <button class="logout-btn">退出</button>
     </div>
     <ol class="role-list">
       <li v-for="role in accountStore.allRole">{{ role.basic.name }}</li>
@@ -62,7 +62,7 @@ function createRole() {
     display: flex;
     justify-content: center;
 
-    .back-ctn {
+    .logout-btn {
       position: fixed;
       right: 5px;
     }

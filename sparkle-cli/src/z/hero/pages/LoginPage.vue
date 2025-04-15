@@ -15,20 +15,27 @@ const router = useRouter();
 
 const username = ref("123456");
 const password = ref(123456);
+const loginBtnDisable = ref(false);
 
 function login(event: MouseEvent) {
   event.preventDefault();
   if (!checkForm()) {
     return;
   }
+  loginBtnDisable.value = true;
   post<LoginRes>(HttpApiOfHero.Login, {
     username: username.value,
     password: password.value
-  }).then(res => {
-    accountStore.init(res.id, res.token, res.allRole);
-    // 跳转角色页面，携带token建立ws连接
-    router.push(HeroPagePath.SelectRole);
-  });
+  })
+    .then(res => {
+      accountStore.init(res.id, res.token, res.allRole);
+      // 跳转角色页面，携带token建立ws连接
+      router.push(HeroPagePath.SelectRole);
+    })
+    .catch(err => {
+      Tip.err(err);
+      loginBtnDisable.value = false;
+    });
 }
 
 function register(event: MouseEvent) {
@@ -76,7 +83,7 @@ function checkForm(): boolean {
         />
       </div>
       <div class="row btn-row">
-        <button @click="login">登录</button>
+        <button @click="login" :disabled="loginBtnDisable">登录</button>
         <button @click="register">注册</button>
       </div>
     </form>

@@ -9,7 +9,9 @@ enum IpcChannels {
   SshLogout = "SshLogout",
   SshReceiveData = "SshReceiveData",
   SshSendData = "SshSendData",
-  WinOption = "WinOption"
+  WinOption = "WinOption",
+  LiveAssistantGet = "LiveAssistantGet",
+  LiveAssistantSave = "LiveAssistantSave"
 }
 
 export enum FloatWinIpcChannels {

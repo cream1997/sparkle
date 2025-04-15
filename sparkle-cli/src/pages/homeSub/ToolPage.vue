@@ -7,14 +7,15 @@ const router = useRouter();
 const allTools = reactive([
   { title: "test", path: PagePath.Test, active: true },
   { title: "ipc通信", path: PagePath.IpcTestTool },
-  { title: "组件通信", path: PagePath.ComponentTestTool }
+  { title: "组件通信", path: PagePath.ComponentTestTool },
+  { title: "直播助手", path: PagePath.LiveAssistant }
 ]);
 
 const skip2Page = (it: any) => {
   if (it.active) {
     return;
   }
-  const activeItem = allTools.find((it) => it.active);
+  const activeItem = allTools.find(it => it.active);
   if (activeItem) {
     delete activeItem.active;
   }
@@ -25,7 +26,7 @@ const skip2Page = (it: any) => {
 onActivated(() => {
   // 调用时机为首次挂载
   // 以及每次从缓存中被重新插入时
-  const activeItem = allTools.find((it) => it.active);
+  const activeItem = allTools.find(it => it.active);
   if (activeItem) {
     router.push(activeItem.path);
   }

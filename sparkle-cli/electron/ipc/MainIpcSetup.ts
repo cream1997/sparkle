@@ -4,6 +4,7 @@ import listenSelectRootDir from "./listeners/listenSelectRootDir";
 import listenAppInfo from "./listeners/listenAppInfo";
 import listenSshToolMsg from "./listeners/listenSshToolMsg.ts";
 import listenWinOption from "./listeners/listenWinOption.ts";
+import listenLiveAssistant from "./listeners/listenLiveAssistant.ts";
 
 export default function mainIpcSetup() {
   listenTest();
@@ -12,4 +13,5 @@ export default function mainIpcSetup() {
   listenDownloadUpdate();
   listenSshToolMsg();
   listenWinOption();
+  listenLiveAssistant();
 }

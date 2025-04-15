@@ -12,6 +12,7 @@ export enum PagePath {
   Test = "/Test",
   IpcTestTool = "/IpcTestTool",
   ComponentTestTool = "/ComponentTestTool",
+  LiveAssistant = "/LiveAssistant",
   FloatWin = "/FloatWin"
 }
 
@@ -76,6 +77,11 @@ const routes = [
             path: PagePath.ComponentTestTool,
             component: () =>
               import("@/pages/homeSub/toolSub/ComponentTestPage.vue")
+          },
+          {
+            path: PagePath.LiveAssistant,
+            component: () =>
+              import("@/pages/homeSub/toolSub/LiveAssistantPage.vue")
           }
         ]
       }
