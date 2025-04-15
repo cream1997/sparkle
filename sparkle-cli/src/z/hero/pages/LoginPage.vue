@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { post } from "@/net/AxiosCfg.ts";
 import HttpApiOfHero from "@/z/hero/net/HttpApiOfHero.ts";
 import swordPng from "@/assets/png/sword.png";
@@ -8,6 +8,7 @@ import { useRouter } from "vue-router";
 import { HeroPagePath } from "@/router/router.ts";
 import type { LoginRes } from "@/z/hero/types/GameTypes.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
+import { heroHttpConfig } from "@/z/hero/net/NetConfig.ts";
 
 const accountStore = useAccountStore();
 
@@ -62,6 +63,10 @@ function checkForm(): boolean {
   }
   return true;
 }
+
+onMounted(() => {
+  heroHttpConfig();
+});
 </script>
 
 <template>
