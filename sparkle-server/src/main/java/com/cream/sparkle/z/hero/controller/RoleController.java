@@ -2,6 +2,7 @@ package com.cream.sparkle.z.hero.controller;
 
 import com.cream.sparkle.z.hero.obj.game.Role;
 import com.cream.sparkle.z.hero.service.RoleService;
+import com.cream.sparkle.z.hero.utils.HttpCtxUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,11 +21,9 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    /**
-     * todo uid不应该客户端传，token验证也没有做
-     */
     @PostMapping("/createRole")
-    public Role createRole(long uid, String nickName) {
+    public Role createRole(String nickName) {
+        long uid = HttpCtxUtil.getUid();
         return this.roleService.createRole(uid, nickName);
     }
 }

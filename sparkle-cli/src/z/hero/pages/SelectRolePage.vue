@@ -18,7 +18,6 @@ function createRole() {
     return;
   }
   post<Role>(HttpApiOfHero.CreateRole, {
-    uid: accountStore.uid,
     nickName: nickName.value
   })
     .then(newRole => {
