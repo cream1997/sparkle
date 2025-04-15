@@ -1,5 +1,7 @@
 package com.cream.sparkle.z.hero.service;
 
+import com.cream.sparkle.config.security.sub.JwtUtil;
+import com.cream.sparkle.config.security.sub.QuanXianEnum;
 import com.cream.sparkle.global.error.TipErr;
 import com.cream.sparkle.utils.Nulls;
 import com.cream.sparkle.utils.Strings;
@@ -17,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -65,7 +66,7 @@ public class AccountService {
             throw new TipErr("密码错误");
         }
         // 生成token,客户端携带token建立ws/socket连接
-        String token = UUID.randomUUID().toString();
+        String token = JwtUtil.generateToken(account.getId(), QuanXianEnum.HERO.name());
         // todo token 放入缓存
         // 查询角色列表
         AccountInfo accountInfo = this.accountInfoDbTool.selectAccountInfo(account.getId());
