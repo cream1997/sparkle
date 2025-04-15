@@ -8,7 +8,8 @@ const allTools = reactive([
   { title: "test", path: PagePath.Test, active: true },
   { title: "ipc通信", path: PagePath.IpcTestTool },
   { title: "组件通信", path: PagePath.ComponentTestTool },
-  { title: "直播助手", path: PagePath.LiveAssistant }
+  { title: "直播助手", path: PagePath.LiveAssistant },
+  { title: "临时窗口", path: PagePath.TmpWindow }
 ]);
 
 const skip2Page = (it: any) => {
