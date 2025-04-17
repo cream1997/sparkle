@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.cream</groupId>
-    <artifactId>sparkle-server</artifactId>
+    <artifactId>sparkle-main</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sparkle-server</name>
-    <description>sparkle-server</description>
+    <name>sparkle-main</name>
+    <description>sparkle-server-main</description>
     <url/>
     <licenses>
         <license/>
