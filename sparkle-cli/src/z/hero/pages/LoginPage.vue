@@ -9,6 +9,7 @@ import { HeroPagePath } from "@/router/router.ts";
 import type { LoginRes } from "@/z/hero/types/GameTypes.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { heroHttpConfig } from "@/z/hero/net/NetConfig.ts";
+import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 
 const accountStore = useAccountStore();
 
@@ -30,7 +31,11 @@ function login(event: MouseEvent) {
   })
     .then(res => {
       accountStore.init(res.id, res.token, res.allRole);
-      // 跳转角色页面，携带token建立ws连接
+      // 存储token,跳转角色页面,主进程携带token建立ws连接
+      window.ipc.invoke(IpcChannelsOfHero.WsConnect, {
+        uid: res.id,
+        token: res.token
+      });
       router.push(HeroPagePath.SelectRole);
     })
     .catch(err => {

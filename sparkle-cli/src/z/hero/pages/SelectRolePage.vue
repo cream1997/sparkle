@@ -27,6 +27,8 @@ function createRole() {
       Tip.err(err);
     });
 }
+
+function enterRole(role: Role) {}
 </script>
 
 <template>
@@ -36,7 +38,9 @@ function createRole() {
       <button class="logout-btn">退出</button>
     </div>
     <ol class="role-list">
-      <li v-for="role in accountStore.allRole">{{ role.basic.name }}</li>
+      <li v-for="role in accountStore.allRole" @click="enterRole(role)">
+        {{ role.basic.name }}
+      </li>
       <li @click="createFormShow = true">
         <strong class="add-role">+</strong>
       </li>

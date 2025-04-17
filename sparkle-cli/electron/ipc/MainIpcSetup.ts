@@ -5,6 +5,7 @@ import listenAppInfo from "./listeners/listenAppInfo";
 import listenSshToolMsg from "./listeners/listenSshToolMsg.ts";
 import listenWinOption from "./listeners/listenWinOption.ts";
 import listenLiveAssistant from "./listeners/listenLiveAssistant.ts";
+import listenHeroChannels from "./listeners/listenHeroChannels.ts";
 
 export default function mainIpcSetup() {
   listenTest();
@@ -14,4 +15,5 @@ export default function mainIpcSetup() {
   listenSshToolMsg();
   listenWinOption();
   listenLiveAssistant();
+  listenHeroChannels();
 }

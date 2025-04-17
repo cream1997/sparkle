@@ -18,4 +18,8 @@ export enum FloatWinIpcChannels {
   ToFloatWinPage = "ToFloatWinPage"
 }
 
+export enum IpcChannelsOfHero {
+  WsConnect = "WsConnect"
+}
+
 export default IpcChannels;
