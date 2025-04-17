@@ -1,13 +1,13 @@
 package com.cream.sparkle.hero.tools;
 
-import com.cream.sparkle.common.tools.ChunkDataTool;
+import com.cream.sparkle.common.bean.tools.ChunkDataTool;
 import com.cream.sparkle.hero.object.game.Role;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static com.cream.sparkle.hero.constants.TableConstants.RoleTableName;
+import static com.cream.sparkle.common.constants.TableConstants.RoleTableName;
 
 
 @Slf4j

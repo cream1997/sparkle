@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cream.sparkle.common.mapper.ChunkDataMapper">
+<mapper namespace="com.cream.sparkle.common.bean.mapper.ChunkDataMapper">
     <insert id="insertChunkData">
         insert into ${tableName}(id, data, createTime, updateTime)
         values (#{id}, #{data}, #{createTime}, #{createTime})
