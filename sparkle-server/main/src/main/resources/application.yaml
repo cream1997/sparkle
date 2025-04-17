@@ -22,7 +22,5 @@ sparkle:
   publish-dir: D:\Code\sparkle\sparkle-server\main\backTmp
 
 mybatis-plus:
-  # fixme 路径问题
   mapper-locations:
-    - classpath:/mapper/**/*.xml
-    - classpath:/hero/mapper/**/*.xml
+    - classpath*:/mapper/**/*.xml

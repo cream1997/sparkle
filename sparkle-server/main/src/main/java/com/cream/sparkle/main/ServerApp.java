@@ -11,8 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @MapperScan({"com.cream.sparkle.*.mapper"})
-// 排除springSecurity的默认认证配置
-@SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
+@SpringBootApplication(scanBasePackages = {"com.cream.sparkle"},
+        // 排除springSecurity的默认认证配置
+        exclude = {UserDetailsServiceAutoConfiguration.class})
 public class ServerApp {
 
     public static void main(String[] args) {
