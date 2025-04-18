@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { post } from "../../../../common/net/http/AxiosCfg.ts";
-import HttpApiOfHero from "@/z/hero/net/HttpApiOfHero.ts";
 import swordPng from "@/assets/png/sword.png";
 import Tip from "@/tools/Tip.ts";
 import { useRouter } from "vue-router";
@@ -9,6 +8,7 @@ import { HeroPagePath } from "@/router/router.ts";
 import type { LoginRes } from "@/z/hero/types/GameTypes.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { heroHttpConfig } from "@/z/hero/net/NetConfig.ts";
+import HttpApi from "../../../../common/net/http/HttpApi.ts";
 
 const accountStore = useAccountStore();
 
@@ -24,7 +24,7 @@ function login(event: MouseEvent) {
     return;
   }
   loginBtnDisable.value = true;
-  post<LoginRes>(HttpApiOfHero.Login, {
+  post<LoginRes>(HttpApi.Login, {
     username: username.value,
     password: password.value
   })
@@ -45,7 +45,7 @@ function register(event: MouseEvent) {
   if (!checkForm()) {
     return;
   }
-  post(HttpApiOfHero.Register, {
+  post(HttpApi.Register, {
     username: username.value,
     password: password.value
   })

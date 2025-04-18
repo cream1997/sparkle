@@ -1,6 +1,6 @@
 import IpcChannels from "../../../common/IpcChannels";
 import { axios } from "../../../common/net/http/AxiosCfg.ts";
-import NetApi from "../../../common/net/http/NetApi.ts";
+import HttpApi from "../../../common/net/http/HttpApi.ts";
 import { AppTmpDir } from "../../constant/MainConst.ts";
 import { app, ipcMain } from "electron";
 import * as path from "node:path";
@@ -12,7 +12,7 @@ import { mainWin } from "../../manager/WindowManager.ts";
 export default function listenDownloadUpdate() {
   ipcMain.on(IpcChannels.DownloadUpdate, async (event, versionNumber) => {
     try {
-      const response = await axios.get(NetApi.DownloadLatestVersion, {
+      const response = await axios.get(HttpApi.DownloadLatestVersion, {
         responseType: "stream",
         params: { versionNumber }
       });

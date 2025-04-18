@@ -3,7 +3,7 @@ import useAccountStore from "@/store/useAccountStore.ts";
 import { reactive, ref } from "vue";
 import Tip from "@/tools/Tip.ts";
 import { post } from "../../../../common/net/http/AxiosCfg.ts";
-import HttpApiOfHero from "@/z/hero/net/HttpApiOfHero.ts";
+import HttpApiOfHero from "../../../../common/net/http/HttpApiOfHero.ts";
 import type { Role } from "@/z/hero/types/GameTypes.ts";
 
 const allRole = reactive<Role[]>([]);
