@@ -1,6 +1,7 @@
 package com.cream.sparkle.hero.net;
 
 import com.cream.sparkle.hero.net.handler.TokenValidator;
+import com.cream.sparkle.hero.net.handler.WebSocketHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -32,10 +33,12 @@ public class GameServer {
     private static final String WEBSOCKET_PATH = "/ws";
 
     private final TokenValidator tokenValidator;
+    private final WebSocketHandler webSocketHandler;
 
     @Autowired
-    public GameServer(TokenValidator tokenValidator) {
+    public GameServer(TokenValidator tokenValidator, WebSocketHandler webSocketHandler) {
         this.tokenValidator = tokenValidator;
+        this.webSocketHandler = webSocketHandler;
     }
 
 
@@ -60,8 +63,8 @@ public class GameServer {
                                 //.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true, 64 * 1024, true, true, 10000))
                                 .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, true))
                                 // fixme 数值将来改小
-                                .addLast(new IdleStateHandler(600, 600, 600));
-//                                .addLast(webSocketHandler);
+                                .addLast(new IdleStateHandler(600, 600, 600))
+                                .addLast(webSocketHandler);
                     }
                 })
                 // TCP参数设置

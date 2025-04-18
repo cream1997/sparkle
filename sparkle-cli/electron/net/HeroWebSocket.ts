@@ -4,7 +4,7 @@ import WebSocket from "ws";
 const WsConfig = {
   RECONNECT_INTERVAL: 5000, // 重试间隔（毫秒）
   MAX_RECONNECT_ATTEMPTS: 5, // 最大重试次数
-  HEARTBEAT_INTERVAL: 30000 // 心跳间隔
+  HEARTBEAT_INTERVAL: 10000 // 心跳间隔
 };
 
 type OnReceiveMsg = (msg: any) => void;
@@ -50,6 +50,7 @@ export default class GameWebSocket {
   private getConnectPromise() {
     return new Promise((resolve, reject) => {
       if (this.ws) {
+        // fixme 这个error的once监听在成功连接后是否需要移除？
         this.ws.once("error", e => {
           console.error("[WS] Connection error:", e);
           reject(e);

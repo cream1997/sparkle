@@ -18,7 +18,7 @@ public class ServerListController {
         /*
         fixme 先静态写死，后续可能改为读取配置，或者动态注册
          */
-        gameServers.add(new GameServer("研发服", "127.0.0.1", 8889, 0));
+        gameServers.add(new GameServer("研发服", "127.0.0.1", 8889, 8899));
         return gameServers;
     }
 }

@@ -1,16 +1,29 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, watchEffect } from "vue";
 import { get } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../../common/net/http/HttpApi.ts";
 import type { GameServer } from "@/z/hero/types/GameServerTypes.ts";
 import Tip from "@/tools/Tip.ts";
 import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
+import { useRouter } from "vue-router";
+import { HeroPagePath } from "@/router/router.ts";
+
+const router = useRouter();
 
 const accountStore = useAccountStore();
 const serverList = reactive<GameServer[]>([]);
 const inLinkServer = ref("");
 
+watchEffect(() => {
+  const token = accountStore.token;
+  if (!token) {
+    Tip.err("token为空，请先登录", 800);
+    setTimeout(() => {
+      router.push(HeroPagePath.LoginGame);
+    }, 900);
+  }
+});
 const leftList = computed(() => {
   const splitIndex = Math.ceil(serverList.length / 2);
   return serverList.slice(0, splitIndex);
@@ -83,7 +96,7 @@ onMounted(() => {
   height: 100%;
 
   .title {
-    margin-top: 10px;
+    padding-top: 2px;
     text-align: center;
   }
 
