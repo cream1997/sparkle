@@ -2,13 +2,11 @@ import { defineStore } from "pinia";
 import { initAppBaseUrl } from "../../common/net/http/AxiosCfg.ts";
 
 export const useAppInfoStore = defineStore("appInfoStore", {
-  state: () => {
-    return {
+  state: () => ({
       version: "",
       rootDir: "",
       serverAddress: ""
-    };
-  },
+  }),
   getters: {},
   actions: {
     init(version: string, rootDir: string, serverAddress: string) {

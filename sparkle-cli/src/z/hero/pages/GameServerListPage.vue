@@ -4,7 +4,10 @@ import { get } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../../common/net/http/HttpApi.ts";
 import type { GameServer } from "@/z/hero/types/GameServerTypes.ts";
 import Tip from "@/tools/Tip.ts";
+import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
+import useAccountStore from "@/store/useAccountStore.ts";
 
+const accountStore = useAccountStore();
 const serverList = reactive<GameServer[]>([]);
 const inLinkServer = ref("");
 
@@ -23,9 +26,18 @@ function enterGameServer(server: GameServer) {
     Tip.info(`正在连接${inLinkServer.value}...`);
     return;
   }
-  console.log(server.name);
-  // todo 简历ws连接
-  // todo 跳转角色界面
+  // 主进程携带token建立ws连接,连接成功后跳转角色页面
+  window.ipc
+    .invoke(IpcChannelsOfHero.WsConnect, {
+      token: accountStore.token
+    })
+    .then(res => {
+      // todo 跳转角色界面
+    })
+    .catch(err => {
+      console.error(err);
+      Tip.err(err);
+    });
 
   inLinkServer.value = server.name;
 }

@@ -30,13 +30,7 @@ function createRole() {
     });
 }
 
-function enterRole(role: Role) {
-  // 存储token,跳转角色页面,主进程携带token建立ws连接
-  // window.ipc.invoke(IpcChannelsOfHero.WsConnect, {
-  //   uid: res.id,
-  //   token: res.token
-  // });
-}
+function enterRole(role: Role) {}
 </script>
 
 <template>
