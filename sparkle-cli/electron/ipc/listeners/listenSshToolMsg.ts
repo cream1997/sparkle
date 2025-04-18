@@ -40,7 +40,7 @@ function createSshClient(param: any) {
     })
     .connect({
       host: param.host,
-      socketPort: param.port,
+      port: param.port,
       username: param.username,
       password: param.password
     });
