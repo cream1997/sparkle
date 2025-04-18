@@ -1,13 +1,14 @@
 package com.cream.sparkle.main.object.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.cream.sparkle.common.constants.TableConstants;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Getter
-@TableName("hero_account")
+@TableName(TableConstants.AccountTableName)
 public class Account {
     /**
      * 雪花算法生成id
