@@ -43,11 +43,12 @@ public class WebSecurityConfig {
                 .requestMatchers(
                         "/test",
                         "/downloadLatestVersion",
-                        "/latestVersionNumber"
+                        "/latestVersionNumber",
+                        "/login",
+                        "/register"
                 )
                 .permitAll()
                 // 配置/hero/**路径下的权限
-                .requestMatchers("/hero/login", "/hero/register").permitAll()
                 .requestMatchers("/hero/**").hasAuthority(QuanXianEnum.HERO.name())
                 // 对其他请求开启授权保护，已认证的请求会被自动授权
                 .anyRequest()
