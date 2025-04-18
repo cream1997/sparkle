@@ -29,6 +29,7 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (isVerified(ctx.channel())) {
             ctx.fireChannelRead(msg);
+            return;
         }
         FullHttpRequest fullHttpRequest = (FullHttpRequest) msg;
         QueryStringDecoder decoder = new QueryStringDecoder(fullHttpRequest.uri());

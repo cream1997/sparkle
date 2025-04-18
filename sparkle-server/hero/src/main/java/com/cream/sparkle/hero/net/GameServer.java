@@ -1,7 +1,8 @@
 package com.cream.sparkle.hero.net;
 
 import com.cream.sparkle.hero.net.handler.TokenValidator;
-import com.cream.sparkle.hero.net.handler.WebSocketHandler;
+import com.cream.sparkle.hero.net.handler.WebSocketMsgHandler;
+import com.cream.sparkle.hero.net.handler.WebSocketPingHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -33,12 +34,14 @@ public class GameServer {
     private static final String WEBSOCKET_PATH = "/ws";
 
     private final TokenValidator tokenValidator;
-    private final WebSocketHandler webSocketHandler;
+    private final WebSocketMsgHandler webSocketMsgHandler;
+    private final WebSocketPingHandler webSocketPingHandler;
 
     @Autowired
-    public GameServer(TokenValidator tokenValidator, WebSocketHandler webSocketHandler) {
+    public GameServer(TokenValidator tokenValidator, WebSocketMsgHandler webSocketMsgHandler, WebSocketPingHandler webSocketPingHandler) {
         this.tokenValidator = tokenValidator;
-        this.webSocketHandler = webSocketHandler;
+        this.webSocketMsgHandler = webSocketMsgHandler;
+        this.webSocketPingHandler = webSocketPingHandler;
     }
 
 
@@ -64,7 +67,8 @@ public class GameServer {
                                 .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, true))
                                 // fixme 数值将来改小
                                 .addLast(new IdleStateHandler(600, 600, 600))
-                                .addLast(webSocketHandler);
+                                .addLast(webSocketPingHandler)
+                                .addLast(webSocketMsgHandler);
                     }
                 })
                 // TCP参数设置
