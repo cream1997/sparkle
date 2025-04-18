@@ -32,7 +32,7 @@ function login(event: MouseEvent) {
       // 存储token
       accountStore.init(res.id, res.token);
       // 跳转服务器列表页面
-      router.push(HeroPagePath.SelectRole);
+      router.push(HeroPagePath.GameServerList);
     })
     .catch(err => {
       Tip.err(err);

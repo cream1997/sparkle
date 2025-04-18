@@ -18,7 +18,8 @@ export enum PagePath {
 }
 
 export enum HeroPagePath {
-  Login = "/Hero/Login",
+  LoginGame = "/Hero/Login",
+  GameServerList = "/Hero/ServerList",
   SelectRole = "/Hero/SelectRole"
 }
 
@@ -50,11 +51,15 @@ const routes = [
       {
         path: PagePath.Hero,
         component: () => import("@/z/hero/HeroPage.vue"),
-        redirect: HeroPagePath.Login,
+        redirect: HeroPagePath.LoginGame,
         children: [
           {
-            path: HeroPagePath.Login,
+            path: HeroPagePath.LoginGame,
             component: () => import("@/z/hero/pages/LoginPage.vue")
+          },
+          {
+            path: HeroPagePath.GameServerList,
+            component: () => import("@/z/hero/pages/GameServerListPage.vue")
           },
           {
             path: HeroPagePath.SelectRole,
