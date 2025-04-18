@@ -1,6 +1,11 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import RetStatus from "./RetStatus.ts";
 
+interface AxiosWithInit extends AxiosInstance {
+  _resolveInit: (() => void) | null;
+  _queue: Array<() => void>;
+}
+
 function createAxiosInstance() {
   const axiosInstance = axios.create({
     timeout: 1000,
@@ -15,7 +20,7 @@ function createAxiosInstance() {
       const res = response.data;
       switch (res.status) {
         case RetStatus.SUCCESS:
-          return response;
+          return res.data;
         case RetStatus.ERROR:
           return Promise.reject(res.info);
         default:
@@ -36,19 +41,33 @@ function createAxiosInstance() {
   return axiosInstance;
 }
 
-const mainAxiosInstance = createAxiosInstance();
-const heroAxiosInstance = createAxiosInstance();
+const mainAxiosInstance = createAxiosInstance() as AxiosWithInit;
+const heroAxiosInstance = createAxiosInstance() as AxiosWithInit;
+
+//初始化队列和Promise
+[mainAxiosInstance, heroAxiosInstance].forEach(instance => {
+  new Promise<void>(resolve => {
+    instance._resolveInit = resolve;
+    instance._queue = [];
+  }).then(() => {
+    instance._queue?.forEach(fn => fn());
+    instance._queue = [];
+    instance._resolveInit = null;
+  });
+});
 
 function initAppBaseUrl(serverAddress: string) {
   mainAxiosInstance.defaults.baseURL = serverAddress;
+  mainAxiosInstance._resolveInit?.();
 }
 
 function initHeroBaseUrl(heroServerAddress: string) {
   heroAxiosInstance.defaults.baseURL = heroServerAddress;
+  heroAxiosInstance?._resolveInit?.();
 }
 
 function basePost<T>(
-  axiosInstance: AxiosInstance,
+  axiosWithInit: AxiosWithInit,
   url: string,
   data?: any,
   contentTypeIsJson: boolean = false,
@@ -64,11 +83,22 @@ function basePost<T>(
     config.headers = config.headers ? config.headers : {};
     config.headers["Content-Type"] = "application/json";
   }
-  return axiosInstance.post(url, data, config).then(res => res.data.data);
+  if (!axiosWithInit._resolveInit) {
+    return axiosWithInit.post(url, data, config).then(res => res as T);
+  } else {
+    return new Promise<T>((resolve, reject) => {
+      axiosWithInit._queue?.push(() => {
+        axiosWithInit
+          .post(url, data, config)
+          .then(res => resolve(res as T))
+          .catch(reject);
+      });
+    });
+  }
 }
 
 function baseGet<T>(
-  axiosInstance: AxiosInstance,
+  axiosWithInit: AxiosWithInit,
   url: string,
   params?: any,
   config?: AxiosRequestConfig
@@ -82,7 +112,18 @@ function baseGet<T>(
       };
     }
   }
-  return axiosInstance.get(url, config).then(res => res.data.data);
+  if (!axiosWithInit._resolveInit) {
+    return axiosWithInit.get(url, config).then(res => res as T);
+  } else {
+    return new Promise<T>((resolve, reject) => {
+      axiosWithInit._queue?.push(() => {
+        axiosWithInit
+          .get(url, config)
+          .then(res => resolve(res as T))
+          .catch(reject);
+      });
+    });
+  }
 }
 
 function get<T>(
