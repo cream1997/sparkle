@@ -1,6 +1,6 @@
 import IpcChannels from "../../../common/IpcChannels";
-import { axios } from "../../../src/net/AxiosCfg";
-import NetApi from "../../../common/NetApi";
+import { axios } from "../../../common/net/http/AxiosCfg.ts";
+import NetApi from "../../../common/net/http/NetApi.ts";
 import { AppTmpDir } from "../../constant/MainConst.ts";
 import { app, ipcMain } from "electron";
 import * as path from "node:path";

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { initBaseUrl } from "@/net/AxiosCfg.ts";
+import { initAppBaseUrl } from "../../common/net/http/AxiosCfg.ts";
 
 export const useAppInfoStore = defineStore("appInfoStore", {
   state: () => {
@@ -15,7 +15,7 @@ export const useAppInfoStore = defineStore("appInfoStore", {
       this.version = version;
       this.rootDir = rootDir;
       this.serverAddress = serverAddress;
-      initBaseUrl(serverAddress);
+      initAppBaseUrl(serverAddress);
     }
   }
 });

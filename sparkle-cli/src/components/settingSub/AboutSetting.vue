@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
-import { axios } from "@/net/AxiosCfg.ts";
-import NetApi from "../../../common/NetApi.ts";
+import { axios } from "../../../common/net/http/AxiosCfg.ts";
+import NetApi from "../../../common/net/http/NetApi.ts";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
 import Confirm from "@/tools/Confirm.ts";
@@ -34,7 +34,7 @@ function checkUpdate() {
         Tip.info("已是最新版本");
       }
     })
-    .catch((err) => {
+    .catch(err => {
       Tip.err("网络异常");
     });
 }

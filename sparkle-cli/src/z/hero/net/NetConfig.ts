@@ -1,4 +1,4 @@
-import { axios } from "@/net/AxiosCfg.ts";
+import { axios } from "../../../../common/net/http/AxiosCfg.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 
 const accountStore = useAccountStore();

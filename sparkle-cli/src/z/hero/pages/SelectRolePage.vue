@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import useAccountStore from "@/store/useAccountStore.ts";
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 import Tip from "@/tools/Tip.ts";
-import { post } from "@/net/AxiosCfg.ts";
+import { post } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApiOfHero from "@/z/hero/net/HttpApiOfHero.ts";
 import type { Role } from "@/z/hero/types/GameTypes.ts";
+
+const allRole = reactive<Role[]>([]);
 
 const accountStore = useAccountStore();
 
@@ -21,14 +23,20 @@ function createRole() {
     nickName: nickName.value
   })
     .then(newRole => {
-      accountStore.addRole(newRole);
+      // accountStore.addRole(newRole);
     })
     .catch(err => {
       Tip.err(err);
     });
 }
 
-function enterRole(role: Role) {}
+function enterRole(role: Role) {
+  // 存储token,跳转角色页面,主进程携带token建立ws连接
+  // window.ipc.invoke(IpcChannelsOfHero.WsConnect, {
+  //   uid: res.id,
+  //   token: res.token
+  // });
+}
 </script>
 
 <template>
@@ -38,7 +46,7 @@ function enterRole(role: Role) {}
       <button class="logout-btn">退出</button>
     </div>
     <ol class="role-list">
-      <li v-for="role in accountStore.allRole" @click="enterRole(role)">
+      <li v-for="role in allRole" @click="enterRole(role)">
         {{ role.basic.name }}
       </li>
       <li @click="createFormShow = true">
