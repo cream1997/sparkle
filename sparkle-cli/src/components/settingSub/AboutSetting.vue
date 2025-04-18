@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
-import { axios } from "../../../common/net/http/AxiosCfg.ts";
+import { get } from "../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../common/net/http/HttpApi.ts";
 import IpcChannels from "../../../common/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
@@ -14,9 +14,8 @@ const AppInfo = useAppInfoStore();
 
 function checkUpdate() {
   // 检查是否有新版本
-  axios
-    .get(HttpApi.GetLatestVersionNumber)
-    .then(async ({ data: { data: versionNumber } }) => {
+  get<string>(HttpApi.GetLatestVersionNumber)
+    .then(async versionNumber => {
       if (needUpdate(AppInfo.version, versionNumber)) {
         // 确认是否更新
         const confirmed = await Confirm.show({
