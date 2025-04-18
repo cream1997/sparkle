@@ -1,5 +1,6 @@
 package com.cream.sparkle.common.utils;
 
+import com.cream.sparkle.common.error.Err;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -26,15 +27,19 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static IdAndQx extractIdAndQx(String token) {
-        Claims payload = Jwts.parser()
-                .verifyWith(SECRET_KEY)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        String id = payload.getSubject();
-        String quanXian = payload.get(QuanXianClaimKey, String.class);
-        return new IdAndQx(id, quanXian);
+    public static IdAndQx extractIdAndQx(String token) throws Err {
+        try {
+            Claims payload = Jwts.parser()
+                    .verifyWith(SECRET_KEY)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            String id = payload.getSubject();
+            String quanXian = payload.get(QuanXianClaimKey, String.class);
+            return new IdAndQx(id, quanXian);
+        } catch (Exception e) {
+            throw new Err("token解析异常", e);
+        }
     }
 
     public static class IdAndQx {

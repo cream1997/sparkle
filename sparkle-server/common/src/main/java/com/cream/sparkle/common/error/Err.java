@@ -9,4 +9,12 @@ public class Err extends Exception {
     public Err(String message) {
         super(message);
     }
+
+    public Err(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public Err(Throwable cause) {
+        super(cause);
+    }
 }
