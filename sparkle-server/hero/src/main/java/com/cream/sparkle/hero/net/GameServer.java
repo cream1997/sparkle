@@ -63,11 +63,13 @@ public class GameServer {
                                 .addLast(new HttpServerCodec())
                                 .addLast(new HttpObjectAggregator(65535))
                                 .addLast(tokenValidator) //在握手之前验证token
+                                // IdleStateHandler和webSocketPingHandler要放到WebSocketServerProtocolHandler之前，否则它们感知不到ping
+                                // 因为WebSocketServerProtocolHandler会默认处理且过滤Ping消息
+                                // fixme 空闲时间控制待定
+                                .addLast(new IdleStateHandler(15, 15, 15))
+                                .addLast(webSocketPingHandler)
                                 //.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true, 64 * 1024, true, true, 10000))
                                 .addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, true))
-                                // fixme 数值将来改小
-                                .addLast(new IdleStateHandler(600, 600, 600))
-                                .addLast(webSocketPingHandler)
                                 .addLast(webSocketMsgHandler);
                     }
                 })
