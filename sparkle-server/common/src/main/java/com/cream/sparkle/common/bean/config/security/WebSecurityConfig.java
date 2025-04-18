@@ -45,7 +45,8 @@ public class WebSecurityConfig {
                         "/downloadLatestVersion",
                         "/latestVersionNumber",
                         "/login",
-                        "/register"
+                        "/register",
+                        "/serverList"
                 )
                 .permitAll()
                 // 配置/hero/**路径下的权限
