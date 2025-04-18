@@ -12,6 +12,12 @@
   /**"
     ],*/
   //--end
+  /*
+  todo 这个配置是解决引入了ws的bufferutil后打包报错；它需要Python处理c++原生模块；而bufferutil提供了预构建(prebuilds);而我不会Python，也
+  而且源代码打包还需要下载配置Python，太麻烦和不友好了；这里设置成false确实可以解决问题；但不确定将来；
+  设置成false我的理解就是有预构建文件的不会rebuild,将来引入其他c++原生模块应该不会出问题吧~
+  */
+  "npmRebuild": false,
   "productName": "Sparkle",
   "copyright": "Copyright © 2025 ${author}",
   "directories": {
