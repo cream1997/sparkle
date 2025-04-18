@@ -4,7 +4,7 @@ import WebSocket from "ws";
 const WsConfig = {
   RECONNECT_INTERVAL: 5000, // 重试间隔（毫秒）
   MAX_RECONNECT_ATTEMPTS: 5, // 最大重试次数
-  HEARTBEAT_INTERVAL: 1000 // 心跳间隔
+  HEARTBEAT_INTERVAL: 10000 // 心跳间隔
 };
 
 type OnReceiveMsg = (msg: any) => void;
