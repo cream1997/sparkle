@@ -67,6 +67,40 @@ function basePost<T>(
   return axiosInstance.post(url, data, config).then(res => res.data.data);
 }
 
+function baseGet<T>(
+  axiosInstance: AxiosInstance,
+  url: string,
+  params?: any,
+  config?: AxiosRequestConfig
+): Promise<T> {
+  if (params) {
+    if (config) {
+      config.params = params;
+    } else {
+      config = {
+        params
+      };
+    }
+  }
+  return axiosInstance.get(url, config).then(res => res.data.data);
+}
+
+function get<T>(
+  url: string,
+  params?: any,
+  config?: AxiosRequestConfig
+): Promise<T> {
+  return baseGet(mainAxiosInstance, url, params, config);
+}
+
+function getOfHero<T>(
+  url: string,
+  params?: any,
+  config?: AxiosRequestConfig
+): Promise<T> {
+  return baseGet(heroAxiosInstance, url, params, config);
+}
+
 function post<T>(
   url: string,
   data?: any,
@@ -89,6 +123,8 @@ export {
   mainAxiosInstance as axios,
   post,
   postOfHero,
+  get,
+  getOfHero,
   initAppBaseUrl,
   initHeroBaseUrl
 };

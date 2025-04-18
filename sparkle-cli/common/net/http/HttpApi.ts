@@ -3,6 +3,7 @@ const HttpApi = {
   GetLatestVersionNumber: "latestVersionNumber",
   DownloadLatestVersion: "downloadLatestVersion",
   Register: "register",
-  Login: "login"
+  Login: "login",
+  ServerList: "serverList"
 } as const;
 export default HttpApi;
