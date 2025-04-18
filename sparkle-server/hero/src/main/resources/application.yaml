@@ -17,5 +17,8 @@ server:
   servlet:
     context-path: /hero
 
+hero:
+  socketPort: 8899
+
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
