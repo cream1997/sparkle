@@ -34,13 +34,13 @@ function createSshClient(param: any) {
   client = new Client();
   client
     .on("ready", clientOnReady())
-    .on("error", (err) => {
+    .on("error", err => {
       // 可能是连接错误，比如地址错误，或者账号密码错误
       console.log(err);
     })
     .connect({
       host: param.host,
-      port: param.port,
+      socketPort: param.port,
       username: param.username,
       password: param.password
     });

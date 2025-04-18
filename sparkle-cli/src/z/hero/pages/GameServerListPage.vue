@@ -29,10 +29,12 @@ function enterGameServer(server: GameServer) {
   // 主进程携带token建立ws连接,连接成功后跳转角色页面
   window.ipc
     .invoke(IpcChannelsOfHero.WsConnect, {
+      ip: server.ip,
+      socketPort: server.socketPort,
       token: accountStore.token
     })
     .then(res => {
-      // todo 跳转角色界面
+      // todo 成功跳转角色界面
     })
     .catch(err => {
       console.error(err);
