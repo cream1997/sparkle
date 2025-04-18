@@ -48,11 +48,5 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.cream</groupId>
-            <artifactId>hero</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>
