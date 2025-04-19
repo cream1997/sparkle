@@ -17,11 +17,13 @@ export enum PagePath {
   FloatWin = "/FloatWin"
 }
 
-export enum HeroPagePath {
-  LoginGame = "/Hero/Login",
-  GameServerList = "/Hero/ServerList",
-  SelectRole = "/Hero/SelectRole"
-}
+export const HeroPageBasePath = "/Hero";
+
+export const HeroPagePath = {
+  LoginGame: `${HeroPageBasePath}/Login`,
+  GameServerList: `${HeroPageBasePath}/ServerList`,
+  SelectRole: `${HeroPageBasePath}/SelectRole`
+} as const;
 
 const routes = [
   {
