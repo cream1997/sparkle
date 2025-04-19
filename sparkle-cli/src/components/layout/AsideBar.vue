@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { PagePath } from "@/router/router.ts";
 import ModalComponent from "@/components/layout/ModalComponent.vue";
 import SettingComponent from "@/components/SettingComponent.vue";
@@ -13,12 +13,17 @@ import toolSvg from "@/assets/icon/tool.svg";
 import settingSvg from "@/assets/icon/setting.svg";
 
 const router = useRouter();
+const route = useRoute();
 
 interface ToolItem {
   title: string;
   icon: string;
-  pagePath?: PagePath;
-  active?: boolean;
+  pagePath: PagePath;
+}
+
+interface SettingItem {
+  title: string;
+  icon: string;
 }
 
 const allTool: ToolItem[] = reactive([
@@ -53,22 +58,23 @@ const allTool: ToolItem[] = reactive([
     pagePath: PagePath.Tool
   }
 ]);
-const settingItem: ToolItem = {
+const settingItem: SettingItem = {
   title: "设置",
   icon: settingSvg
 };
 
-const selectTool = (item: any) => {
-  // todo 检查当前是否已经在此页面
-  if (item.active) {
+const selectTool = (item: ToolItem) => {
+  // 检查当前是否已经在此页面
+  if (pageActive(item)) {
     return;
   }
-  allTool.forEach((item) => {
-    item.active = false;
-  });
   router.push(item.pagePath);
-  item.active = true;
 };
+
+function pageActive(item: ToolItem) {
+  return route.path.startsWith(item.pagePath);
+}
+
 const modalRef = ref();
 const openSettingModal = () => {
   modalRef.value.open();
@@ -81,7 +87,7 @@ const openSettingModal = () => {
       v-for="item in allTool"
       :title="item.title"
       class="tool-item"
-      :class="[item.active ? 'active-tool-item' : '']"
+      :class="[pageActive(item) ? 'active-tool-item' : '']"
       @click="selectTool(item)"
     >
       <img class="item-icon" :src="item.icon" :alt="item.title" />
