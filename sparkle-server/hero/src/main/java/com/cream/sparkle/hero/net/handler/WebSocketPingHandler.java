@@ -21,7 +21,7 @@ public class WebSocketPingHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof PingWebSocketFrame) {
-            log.info("收到ping消息，uid:{}", TokenValidator.getUIdAfterLogin(ctx.channel()));
+            log.debug("收到ping消息，uid:{}", TokenValidator.getUIdAfterLogin(ctx.channel()));
         }
         super.channelRead(ctx, msg);
     }
