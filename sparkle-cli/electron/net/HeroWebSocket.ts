@@ -37,7 +37,7 @@ export default class GameWebSocket {
     this.ws = new WebSocket(
       `ws://${this.ip}:${this.port}/ws?token=${this.token}`,
       {
-        // todo 先关闭压缩，因为不确定后端能后处理，待验证修改
+        // todo 先关闭压缩，因为不确定后端能否处理，待验证修改
         perMessageDeflate: false,
         handshakeTimeout: 5000
       }

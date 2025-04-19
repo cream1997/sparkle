@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watchEffect } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { get } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../../common/net/http/HttpApi.ts";
 import type { GameServer } from "@/z/hero/types/GameServerTypes.ts";
@@ -8,6 +8,8 @@ import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { useRouter } from "vue-router";
 import { HeroPagePath } from "@/router/router.ts";
+import type { WsConnectResult } from "../../../../common/types/WsConnectResult.ts";
+import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
 
 const router = useRouter();
 
@@ -15,15 +17,8 @@ const accountStore = useAccountStore();
 const serverList = reactive<GameServer[]>([]);
 const inLinkServer = ref("");
 
-watchEffect(() => {
-  const token = accountStore.token;
-  if (!token) {
-    Tip.err("token为空，请先登录", 800);
-    setTimeout(() => {
-      router.push(HeroPagePath.LoginGame);
-    }, 900);
-  }
-});
+useWatchTokenHook();
+
 const leftList = computed(() => {
   const splitIndex = Math.ceil(serverList.length / 2);
   return serverList.slice(0, splitIndex);
@@ -46,8 +41,15 @@ function enterGameServer(server: GameServer) {
       socketPort: server.socketPort,
       token: accountStore.token
     })
-    .then(res => {
-      // todo 成功跳转角色界面
+    .then((res: WsConnectResult) => {
+      if (res.success) {
+        Tip.info("连接成功~");
+        // 跳转角色界面
+        router.push(HeroPagePath.SelectRole);
+      } else {
+        Tip.err(res.err);
+        inLinkServer.value = "";
+      }
     })
     .catch(err => {
       console.error(err);
