@@ -3,6 +3,7 @@ package com.cream.sparkle.hero.net.handler;
 import com.cream.sparkle.common.error.Err;
 import com.cream.sparkle.common.utils.JwtUtil;
 import com.cream.sparkle.common.utils.Nulls;
+import com.cream.sparkle.hero.net.msg.MsgDispatcher;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -12,6 +13,7 @@ import io.netty.handler.codec.http.QueryStringDecoder;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,7 +26,13 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
 
     private static final AttributeKey<Long> UID_KEY = AttributeKey.newInstance("uidKey");
 
-    //    private final MsgDispatcher msgDispatcher;
+    private final MsgDispatcher msgDispatcher;
+
+    @Autowired
+    public TokenValidator(MsgDispatcher msgDispatcher) {
+        this.msgDispatcher = msgDispatcher;
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (isVerified(ctx.channel())) {
@@ -51,7 +59,7 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
         }
         // 验证成功，存入id
         ctx.channel().attr(UID_KEY).set(idAndQx.id);
-//        this.msgDispatcher.putChannel(ctx.channel());
+        this.msgDispatcher.putChannel(ctx.channel());
         ctx.fireChannelRead(msg);
     }
 
