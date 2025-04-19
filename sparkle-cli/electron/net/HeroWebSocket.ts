@@ -83,7 +83,8 @@ export default class GameWebSocket {
   // 关闭连接
   handleClose(code: any, reason: any) {
     console.log(`[WS] Connection closed: ${code} ${reason}`);
-    clearInterval(this.heartbeatTimer);
+    this.close();
+    // todo 向渲染进程通知...
     // 自动重连逻辑
     /*    if (this.reconnectAttempts < WsConfig.MAX_RECONNECT_ATTEMPTS) {
           setTimeout(() => {
@@ -108,6 +109,7 @@ export default class GameWebSocket {
     if (this.ws) {
       this.ws.removeAllListeners();
       this.ws.close();
+      this.ws = null;
     }
   }
 }

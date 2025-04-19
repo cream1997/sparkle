@@ -19,7 +19,9 @@ export enum FloatWinIpcChannels {
 }
 
 export enum IpcChannelsOfHero {
-  WsConnect = "WsConnect"
+  WsConnect = "WsConnect",
+  SendMsg = "SendMsg",
+  ReceiveMsg = "ReceiveMsg"
 }
 
 export default IpcChannels;

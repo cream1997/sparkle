@@ -36,11 +36,12 @@ function enterGameServer(server: GameServer) {
   }
   // 主进程携带token建立ws连接,连接成功后跳转角色页面
   window.ipc
-    .invoke(IpcChannelsOfHero.WsConnect, {
-      ip: server.ip,
-      socketPort: server.socketPort,
-      token: accountStore.token
-    })
+    .invoke(
+      IpcChannelsOfHero.WsConnect,
+      server.ip,
+      server.socketPort,
+      accountStore.token
+    )
     .then((res: WsConnectResult) => {
       if (res.success) {
         Tip.info("连接成功~");
