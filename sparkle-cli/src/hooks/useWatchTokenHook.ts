@@ -1,8 +1,8 @@
-import { onActivated, onDeactivated, watchEffect, type WatchHandle } from "vue";
+import { onActivated, watchEffect, type WatchHandle } from "vue";
 import Tip from "@/tools/Tip.ts";
 import { HeroPagePath } from "@/router/router.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
-import { useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 
 const accountStore = useAccountStore();
 
@@ -27,7 +27,7 @@ export default function useWatchTokenHook() {
     });
   });
 
-  onDeactivated(() => {
+  onBeforeRouteLeave(() => {
     stopTokenWatch();
   });
 }
