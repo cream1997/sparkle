@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class RoleService {
@@ -30,5 +32,9 @@ public class RoleService {
         Role role = new Role(Times.now(), nickName);
         this.roleDbTool.insertRole(role);
         return role;
+    }
+
+    public List<Role> getAllRole(long uid) {
+        return null;
     }
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/hero")
@@ -25,5 +27,11 @@ public class RoleController {
     public Role createRole(String nickName) {
         long uid = HttpCtxUtil.getUid();
         return this.roleService.createRole(uid, nickName);
+    }
+
+    @PostMapping("/getAllRole")
+    public List<Role> getAllRole() {
+        long uid = HttpCtxUtil.getUid();
+        return this.roleService.getAllRole(uid);
     }
 }

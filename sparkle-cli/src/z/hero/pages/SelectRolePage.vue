@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import useAccountStore from "@/store/useAccountStore.ts";
-import { reactive, ref } from "vue";
+import { onActivated, reactive, ref } from "vue";
 import Tip from "@/tools/Tip.ts";
 import { postOfHero } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApiOfHero from "../../../../common/net/http/HttpApiOfHero.ts";
@@ -26,14 +26,24 @@ function createRole() {
     nickName: nickName.value
   })
     .then(newRole => {
-      // accountStore.addRole(newRole);
+      allRole.push(newRole);
     })
     .catch(err => {
       Tip.err(err);
     });
 }
 
+function getAllRole() {
+  postOfHero<Role[]>(HttpApiOfHero.GetAllRole).then(roleList => {
+    allRole.push(...roleList);
+  });
+}
+
 function enterRole(role: Role) {}
+
+onActivated(() => {
+  getAllRole();
+});
 </script>
 
 <template>
