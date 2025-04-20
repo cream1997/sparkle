@@ -51,7 +51,7 @@ const routes = [
             path: HeroPagePath.LoginGame,
             components: {
               [HeroSubPageViewName]: () =>
-                import("@/z/hero/pages/LoginPage.vue")
+                import("@/z/hero/pages/LoginGamePage.vue")
             }
           },
           {
