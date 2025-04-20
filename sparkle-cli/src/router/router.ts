@@ -25,6 +25,11 @@ export const HeroPagePath = {
   SelectRole: `${HeroPageBasePath}/SelectRole`
 } as const;
 
+const HeroPageName = Object.keys(HeroPagePath).reduce(
+  (acc, key) => ({ ...acc, [key]: key }),
+  {} as { [K in keyof typeof HeroPagePath]: string }
+);
+
 const routes = [
   {
     path: "/",
@@ -56,14 +61,17 @@ const routes = [
         redirect: HeroPagePath.LoginGame,
         children: [
           {
+            name: HeroPageName.LoginGame,
             path: HeroPagePath.LoginGame,
             component: () => import("@/z/hero/pages/LoginPage.vue")
           },
           {
+            name: HeroPageName.GameServerList,
             path: HeroPagePath.GameServerList,
             component: () => import("@/z/hero/pages/GameServerListPage.vue")
           },
           {
+            name: HeroPageName.SelectRole,
             path: HeroPagePath.SelectRole,
             component: () => import("@/z/hero/pages/SelectRolePage.vue")
           }
