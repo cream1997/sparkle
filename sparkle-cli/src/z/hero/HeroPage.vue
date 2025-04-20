@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import { BasePagePath, HeroSubPageViewName } from "@/router/RouterConst";
+import {
+  BasePagePath,
+  HeroPagePath,
+  HeroSubPageViewName
+} from "@/router/RouterConst";
 import useRouteInfoStore from "@/store/useRouteInfoStore.ts";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { ref, watchEffect } from "vue";
 
 const router = useRouter();
+const route = useRoute();
 const routeInfoStore = useRouteInfoStore();
 
 /**
@@ -29,12 +35,22 @@ router.beforeEach((to, from, next) => {
     next(skipPath);
   }
 });
+const cacheKey = ref();
+watchEffect(() => {
+  /**
+   * 一旦token失效，比如被值为空，就会跳到登录页,这时让缓存失效
+   * todo :key到底是放在router-view标签上还是放在keep-alive标签上(甚至是放在component标签上)暂不清楚，目前的观察是放在两个上都能实现效果
+   */
+  if (route.path === HeroPagePath.LoginGame) {
+    cacheKey.value = Date.now();
+  }
+});
 </script>
 
 <template>
   <div id="ctn-heroPage">
     <router-view v-slot="{ Component }" :name="HeroSubPageViewName">
-      <keep-alive>
+      <keep-alive :key="cacheKey">
         <component :is="Component"></component>
       </keep-alive>
     </router-view>
