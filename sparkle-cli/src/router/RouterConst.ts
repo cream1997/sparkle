@@ -28,6 +28,9 @@ export const BasePageName = genePageName(BasePagePath);
 export const HeroPageName = genePageName(HeroPagePath);
 export const ToolPageName = genePageName(ToolPagePath);
 
+export const HeroSubPageViewName = "HeroSubPageView";
+export const ToolSubPageViewName = "ToolSubPageView";
+
 function genePageName<T extends Record<string, string>>(
   pagePathConst: T
 ): { [K in keyof T]: string } {

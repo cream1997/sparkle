@@ -4,8 +4,10 @@ import {
   BasePagePath,
   HeroPageName,
   HeroPagePath,
+  HeroSubPageViewName,
   ToolPageName,
-  ToolPagePath
+  ToolPagePath,
+  ToolSubPageViewName
 } from "@/router/RouterConst.ts";
 
 const routes = [
@@ -47,17 +49,26 @@ const routes = [
           {
             name: HeroPageName.LoginGame,
             path: HeroPagePath.LoginGame,
-            component: () => import("@/z/hero/pages/LoginPage.vue")
+            components: {
+              [HeroSubPageViewName]: () =>
+                import("@/z/hero/pages/LoginPage.vue")
+            }
           },
           {
             name: HeroPageName.GameServerList,
             path: HeroPagePath.GameServerList,
-            component: () => import("@/z/hero/pages/GameServerListPage.vue")
+            components: {
+              [HeroSubPageViewName]: () =>
+                import("@/z/hero/pages/GameServerListPage.vue")
+            }
           },
           {
             name: HeroPageName.SelectRole,
             path: HeroPagePath.SelectRole,
-            component: () => import("@/z/hero/pages/SelectRolePage.vue")
+            components: {
+              [HeroSubPageViewName]: () =>
+                import("@/z/hero/pages/SelectRolePage.vue")
+            }
           }
         ]
       },
@@ -69,29 +80,42 @@ const routes = [
           {
             name: ToolPageName.Test,
             path: ToolPagePath.Test,
-            component: () => import("@/pages/homeSub/toolSub/TestPage.vue")
+            components: {
+              [ToolSubPageViewName]: () =>
+                import("@/pages/homeSub/toolSub/TestPage.vue")
+            }
           },
           {
             name: ToolPageName.IpcTestTool,
             path: ToolPagePath.IpcTestTool,
-            component: () => import("@/pages/homeSub/toolSub/IpcTestPage.vue")
+            components: {
+              [ToolSubPageViewName]: () =>
+                import("@/pages/homeSub/toolSub/IpcTestPage.vue")
+            }
           },
           {
             name: ToolPageName.ComponentTestTool,
             path: ToolPagePath.ComponentTestTool,
-            component: () =>
-              import("@/pages/homeSub/toolSub/ComponentTestPage.vue")
+            components: {
+              [ToolSubPageViewName]: () =>
+                import("@/pages/homeSub/toolSub/ComponentTestPage.vue")
+            }
           },
           {
             name: ToolPageName.LiveAssistant,
             path: ToolPagePath.LiveAssistant,
-            component: () =>
-              import("@/pages/homeSub/toolSub/LiveAssistantPage.vue")
+            components: {
+              [ToolSubPageViewName]: () =>
+                import("@/pages/homeSub/toolSub/LiveAssistantPage.vue")
+            }
           },
           {
             name: ToolPageName.TmpWindow,
             path: ToolPagePath.TmpWindow,
-            component: () => import("@/pages/homeSub/toolSub/TmpWindow.vue")
+            components: {
+              [ToolSubPageViewName]: () =>
+                import("@/pages/homeSub/toolSub/TmpWindow.vue")
+            }
           }
         ]
       }

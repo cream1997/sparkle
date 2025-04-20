@@ -1,8 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { HeroSubPageViewName } from "@/router/RouterConst";
+</script>
 
 <template>
   <div id="ctn-heroPage">
-    <router-view v-slot="{ Component }">
+    <router-view v-slot="{ Component }" :name="HeroSubPageViewName">
       <keep-alive>
         <component :is="Component"></component>
       </keep-alive>

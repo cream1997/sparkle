@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onActivated, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { ToolPagePath } from "@/router/RouterConst.ts";
+import { ToolPagePath, ToolSubPageViewName } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 const allTools = reactive([
@@ -48,7 +48,7 @@ onActivated(() => {
       </ul>
     </aside>
     <main class="tool-page-main">
-      <router-view v-slot="{ Component }">
+      <router-view v-slot="{ Component }" :name="ToolSubPageViewName">
         <keep-alive>
           <component :is="Component"></component>
         </keep-alive>
