@@ -1,44 +1,46 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import {
+  BasePageName,
+  BasePagePath,
   HeroPageName,
   HeroPagePath,
-  PageName,
-  PagePath
+  ToolPageName,
+  ToolPagePath
 } from "@/router/RouterConst.ts";
 
 const routes = [
   {
     path: "/",
-    redirect: PagePath.Home
+    redirect: BasePagePath.Home
   },
   {
-    name: PageName.Home,
-    path: PagePath.Home,
+    name: BasePageName.Home,
+    path: BasePagePath.Home,
     component: () => import("@/pages/HomePage.vue"),
     children: [
       {
-        name: PageName.Music,
-        path: PagePath.Music,
+        name: BasePageName.Music,
+        path: BasePagePath.Music,
         component: () => import("@/pages/homeSub/MusicPage.vue")
       },
       {
-        name: PageName.Note,
-        path: PagePath.Note,
+        name: BasePageName.Note,
+        path: BasePagePath.Note,
         component: () => import("@/pages/homeSub/NotePage.vue")
       },
       {
-        name: PageName.Chat,
-        path: PagePath.Chat,
+        name: BasePageName.Chat,
+        path: BasePagePath.Chat,
         component: () => import("@/pages/homeSub/ChatPage.vue")
       },
       {
-        name: PageName.Cmd,
-        path: PagePath.Cmd,
+        name: BasePageName.Cmd,
+        path: BasePagePath.Cmd,
         component: () => import("@/pages/homeSub/CmdPage.vue")
       },
       {
-        name: PageName.Hero,
-        path: PagePath.Hero,
+        name: BasePageName.Hero,
+        path: BasePagePath.Hero,
         component: () => import("@/z/hero/HeroPage.vue"),
         redirect: HeroPagePath.LoginGame,
         children: [
@@ -60,35 +62,35 @@ const routes = [
         ]
       },
       {
-        name: PageName.Tool,
-        path: PagePath.Tool,
+        name: BasePageName.Tool,
+        path: BasePagePath.Tool,
         component: () => import("@/pages/homeSub/ToolPage.vue"),
         children: [
           {
-            name: PageName.Test,
-            path: PagePath.Test,
+            name: ToolPageName.Test,
+            path: ToolPagePath.Test,
             component: () => import("@/pages/homeSub/toolSub/TestPage.vue")
           },
           {
-            name: PageName.IpcTestTool,
-            path: PagePath.IpcTestTool,
+            name: ToolPageName.IpcTestTool,
+            path: ToolPagePath.IpcTestTool,
             component: () => import("@/pages/homeSub/toolSub/IpcTestPage.vue")
           },
           {
-            name: PageName.ComponentTestTool,
-            path: PagePath.ComponentTestTool,
+            name: ToolPageName.ComponentTestTool,
+            path: ToolPagePath.ComponentTestTool,
             component: () =>
               import("@/pages/homeSub/toolSub/ComponentTestPage.vue")
           },
           {
-            name: PageName.LiveAssistant,
-            path: PagePath.LiveAssistant,
+            name: ToolPageName.LiveAssistant,
+            path: ToolPagePath.LiveAssistant,
             component: () =>
               import("@/pages/homeSub/toolSub/LiveAssistantPage.vue")
           },
           {
-            name: PageName.TmpWindow,
-            path: PagePath.TmpWindow,
+            name: ToolPageName.TmpWindow,
+            path: ToolPagePath.TmpWindow,
             component: () => import("@/pages/homeSub/toolSub/TmpWindow.vue")
           }
         ]
@@ -96,13 +98,13 @@ const routes = [
     ]
   },
   {
-    name: PageName.Init,
-    path: PagePath.Init,
+    name: BasePageName.Init,
+    path: BasePagePath.Init,
     component: () => import("@/pages/InitPage.vue")
   },
   {
-    name: PageName.FloatWin,
-    path: PagePath.FloatWin,
+    name: BasePageName.FloatWin,
+    path: BasePagePath.FloatWin,
     component: () => import("@/pages/FloatWinPage.vue")
   }
 ];

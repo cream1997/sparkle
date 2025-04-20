@@ -8,7 +8,7 @@ import WinTitleBar from "@/components/layout/WinTitleBar.vue";
 import { useRouter } from "vue-router";
 import useRouteInfoStore from "@/store/useRouteInfoStore.ts";
 
-import { HeroPageBasePath } from "@/router/RouterConst.ts";
+import { BasePagePath } from "@/router/RouterConst.ts";
 
 const routeInfoStore = useRouteInfoStore();
 
@@ -21,14 +21,14 @@ const router = useRouter();
 router.beforeEach((to, from, next) => {
   let skipPath = to.path;
   if (
-    !from.path.startsWith(HeroPageBasePath) &&
-    to.path.startsWith(HeroPageBasePath)
+    !from.path.startsWith(BasePagePath.Hero) &&
+    to.path.startsWith(BasePagePath.Hero)
   ) {
     skipPath = routeInfoStore.heroPageCurrentPath
       ? routeInfoStore.heroPageCurrentPath
       : skipPath;
   }
-  if (skipPath.startsWith(HeroPageBasePath)) {
+  if (skipPath.startsWith(BasePagePath.Hero)) {
     routeInfoStore.heroPageCurrentPath = skipPath;
   }
   // 不能直接简化写成next(skipPath),因为next函数传值就会导致再执行router.beforeEach导致无限循环

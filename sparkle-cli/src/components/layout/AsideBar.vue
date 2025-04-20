@@ -10,7 +10,7 @@ import cmdSvg from "@/assets/icon/cmd.svg";
 import swordSvg from "@/assets/icon/sword.svg";
 import toolSvg from "@/assets/icon/tool.svg";
 import settingSvg from "@/assets/icon/setting.svg";
-import { PagePath } from "@/router/RouterConst.ts";
+import { BasePagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 const route = useRoute();
@@ -18,7 +18,7 @@ const route = useRoute();
 interface ToolItem {
   title: string;
   icon: string;
-  pagePath: PagePath;
+  pagePath: BasePagePath;
 }
 
 interface SettingItem {
@@ -30,32 +30,32 @@ const allTool: ToolItem[] = reactive([
   {
     title: "音乐",
     icon: musicSvg,
-    pagePath: PagePath.Music
+    pagePath: BasePagePath.Music
   },
   {
     title: "笔记",
     icon: noteSvg,
-    pagePath: PagePath.Note
+    pagePath: BasePagePath.Note
   },
   {
     title: "聊天",
     icon: chatSvg,
-    pagePath: PagePath.Chat
+    pagePath: BasePagePath.Chat
   },
   {
     title: "命令行",
     icon: cmdSvg,
-    pagePath: PagePath.Cmd
+    pagePath: BasePagePath.Cmd
   },
   {
     title: "hero",
     icon: swordSvg,
-    pagePath: PagePath.Hero
+    pagePath: BasePagePath.Hero
   },
   {
     title: "工具",
     icon: toolSvg,
-    pagePath: PagePath.Tool
+    pagePath: BasePagePath.Tool
   }
 ]);
 const settingItem: SettingItem = {

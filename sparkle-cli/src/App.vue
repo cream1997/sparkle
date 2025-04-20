@@ -3,17 +3,17 @@ import IpcChannels, { FloatWinIpcChannels } from "../common/IpcChannels.ts";
 import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 
-import { PagePath } from "@/router/RouterConst.ts";
+import { BasePagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 
 onMounted(() => {
   window.ipc.on(IpcChannels.ToInitPage, () => {
-    router.push(PagePath.Init);
+    router.push(BasePagePath.Init);
   });
 
   window.ipc.on(FloatWinIpcChannels.ToFloatWinPage, () => {
-    router.push(PagePath.FloatWin);
+    router.push(BasePagePath.FloatWin);
   });
 });
 onUnmounted(() => {

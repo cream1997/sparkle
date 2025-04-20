@@ -1,4 +1,4 @@
-export const PagePath = {
+export const BasePagePath = {
   Home: "/Home",
   Init: "/Init",
   Music: "/Music",
@@ -7,28 +7,32 @@ export const PagePath = {
   Cmd: "/Cmd",
   Hero: "/Hero",
   Tool: "/Tool",
-  Test: "/Test",
-  IpcTestTool: "/IpcTestTool",
-  ComponentTestTool: "/ComponentTestTool",
-  LiveAssistant: "/LiveAssistant",
-  TmpWindow: "/TmpWindow",
   FloatWin: "/FloatWin"
 } as const;
 
-export const PageName = Object.keys(PagePath).reduce(
-  (acc, key) => ({ ...acc, [key]: key }),
-  {} as { [K in keyof typeof PagePath]: string }
-);
-
-export const HeroPageBasePath = "/Hero";
-
 export const HeroPagePath = {
-  LoginGame: `${HeroPageBasePath}/Login`,
-  GameServerList: `${HeroPageBasePath}/ServerList`,
-  SelectRole: `${HeroPageBasePath}/SelectRole`
+  LoginGame: `${BasePagePath.Hero}/Login`,
+  GameServerList: `${BasePagePath.Hero}/ServerList`,
+  SelectRole: `${BasePagePath.Hero}/SelectRole`
 } as const;
 
-export const HeroPageName = Object.keys(HeroPagePath).reduce(
-  (acc, key) => ({ ...acc, [key]: key }),
-  {} as { [K in keyof typeof HeroPagePath]: string }
-);
+export const ToolPagePath = {
+  Test: `${BasePagePath.Tool}/Test`,
+  IpcTestTool: `${BasePagePath.Tool}/IpcTestTool`,
+  ComponentTestTool: `${BasePagePath.Tool}/ComponentTestTool`,
+  LiveAssistant: `${BasePagePath.Tool}/LiveAssistant`,
+  TmpWindow: `${BasePagePath.Tool}/TmpWindow`
+} as const;
+
+export const BasePageName = genePageName(BasePagePath);
+export const HeroPageName = genePageName(HeroPagePath);
+export const ToolPageName = genePageName(ToolPagePath);
+
+function genePageName<T extends Record<string, string>>(
+  pagePathConst: T
+): { [K in keyof T]: string } {
+  return Object.keys(pagePathConst).reduce(
+    (acc, key) => ({ ...acc, [key]: key }),
+    {} as { [K in keyof T]: string }
+  );
+}

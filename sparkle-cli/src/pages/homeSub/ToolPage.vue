@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { onActivated, reactive } from "vue";
 import { useRouter } from "vue-router";
-import { PagePath } from "@/router/RouterConst.ts";
+import { ToolPagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 const allTools = reactive([
-  { title: "test", path: PagePath.Test, active: true },
-  { title: "ipc通信", path: PagePath.IpcTestTool },
-  { title: "组件通信", path: PagePath.ComponentTestTool },
-  { title: "直播助手", path: PagePath.LiveAssistant },
-  { title: "临时窗口", path: PagePath.TmpWindow }
+  { title: "test", path: ToolPagePath.Test, active: true },
+  { title: "ipc通信", path: ToolPagePath.IpcTestTool },
+  { title: "组件通信", path: ToolPagePath.ComponentTestTool },
+  { title: "直播助手", path: ToolPagePath.LiveAssistant },
+  { title: "临时窗口", path: ToolPagePath.TmpWindow }
 ]);
 
 const skip2Page = (it: any) => {

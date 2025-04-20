@@ -3,7 +3,7 @@ import IpcChannels from "../../common/IpcChannels.ts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import WinTitleBar from "@/components/layout/WinTitleBar.vue";
-import { PagePath } from "@/router/RouterConst.ts";
+import { BasePagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 
@@ -13,7 +13,7 @@ async function selectRootDir() {
   btnRef.value.disabled = true;
   let ok = await window.electron.ipcRenderer.invoke(IpcChannels.SelectRootDir);
   if (ok) {
-    router.push(PagePath.Home);
+    router.push(BasePagePath.Home);
   } else {
     // 取消了
     btnRef.value.disabled = false;
