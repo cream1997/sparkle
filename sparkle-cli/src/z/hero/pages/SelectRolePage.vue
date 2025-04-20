@@ -2,7 +2,7 @@
 import useAccountStore from "@/store/useAccountStore.ts";
 import { reactive, ref } from "vue";
 import Tip from "@/tools/Tip.ts";
-import { post } from "../../../../common/net/http/AxiosCfg.ts";
+import { postOfHero } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApiOfHero from "../../../../common/net/http/HttpApiOfHero.ts";
 import type { Role } from "@/z/hero/types/GameTypes.ts";
 import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
@@ -22,7 +22,7 @@ function createRole() {
     Tip.err("昵称不能为空~");
     return;
   }
-  post<Role>(HttpApiOfHero.CreateRole, {
+  postOfHero<Role>(HttpApiOfHero.CreateRole, {
     nickName: nickName.value
   })
     .then(newRole => {

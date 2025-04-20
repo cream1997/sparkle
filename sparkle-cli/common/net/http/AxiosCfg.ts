@@ -1,5 +1,7 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import RetStatus from "./RetStatus.ts";
+import HttpApiOfHero from "./HttpApiOfHero.ts";
+import type HttpApi from "./HttpApi.ts";
 
 interface AxiosWithInit extends AxiosInstance {
   _resolveInit: (() => void) | null;
@@ -127,7 +129,7 @@ function baseGet<T>(
 }
 
 function get<T>(
-  url: string,
+  url: (typeof HttpApi)[keyof typeof HttpApi],
   params?: any,
   config?: AxiosRequestConfig
 ): Promise<T> {
@@ -135,7 +137,7 @@ function get<T>(
 }
 
 function getOfHero<T>(
-  url: string,
+  url: (typeof HttpApiOfHero)[keyof typeof HttpApiOfHero],
   params?: any,
   config?: AxiosRequestConfig
 ): Promise<T> {
@@ -143,7 +145,7 @@ function getOfHero<T>(
 }
 
 function post<T>(
-  url: string,
+  url: (typeof HttpApi)[keyof typeof HttpApi],
   data?: any,
   contentTypeIsJson: boolean = false,
   config?: AxiosRequestConfig
@@ -152,7 +154,7 @@ function post<T>(
 }
 
 function postOfHero<T>(
-  url: string,
+  url: (typeof HttpApiOfHero)[keyof typeof HttpApiOfHero],
   data?: any,
   contentTypeIsJson: boolean = false,
   config?: AxiosRequestConfig
