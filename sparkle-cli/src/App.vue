@@ -2,7 +2,8 @@
 import IpcChannels, { FloatWinIpcChannels } from "../common/IpcChannels.ts";
 import { onMounted, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
-import { PagePath } from "@/router/router.ts";
+
+import { PagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 

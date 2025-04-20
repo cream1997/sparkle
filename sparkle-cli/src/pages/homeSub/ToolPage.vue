@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onActivated, reactive } from "vue";
-import { PagePath } from "@/router/router.ts";
 import { useRouter } from "vue-router";
+import { PagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 const allTools = reactive([

@@ -2,8 +2,8 @@
 import IpcChannels from "../../common/IpcChannels.ts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { PagePath } from "@/router/router.ts";
 import WinTitleBar from "@/components/layout/WinTitleBar.vue";
+import { PagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 

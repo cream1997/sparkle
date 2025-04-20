@@ -1,8 +1,8 @@
 import { onActivated, watchEffect, type WatchHandle } from "vue";
 import Tip from "@/tools/Tip.ts";
-import { HeroPagePath } from "@/router/router.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
+import { HeroPagePath } from "@/router/RouterConst.ts";
 
 const accountStore = useAccountStore();
 

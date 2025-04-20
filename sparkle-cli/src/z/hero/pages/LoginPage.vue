@@ -4,11 +4,11 @@ import { post } from "../../../../common/net/http/AxiosCfg.ts";
 import swordPng from "@/assets/png/sword.png";
 import Tip from "@/tools/Tip.ts";
 import { useRouter } from "vue-router";
-import { HeroPagePath } from "@/router/router.ts";
 import type { LoginRes } from "@/z/hero/types/GameTypes.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { heroHttpConfig } from "@/z/hero/net/NetConfig.ts";
 import HttpApi from "../../../../common/net/http/HttpApi.ts";
+import { HeroPagePath } from "@/router/RouterConst.ts";
 
 const accountStore = useAccountStore();
 

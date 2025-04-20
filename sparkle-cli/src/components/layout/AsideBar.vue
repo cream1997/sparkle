@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useRoute, useRouter } from "vue-router";
-import { PagePath } from "@/router/router.ts";
 import ModalComponent from "@/components/layout/ModalComponent.vue";
 import SettingComponent from "@/components/SettingComponent.vue";
 import { reactive, ref } from "vue";
@@ -11,6 +10,7 @@ import cmdSvg from "@/assets/icon/cmd.svg";
 import swordSvg from "@/assets/icon/sword.svg";
 import toolSvg from "@/assets/icon/tool.svg";
 import settingSvg from "@/assets/icon/setting.svg";
+import { PagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 const route = useRoute();

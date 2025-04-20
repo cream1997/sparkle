@@ -7,9 +7,9 @@ import Tip from "@/tools/Tip.ts";
 import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { useRouter } from "vue-router";
-import { HeroPagePath } from "@/router/router.ts";
 import type { WsConnectResult } from "../../../../common/types/WsConnectResult.ts";
 import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
+import { HeroPagePath } from "@/router/RouterConst.ts";
 
 const router = useRouter();
 

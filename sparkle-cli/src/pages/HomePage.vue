@@ -7,7 +7,8 @@ import BottomInfoPanel from "@/components/layout/bottom/BottomInfoPanel.vue";
 import WinTitleBar from "@/components/layout/WinTitleBar.vue";
 import { useRouter } from "vue-router";
 import useRouteInfoStore from "@/store/useRouteInfoStore.ts";
-import { HeroPageBasePath } from "@/router/router.ts";
+
+import { HeroPageBasePath } from "@/router/RouterConst.ts";
 
 const routeInfoStore = useRouteInfoStore();
 
