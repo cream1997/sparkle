@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.net.handler;
+package com.cream.sparkle.hero.net.pipeline;
 
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -30,9 +30,8 @@ public class WebSocketPingHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             // 关闭空闲连接
-            log.info("连接空闲: uid:{}", TokenValidator.getUIdAfterLogin(ctx.channel()));
-            // todo 心跳机制完善后取消注释
-            // ctx.close();
+            log.debug("连接空闲: uid:{}", TokenValidator.getUIdAfterLogin(ctx.channel()));
+            ctx.close();
         }
     }
 }

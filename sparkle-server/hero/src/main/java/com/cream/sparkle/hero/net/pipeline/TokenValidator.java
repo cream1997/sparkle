@@ -1,9 +1,9 @@
-package com.cream.sparkle.hero.net.handler;
+package com.cream.sparkle.hero.net.pipeline;
 
 import com.cream.sparkle.common.error.Err;
 import com.cream.sparkle.common.utils.JwtUtil;
 import com.cream.sparkle.common.utils.Nulls;
-import com.cream.sparkle.hero.net.msg.MsgDispatcher;
+import com.cream.sparkle.hero.net.component.LinkContainer;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,11 +26,11 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
 
     private static final AttributeKey<Long> UID_KEY = AttributeKey.newInstance("uidKey");
 
-    private final MsgDispatcher msgDispatcher;
+    private final LinkContainer linkContainer;
 
     @Autowired
-    public TokenValidator(MsgDispatcher msgDispatcher) {
-        this.msgDispatcher = msgDispatcher;
+    public TokenValidator(LinkContainer linkContainer) {
+        this.linkContainer = linkContainer;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
         }
         // 验证成功，存入id
         ctx.channel().attr(UID_KEY).set(idAndQx.id);
-        this.msgDispatcher.putChannel(ctx.channel());
+        this.linkContainer.putChannel(ctx.channel());
         ctx.fireChannelRead(msg);
     }
 

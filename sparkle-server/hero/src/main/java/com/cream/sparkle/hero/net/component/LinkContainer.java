@@ -1,31 +1,35 @@
-package com.cream.sparkle.hero.net.msg;
+package com.cream.sparkle.hero.net.component;
 
 import com.cream.sparkle.hero.manager.MapManager;
 import com.cream.sparkle.hero.net.constants.DisconnectReason;
-import com.cream.sparkle.hero.net.handler.TokenValidator;
+import com.cream.sparkle.hero.net.pipeline.TokenValidator;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-public class MsgDispatcher {
+public class LinkContainer {
 
-    private final ConcurrentHashMap<Long, Channel> uid2Channel = new ConcurrentHashMap<>();
+    private final Map<Long, Channel> Uid2Channel = new ConcurrentHashMap<>();
+    private final Map<Long, Long> Uid2Rid = new ConcurrentHashMap<>();
+    private final Map<Long, Long> Rid2Uid = new ConcurrentHashMap<>();
+
 
     private final MapManager mapManager;
 
     @Autowired
-    public MsgDispatcher(MapManager mapManager) {
+    public LinkContainer(MapManager mapManager) {
         this.mapManager = mapManager;
     }
 
     public void putChannel(Channel channel) {
         long uid = TokenValidator.getUIdAfterLogin(channel);
-        Channel oldChannel = this.uid2Channel.get(uid);
+        Channel oldChannel = Uid2Channel.get(uid);
         if (oldChannel != null) {
             log.info("顶号，uid:{}", uid);
             /*
@@ -36,7 +40,7 @@ public class MsgDispatcher {
             // 断开旧连接
             oldChannel.close();
         }
-        this.uid2Channel.put(uid, channel);
+        Uid2Channel.put(uid, channel);
     }
 
     /**
@@ -48,14 +52,14 @@ public class MsgDispatcher {
          * 之所以要这样判断一下，是因为在顶号时，oldChannel.close()会出发一个异步的channelInactive，里面有个removeChannel的操作
          * 而在oldChannel.close()后还有个put new channel操作,它会先于异步的removeChannel，导致先put后remove
          */
-        if (channel == this.uid2Channel.get(uid)) {
-            this.uid2Channel.remove(uid);
+        if (channel == Uid2Channel.get(uid)) {
+            Uid2Channel.remove(uid);
         }
     }
 
     public boolean containsChannel(Channel channel) {
         long uid = TokenValidator.getUIdAfterLogin(channel);
-        return channel == this.uid2Channel.get(uid);
+        return channel == Uid2Channel.get(uid);
     }
 
     /**
@@ -64,5 +68,29 @@ public class MsgDispatcher {
     public void handleDisconnect(Channel channel, DisconnectReason reason) {
         this.mapManager.exitMap(TokenValidator.getUIdAfterLogin(channel));
         removeChannel(channel);
+    }
+
+    public void setRid(long uid, long rid) {
+        Uid2Rid.put(uid, rid);
+        Rid2Uid.put(rid, uid);
+    }
+
+    public long getRidByUid(long uid) {
+        return Uid2Rid.getOrDefault(uid, 0L);
+    }
+
+    public void removeRid(long rid) {
+        Long uid = Rid2Uid.get(rid);
+        Rid2Uid.remove(rid);
+        Uid2Rid.remove(uid);
+    }
+
+    public Channel getChannel(long rid) {
+        Long uid = Rid2Uid.get(rid);
+        Channel channel = Uid2Channel.get(uid);
+        if (channel == null) {
+            log.error("获取channel为空, rid:{},uid:{}", rid, uid);
+        }
+        return channel;
     }
 }
