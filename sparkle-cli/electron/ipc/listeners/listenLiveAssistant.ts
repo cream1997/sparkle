@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import IpcChannels from "../../../common/IpcChannels.ts";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { getAppRootDir } from "../../config/AppStore.ts";
 import * as path from "node:path";
 import * as fs from "node:fs";

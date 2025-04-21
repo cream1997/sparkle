@@ -1,9 +1,9 @@
 import { ipcMain } from "electron";
-import { IpcChannelsOfHero } from "../../../common/IpcChannels.ts";
 import GameWebSocket from "../../net/HeroWebSocket.ts";
 import type { WsConnectResult } from "../../../common/types/WsConnectResult.ts";
 import { InvokeListener, SendListener } from "../../types/MainProcessTypes.ts";
 import { mainWin } from "../../manager/WindowManager.ts";
+import { IpcChannelsOfHero } from "../../../common/channels/IpcChannelsOfHero.ts";
 
 export default function listenHeroChannels() {
   ipcMain.handle(IpcChannelsOfHero.WsConnect, wsConnectListener);

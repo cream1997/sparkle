@@ -2,7 +2,7 @@ import { app, BrowserWindow } from "electron";
 import * as path from "node:path";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import mainIpcSetup from "./ipc/MainIpcSetup";
-import IpcChannels from "../common/IpcChannels";
+import IpcChannels from "../common/channels/IpcChannels.ts";
 import { getAppRootDir } from "./config/AppStore";
 import { initMainWindow } from "./manager/WindowManager.ts";
 import createTray from "./manager/TrayManager.ts";

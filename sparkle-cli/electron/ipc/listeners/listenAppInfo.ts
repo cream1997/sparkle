@@ -1,4 +1,4 @@
-import IpcChannels from "../../../common/IpcChannels";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { getAppRootDir, getServerAddress } from "../../config/AppStore";
 import { app, ipcMain } from "electron";
 

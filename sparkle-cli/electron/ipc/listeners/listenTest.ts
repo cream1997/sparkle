@@ -1,4 +1,4 @@
-import IpcChannels from "../../../common/IpcChannels";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { ipcMain } from "electron";
 
 export default function listenTest() {

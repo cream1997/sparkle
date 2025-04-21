@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AsideBar from "@/components/layout/AsideBar.vue";
 import { onMounted } from "vue";
-import IpcChannels from "../../common/IpcChannels.ts";
+import IpcChannels from "../../common/channels/IpcChannels.ts";
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
 import BottomInfoPanel from "@/components/layout/bottom/BottomInfoPanel.vue";
 import WinTitleBar from "@/components/layout/WinTitleBar.vue";

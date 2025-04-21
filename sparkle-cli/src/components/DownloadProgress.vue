@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";
-import IpcChannels from "../../common/IpcChannels.ts";
+import IpcChannels from "../../common/channels/IpcChannels.ts";
 
 const updateDownloadStore = useUpdateDownloadStore();
 

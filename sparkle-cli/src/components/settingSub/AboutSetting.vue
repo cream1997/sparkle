@@ -2,7 +2,7 @@
 import { useAppInfoStore } from "@/store/useAppInfoStore.ts";
 import { get } from "../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../common/net/http/HttpApi.ts";
-import IpcChannels from "../../../common/IpcChannels.ts";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
 import Confirm from "@/tools/Confirm.ts";
 import { useUpdateDownloadStore } from "@/store/useUpdateDownloadStore.ts";

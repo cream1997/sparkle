@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import IpcChannels from "../../../../common/IpcChannels.ts";
+import IpcChannels from "../../../../common/channels/IpcChannels.ts";
 import Tip from "@/tools/Tip.ts";
 
 const testCmdResult = ref("");

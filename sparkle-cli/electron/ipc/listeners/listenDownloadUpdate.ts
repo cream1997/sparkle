@@ -1,4 +1,4 @@
-import IpcChannels from "../../../common/IpcChannels";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { axios } from "../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../common/net/http/HttpApi.ts";
 import { AppTmpDir } from "../../constant/MainConst.ts";

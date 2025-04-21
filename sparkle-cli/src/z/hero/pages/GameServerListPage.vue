@@ -4,12 +4,12 @@ import { get, initHeroBaseUrl } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../../common/net/http/HttpApi.ts";
 import type { GameServer } from "@/z/hero/types/GameServerTypes.ts";
 import Tip from "@/tools/Tip.ts";
-import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 import useAccountStore from "@/store/useAccountStore.ts";
 import { useRouter } from "vue-router";
 import type { WsConnectResult } from "../../../../common/types/WsConnectResult.ts";
 import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
 import { HeroPagePath } from "@/router/RouterConst.ts";
+import IpcChannelsOfHero from "../../../../common/channels/IpcChannelsOfHero.ts";
 
 const router = useRouter();
 

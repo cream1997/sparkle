@@ -1,5 +1,5 @@
 import { ipcMain } from "electron";
-import IpcChannels from "../../../common/IpcChannels.ts";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { WinOpType } from "../../../common/CommonConst.ts";
 import { mainWin } from "../../manager/WindowManager.ts";
 

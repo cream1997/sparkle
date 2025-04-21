@@ -6,9 +6,9 @@ import { postOfHero } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApiOfHero from "../../../../common/net/http/HttpApiOfHero.ts";
 import type { Role } from "@/z/hero/types/GameTypes.ts";
 import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
-import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 import msgDispatcher from "@/z/hero/net/ResMsgDispatcher.ts";
 import msgSender from "@/z/hero/net/MsgSender.ts";
+import IpcChannelsOfHero from "../../../../common/channels/IpcChannelsOfHero.ts";
 
 useWatchTokenHook();
 

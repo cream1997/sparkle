@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IpcChannels from "../../common/IpcChannels.ts";
+import IpcChannels from "../../common/channels/IpcChannels.ts";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import WinTitleBar from "@/components/layout/WinTitleBar.vue";

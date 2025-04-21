@@ -14,14 +14,4 @@ enum IpcChannels {
   LiveAssistantSave = "LiveAssistantSave"
 }
 
-export enum FloatWinIpcChannels {
-  ToFloatWinPage = "ToFloatWinPage"
-}
-
-export enum IpcChannelsOfHero {
-  WsConnect = "WsConnect",
-  SendMsg = "SendMsg",
-  ReceiveMsg = "ReceiveMsg"
-}
-
 export default IpcChannels;

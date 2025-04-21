@@ -2,7 +2,7 @@
 import "@xterm/xterm/css/xterm.css";
 import { nextTick, onMounted, onUnmounted, reactive, ref, toRaw } from "vue";
 import { Terminal } from "@xterm/xterm";
-import IpcChannels from "../../../common/IpcChannels.ts";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { FitAddon } from "@xterm/addon-fit";
 import Tip from "@/tools/Tip.ts";
 
@@ -46,7 +46,7 @@ function logDecoderStr(chunk: any) {
     .replace(
       // eslint-disable-next-line no-control-regex
       /[\u0000-\u001F]/g,
-      (c) => String.fromCharCode(0x2400 + c.charCodeAt(0)) // 显示为控制图形符号
+      c => String.fromCharCode(0x2400 + c.charCodeAt(0)) // 显示为控制图形符号
     );
 
   console.log("接收到的数据(包含控制序列):", str);
@@ -77,7 +77,7 @@ function createTerminal(mountEl: HTMLElement) {
     adjustSize();
   });
   resizeObserver.observe(mountEl);
-  newTerminal.onData((data) => {
+  newTerminal.onData(data => {
     // 直接将所有输入数据发送到SSH服务器，让服务器端处理所有特殊字符
     sendSshMsg(data);
   });

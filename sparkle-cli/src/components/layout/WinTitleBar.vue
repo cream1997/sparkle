@@ -7,7 +7,7 @@ import minSvg from "@/assets/icon/min.svg";
 import unTopSvg from "@/assets/icon/unTop.svg";
 import restoreSvg from "@/assets/icon/restore.svg";
 import { ref } from "vue";
-import IpcChannels from "../../../common/IpcChannels.ts";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { WinOpType } from "../../../common/CommonConst.ts";
 
 defineProps({

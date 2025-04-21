@@ -84,9 +84,17 @@ export default class GameWebSocket {
     }
   }
 
-  // 关闭连接
+  /**
+   * 关闭连接
+   * 手动调用close不会走到这里，实测服务器那边的关闭会走到这里
+   */
   handleClose(code: any, reason: any) {
     console.log(`[WS] Connection closed: ${code} ${reason}`);
+    // 还是要调用一下实例的close方法，清理其他资源
+    /**
+     * 所以这里需要调用实例的close方法，清理实例的一些东西
+     * 因为手动调用close不会走到这里，实测服务器那边的关闭会走到这里(所以不会导致无限递归)
+     */
     this.close();
     // todo 向渲染进程通知...
     // 自动重连逻辑

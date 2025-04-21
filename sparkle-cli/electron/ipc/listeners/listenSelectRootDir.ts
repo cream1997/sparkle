@@ -1,4 +1,4 @@
-import IpcChannels from "../../../common/IpcChannels";
+import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { AppCfgStore } from "../../config/AppStore";
 import { AppRootDirKey } from "../../constant/MainConst.ts";
 import { dialog, ipcMain } from "electron";
