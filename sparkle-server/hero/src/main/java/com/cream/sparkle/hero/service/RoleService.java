@@ -29,12 +29,12 @@ public class RoleService {
             throw new TipErr("昵称不能为空");
         }
         // fixme 随机id算法
-        Role role = new Role(Times.now(), Times.now(), nickName);
+        Role role = new Role(Times.now(), uid, nickName);
         this.roleDbTool.insertRole(role);
         return role;
     }
 
     public List<Role> getAllRole(long uid) {
-        return null;
+        return this.roleDbTool.selectAllRole(uid);
     }
 }

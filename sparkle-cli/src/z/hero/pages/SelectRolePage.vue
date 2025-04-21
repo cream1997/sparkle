@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import useAccountStore from "@/store/useAccountStore.ts";
-import { onActivated, reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import Tip from "@/tools/Tip.ts";
 import { postOfHero } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApiOfHero from "../../../../common/net/http/HttpApiOfHero.ts";
@@ -41,7 +41,7 @@ function getAllRole() {
 
 function enterRole(role: Role) {}
 
-onActivated(() => {
+onMounted(() => {
   getAllRole();
 });
 </script>

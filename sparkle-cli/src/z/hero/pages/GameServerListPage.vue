@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
-import { get } from "../../../../common/net/http/AxiosCfg.ts";
+import { get, initHeroBaseUrl } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApi from "../../../../common/net/http/HttpApi.ts";
 import type { GameServer } from "@/z/hero/types/GameServerTypes.ts";
 import Tip from "@/tools/Tip.ts";
@@ -45,6 +45,7 @@ function enterGameServer(server: GameServer) {
     .then((res: WsConnectResult) => {
       if (res.success) {
         Tip.info("连接成功~");
+        initHeroBaseUrl(`http://${server.ip}:${server.httpPort}`);
         // 跳转角色界面
         router.push(HeroPagePath.SelectRole);
       } else {

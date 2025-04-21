@@ -52,7 +52,7 @@ const heroAxiosInstance = createAxiosInstance() as AxiosWithInit;
     instance._resolveInit = resolve;
     instance._queue = [];
   }).then(() => {
-    instance._queue?.forEach(fn => fn());
+    instance._queue.forEach(fn => fn());
     instance._queue = [];
     instance._resolveInit = null;
   });
@@ -89,12 +89,19 @@ function basePost<T>(
     return axiosWithInit.post(url, data, config).then(res => res as T);
   } else {
     return new Promise<T>((resolve, reject) => {
-      axiosWithInit._queue?.push(() => {
+      axiosWithInit._queue.push(() => {
         axiosWithInit
           .post(url, data, config)
           .then(res => resolve(res as T))
           .catch(reject);
       });
+      if (axiosWithInit._queue.length > 6) {
+        /*
+         * 队列只是起到一个预防作用，并不是让它真正去缓存消息；比如f5刷新页面时,如果初始化url操作
+         * 放到了父组件，而子组件先调用了请求，就会有问题(刷新时父组件的mount会后于子组件)；加了这个队列主要是预防这种问题
+         */
+        throw new Error("http请求队列累计消息数量超限");
+      }
     });
   }
 }
@@ -118,12 +125,19 @@ function baseGet<T>(
     return axiosWithInit.get(url, config).then(res => res as T);
   } else {
     return new Promise<T>((resolve, reject) => {
-      axiosWithInit._queue?.push(() => {
+      axiosWithInit._queue.push(() => {
         axiosWithInit
           .get(url, config)
           .then(res => resolve(res as T))
           .catch(reject);
       });
+      if (axiosWithInit._queue.length > 6) {
+        /*
+         * 队列只是起到一个预防作用，并不是让它真正去缓存消息；比如f5刷新页面时,如果初始化url操作
+         * 放到了父组件，而子组件先调用了请求，就会有问题(刷新时父组件的mount会后于子组件)；加了这个队列主要是预防这种问题
+         */
+        throw new Error("http请求队列累计消息数量超限");
+      }
     });
   }
 }
@@ -164,6 +178,7 @@ function postOfHero<T>(
 
 export {
   mainAxiosInstance as axios,
+  heroAxiosInstance as heroAxios,
   post,
   postOfHero,
   get,
