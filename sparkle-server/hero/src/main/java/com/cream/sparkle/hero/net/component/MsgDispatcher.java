@@ -31,10 +31,13 @@ public class MsgDispatcher {
     }
 
     public void dispatchReqMsg(long uid, JSONObject reqMsg) {
-        Integer msgType;
+        Integer msgType = null;
         try {
             msgType = (Integer) reqMsg.get(MsgTypeJsonKey);
-        } catch (ClassCastException e) {
+        } catch (ClassCastException ignored) {
+        }
+        // null是可以强转为Integer,所以这里还需判断一下
+        if (msgType == null) {
             log.error("请求消息类型格式错误, msgType:{}", reqMsg.get(MsgTypeJsonKey));
             return;
         }
@@ -43,14 +46,16 @@ public class MsgDispatcher {
             log.error("未找到对应类型的请求消息处理器,msgType:{}", msgType);
             return;
         }
-        long rid = this.linkContainer.getRidByUid(uid);
-        if (msgType != ReqMsgType.LoginRole.value && rid == 0) {
-            log.error("rid获取失败,msgType:{}", ReqMsgType.getByValue(msgType));
-            return;
+        // 对于登录前id设置为uid，对于登录后id设置为rid
+        long id;
+        if (msgType == ReqMsgType.LoginRole.value) {
+            id = uid;
+        } else {
+            id = this.linkContainer.getRidByUid(uid);
         }
         Object data = reqMsg.get(DataJsonKey);
         if (data == null) {
-            reqMsgProcessor.process(rid);
+            reqMsgProcessor.process(id);
             return;
         }
         if (data instanceof JSONObject jsonObject) {
@@ -64,6 +69,6 @@ public class MsgDispatcher {
         }
         @SuppressWarnings("unchecked")
         MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
-        processor.process(rid, data);
+        processor.process(id, data);
     }
 }

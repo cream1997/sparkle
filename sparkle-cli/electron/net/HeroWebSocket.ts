@@ -43,7 +43,11 @@ export default class GameWebSocket {
       }
     );
     // 事件绑定
-    this.ws.on("message", this.handleMessage).on("close", this.handleClose);
+    this.ws
+      // 注意这里不能直接将this.handleMessage传给第二个参数，因为它会改变内部this的指向(或者也可以将handleMessage的声明改为使用箭头函数)
+      .on("message", data => this.handleMessage(data))
+      // 注意这里不能直接将this.handleClose传给第二个参数，因为它会改变内部this的指向(或者也可以将handleClose的声明改为使用箭头函数)
+      .on("close", (code, reason) => this.handleClose(code, reason));
     return this.getConnectPromise();
   }
 

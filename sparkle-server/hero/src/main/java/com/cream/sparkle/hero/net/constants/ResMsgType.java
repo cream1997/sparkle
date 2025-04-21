@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public enum ResMsgType {
+    LoginRole(0),
     ;
 
     public final int value;

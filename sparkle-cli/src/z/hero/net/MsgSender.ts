@@ -1,5 +1,5 @@
-import ReqMsgType from "@/z/hero/net/base/ReqMsgType.ts";
 import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
+import ReqMsgType from "@/z/hero/net/types/ReqMsgType.ts";
 
 class MsgSender {
   sendLoginRole(rid: number) {
@@ -7,8 +7,8 @@ class MsgSender {
   }
 }
 
-function sendMsg(type: ReqMsgType, data?: any) {
-  window.ipc.send(IpcChannelsOfHero.SendMsg, { type, data });
+function sendMsg(msgType: ReqMsgType, data?: any) {
+  window.ipc.send(IpcChannelsOfHero.SendMsg, { msgType, data });
 }
 
 const msgSender = new MsgSender();

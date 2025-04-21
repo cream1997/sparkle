@@ -7,11 +7,17 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 public abstract class MsgProcessor<T> {
-    
-    public void process(long rid, @NonNull T data) {
+
+    /**
+     * @param id 对于登录角色前的请求会传uid,对于登录后的会传rid
+     */
+    public void process(long id, @NonNull T data) {
     }
 
-    public void process(long rid) {
+    /**
+     * @param id 对于登录角色前的请求会传uid,对于登录后的会传rid
+     */
+    public void process(long id) {
     }
 
     public abstract ReqMsgType matchType();

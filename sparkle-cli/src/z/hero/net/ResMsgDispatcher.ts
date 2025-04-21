@@ -1,4 +1,4 @@
-import type ResMsgType from "@/z/hero/net/base/ResMsgType.ts";
+import type ResMsgType from "@/z/hero/net/types/ResMsgType.ts";
 
 type ResMsgListener = (data: any, msgType: number) => void;
 

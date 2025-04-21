@@ -8,6 +8,7 @@ import type { Role } from "@/z/hero/types/GameTypes.ts";
 import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
 import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
 import msgDispatcher from "@/z/hero/net/ResMsgDispatcher.ts";
+import msgSender from "@/z/hero/net/MsgSender.ts";
 
 useWatchTokenHook();
 
@@ -41,7 +42,9 @@ function getAllRole() {
   });
 }
 
-function enterRole(role: Role) {}
+function enterRole(role: Role) {
+  msgSender.sendLoginRole(+role.basic.id);
+}
 
 onMounted(() => {
   getAllRole();

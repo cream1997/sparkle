@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
@@ -54,6 +55,10 @@ public class LinkContainer {
          */
         if (channel == Uid2Channel.get(uid)) {
             Uid2Channel.remove(uid);
+            long rid = getRidByUidMayNull(uid);
+            if (rid != 0) {
+                removeRid(rid);
+            }
         }
     }
 
@@ -66,8 +71,20 @@ public class LinkContainer {
      * 处理断开
      */
     public void handleDisconnect(Channel channel, DisconnectReason reason) {
-        this.mapManager.exitMap(TokenValidator.getUIdAfterLogin(channel));
+        long uid = TokenValidator.getUIdAfterLogin(channel);
+        long rid = getRidByUidMayNull(uid);
+        if (rid != 0) {
+            this.mapManager.exitMap(rid);
+        }
         removeChannel(channel);
+    }
+
+    public long getUidByRid(long rid) {
+        Long uid = Rid2Uid.getOrDefault(rid, 0L);
+        if (uid == 0) {
+            log.error("获取uid为空, rid:{}", rid);
+        }
+        return uid;
     }
 
     public void setRid(long uid, long rid) {
@@ -76,20 +93,35 @@ public class LinkContainer {
     }
 
     public long getRidByUid(long uid) {
+        Long rid = Uid2Rid.getOrDefault(uid, 0L);
+        if (rid == 0) {
+            log.error("获取rid为空, uid:{}", uid);
+        }
+        return rid;
+    }
+
+    /**
+     * 这个方法允许返回为空(即0)，也就是为空不会打印错误日志
+     * 因为在有些时机获取rid是允许为空的，比如登录角色前
+     */
+    public long getRidByUidMayNull(long uid) {
         return Uid2Rid.getOrDefault(uid, 0L);
     }
 
+    /**
+     * 退出当前角色或者退出整个账号时remove
+     */
     public void removeRid(long rid) {
         Long uid = Rid2Uid.get(rid);
+        Objects.requireNonNull(uid);
         Rid2Uid.remove(rid);
         Uid2Rid.remove(uid);
     }
 
-    public Channel getChannel(long rid) {
-        Long uid = Rid2Uid.get(rid);
+    public Channel getChannelByUid(long uid) {
         Channel channel = Uid2Channel.get(uid);
         if (channel == null) {
-            log.error("获取channel为空, rid:{},uid:{}", rid, uid);
+            log.error("使用uid获取channel为空, uid:{}", uid);
         }
         return channel;
     }

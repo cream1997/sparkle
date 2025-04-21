@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component;
 public class MapManager {
 
 
-    public void exitMap(long uid) {
+    public void exitMap(long rid) {
     }
 }
