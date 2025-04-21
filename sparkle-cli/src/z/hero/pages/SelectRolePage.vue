@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import useAccountStore from "@/store/useAccountStore.ts";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 import Tip from "@/tools/Tip.ts";
 import { postOfHero } from "../../../../common/net/http/AxiosCfg.ts";
 import HttpApiOfHero from "../../../../common/net/http/HttpApiOfHero.ts";
 import type { Role } from "@/z/hero/types/GameTypes.ts";
 import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
+import { IpcChannelsOfHero } from "../../../../common/IpcChannels.ts";
+import msgDispatcher from "@/z/hero/net/ResMsgDispatcher.ts";
 
 useWatchTokenHook();
 
@@ -43,6 +45,13 @@ function enterRole(role: Role) {}
 
 onMounted(() => {
   getAllRole();
+  window.ipc.on(IpcChannelsOfHero.ReceiveMsg, (_e, msg) => {
+    msgDispatcher.dispatchMsg(msg);
+  });
+});
+
+onUnmounted(() => {
+  window.ipc.removeAllListeners(IpcChannelsOfHero.ReceiveMsg);
 });
 </script>
 
