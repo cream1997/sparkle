@@ -34,13 +34,6 @@ public class Context {
         }
     }
 
-    private static class DataWrapper {
-        private final int msgType;
-        private final BaseRes data;
-
-        private DataWrapper(int msgType, BaseRes data) {
-            this.msgType = msgType;
-            this.data = data;
-        }
+    private record DataWrapper(int msgType, BaseRes data) {
     }
 }
