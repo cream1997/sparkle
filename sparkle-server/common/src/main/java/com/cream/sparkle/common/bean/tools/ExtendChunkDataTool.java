@@ -37,7 +37,9 @@ public class ExtendChunkDataTool {
         Map<String, Object> valueMap = new HashMap<>();
         byte[] data = DbCodecUtil.format(dataObj);
         valueMap.put(DataTableFiledName, data);
-        valueMap.put(CreateTimeTableFieldName, new Timestamp(Times.now()));
+        Timestamp nowTimeStamp = new Timestamp(Times.now());
+        valueMap.put(CreateTimeTableFieldName, nowTimeStamp);
+        valueMap.put(UpdateTimeTableFieldName, nowTimeStamp);
         if (extendFields != null) {
             valueMap.putAll(extendFields);
         }

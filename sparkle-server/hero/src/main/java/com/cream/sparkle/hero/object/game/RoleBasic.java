@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class RoleBasic {
     public final long id;
+    public final long uid;
     private String name;
     private int level;
     private int hp;
@@ -19,8 +20,9 @@ public class RoleBasic {
     private long loginTime;
     private long logoutTime;
 
-    public RoleBasic(long id, String name) {
+    public RoleBasic(long id, long uid, String name) {
         this.id = id;
+        this.uid = uid;
         this.name = name;
         this.level = 1;
         this.createTime = Times.now();
