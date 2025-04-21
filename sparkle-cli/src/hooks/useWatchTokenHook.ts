@@ -15,7 +15,12 @@ export default function useWatchTokenHook() {
     stopTokenWatch = watchEffect(() => {
       const token = accountStore.token;
       if (!token) {
-        Tip.err("token为空，请先登录", 800);
+        let tip = accountStore.tokenInvalidDesc;
+        accountStore.tokenInvalidDesc = "";
+        if (!tip) {
+          tip = "token为空，请先登录";
+        }
+        Tip.err(tip, 800);
         const oldPath = route.path;
         setTimeout(() => {
           if (route.path === oldPath) {

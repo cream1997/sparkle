@@ -1,5 +1,5 @@
 import ReqMsgType from "@/z/hero/net/types/ReqMsgType.ts";
-import { IpcChannelsOfHero } from "../../../../common/channels/IpcChannelsOfHero.ts";
+import IpcChannelsOfHero from "../../../../common/channels/IpcChannelsOfHero.ts";
 
 class MsgSender {
   sendLoginRole(rid: number) {

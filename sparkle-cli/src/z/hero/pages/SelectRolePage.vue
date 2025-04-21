@@ -51,6 +51,11 @@ onMounted(() => {
   window.ipc.on(IpcChannelsOfHero.ReceiveMsg, (_e, msg) => {
     msgDispatcher.dispatchMsg(msg);
   });
+  window.ipc.on(IpcChannelsOfHero.ServerDisconnect, () => {
+    // 服务器断开
+    accountStore.tokenInvalidDesc = "游戏服务器网络异常，断开连接";
+    accountStore.token = "";
+  });
 });
 
 onUnmounted(() => {

@@ -1,5 +1,7 @@
 // 配置参数
 import WebSocket from "ws";
+import { mainWin } from "../manager/WindowManager.ts";
+import IpcChannelsOfHero from "../../common/channels/IpcChannelsOfHero.ts";
 
 const WsConfig = {
   RECONNECT_INTERVAL: 5000, // 重试间隔（毫秒）
@@ -96,7 +98,8 @@ export default class GameWebSocket {
      * 因为手动调用close不会走到这里，实测服务器那边的关闭会走到这里(所以不会导致无限递归)
      */
     this.close();
-    // todo 向渲染进程通知...
+    // 向渲染进程通知...
+    mainWin.webContents.send(IpcChannelsOfHero.ServerDisconnect);
     // 自动重连逻辑
     /*    if (this.reconnectAttempts < WsConfig.MAX_RECONNECT_ATTEMPTS) {
           setTimeout(() => {
