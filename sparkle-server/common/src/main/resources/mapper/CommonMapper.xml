@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cream.sparkle.common.bean.mapper.CommonMapper">
+    <select id="selectAll" resultType="java.util.Map">
+        SELECT *
+        FROM ${tableName}
+        <if test="equalConditions != null">
+            <where>
+                <foreach collection="equalConditions" index="key" item="value">
+                    <if test="value != null">
+                        AND ${key} = #{value}
+                    </if>
+                </foreach>
+            </where>
+        </if>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO ${tableName}
+        <!-- 动态生成字段列表 -->
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="valueMap" index="field" item="value">
+                <if test="value != null">
+                    ${field},
+                </if>
+            </foreach>
+        </trim>
+        <!-- 动态生成值列表 -->
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <foreach collection="valueMap" index="field" item="value">
+                <if test="value != null">
+                    #{value},
+                </if>
+            </foreach>
+        </trim>
+    </insert>
+
+    <update id="update">
+        UPDATE ${tableName}
+        <!-- 动态生成SET字段 -->
+        <set>
+            <foreach collection="valueMap" index="field" item="value" separator=",">
+                <if test="value != null">
+                    ${field} = #{value}
+                </if>
+            </foreach>
+        </set>
+        <!-- 动态生成WHERE条件 -->
+        <where>
+            <foreach collection="equalConditions" index="conditionField" item="conditionValue">
+                AND ${conditionField} = #{conditionValue}
+            </foreach>
+        </where>
+    </update>
+</mapper>

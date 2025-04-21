@@ -1,17 +1,18 @@
 package com.cream.sparkle.common.bean.tools;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONReader;
 import com.cream.sparkle.common.bean.mapper.ChunkDataMapper;
 import com.cream.sparkle.common.object.entity.ChunkData;
+import com.cream.sparkle.common.utils.DbCodecUtil;
 import com.cream.sparkle.common.utils.Times;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 
+/**
+ * 表字段是固定数量
+ */
 @Slf4j
 @Component
 public class ChunkDataTool {
@@ -24,7 +25,7 @@ public class ChunkDataTool {
     }
 
     public void insertChunkData(String tableName, long id, Object obj) {
-        byte[] data = format(obj);
+        byte[] data = DbCodecUtil.format(obj);
         chunkDataMapper.insertChunkData(tableName, id, data, new Timestamp(Times.now()));
     }
 
@@ -35,20 +36,11 @@ public class ChunkDataTool {
             return null;
         }
         byte[] data = chunkData.getData();
-        return parse(data, clazz);
+        return DbCodecUtil.parse(data, clazz);
     }
 
     public void updateChunkData(String tableName, long id, Object obj) {
-        byte[] data = format(obj);
+        byte[] data = DbCodecUtil.format(obj);
         chunkDataMapper.updateChunkData(tableName, id, data, new Timestamp(Times.now()));
-    }
-
-    private byte[] format(Object obj) {
-        return JSON.toJSONString(obj).getBytes(StandardCharsets.UTF_8);
-    }
-
-    private <T> T parse(byte[] data, Class<T> tClass) {
-        String jsonStr = new String(data, StandardCharsets.UTF_8);
-        return JSON.parseObject(jsonStr, tClass, JSONReader.Feature.FieldBased);
     }
 }
