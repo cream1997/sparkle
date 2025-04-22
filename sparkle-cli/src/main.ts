@@ -27,7 +27,7 @@ function globalErrorConfig() {
   // 3.捕获全局JavaScript错误
   window.onerror = function (message, source, lineno, colno, error) {
     handleError({
-      info: `${message}; 源${source}, 行:${lineno}, 列:${colno}}`,
+      info: `${message}; 源:${source}, 行:${lineno}, 列:${colno}}`,
       error
     });
   };

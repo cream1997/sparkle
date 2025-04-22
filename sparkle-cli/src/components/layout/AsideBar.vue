@@ -18,7 +18,7 @@ const route = useRoute();
 interface ToolItem {
   title: string;
   icon: string;
-  pagePath: BasePagePath;
+  pagePath: (typeof BasePagePath)[keyof typeof BasePagePath];
 }
 
 interface SettingItem {

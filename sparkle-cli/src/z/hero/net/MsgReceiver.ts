@@ -1,6 +1,6 @@
 import msgDispatcher from "@/z/hero/net/ResMsgDispatcher.ts";
-import ResMsgType from "@/z/hero/net/base/ResMsgType.ts";
 import type { LoginRoleRes } from "@/z/hero/net/types/ResInterface.ts";
+import ResMsgType from "@/z/hero/net/types/ResMsgType.ts";
 
 type MsgHandler<T> = (resData: T, resMsgType: number) => void;
 
