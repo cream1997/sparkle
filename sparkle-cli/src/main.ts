@@ -6,24 +6,48 @@ import { createPinia } from "pinia";
 import Tip from "@/tools/Tip.ts";
 
 const app = createApp(App);
-app.config.errorHandler = handleGlobalError;
-window.addEventListener("unhandledrejection", event =>
-  handleGlobalError(event.reason, null, "unhandledrejection")
-);
+globalErrorConfig();
 app.use(router).use(createPinia()).mount("#app");
 
 /**
- * 捕获组件实例的错误
- * @param err 错误对象
- * @param vm 发生错误的组件实例
- * @param otherInfo vue特定的错误信息，如生命周期钩子名称
+ * 全局错误处理配置
  */
-function handleGlobalError(
-  err: any,
-  vm: ComponentPublicInstance | null,
-  otherInfo: string
-) {
-  console.error(err, vm, otherInfo);
-  Tip.err(err);
-  // todo 错误记录，比如记录本地日志或者发给服务器
+function globalErrorConfig() {
+  // 1.捕获vue组件中的错误
+  app.config.errorHandler = (error, vm, info) => {
+    handleError({ info, error, vm });
+  };
+
+  // 2.捕获未处理的Promise拒绝
+  window.onunhandledrejection = function (event) {
+    handleError({
+      info: `reason:${event.reason}, type:unhandledrejection`
+    });
+  };
+  // 3.捕获全局JavaScript错误
+  window.onerror = function (message, source, lineno, colno, error) {
+    handleError({
+      info: `Global error: ${message} ${source} ${lineno} ${colno}}`,
+      error
+    });
+  };
 }
+
+/**
+ * 统一错误处理入口
+ */
+function handleError(err: {
+  info: string;
+  error?: any;
+  time?: Date;
+  vm?: ComponentPublicInstance | null;
+}) {
+  err.time = new Date();
+  console.error(err);
+  Tip.err(err.info);
+  // todo 错误记录，比如记录本地日志或者发给服务器
+  sendErrToServer(err);
+}
+
+// todo
+function sendErrToServer(err: object) {}
