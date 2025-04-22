@@ -19,6 +19,8 @@ function createWin() {
     // 移除默认的title bar
     titleBarStyle: "hidden",
     webPreferences: {
+      // 开发阶段关闭上下文隔离，从而可以devtools调试预加载脚本
+      contextIsolation: !is.dev,
       preload: path.join(__dirname, "./preload.js"),
       sandbox: false,
       // todo 禁用后台节流，观察效果

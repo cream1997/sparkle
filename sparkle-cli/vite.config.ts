@@ -64,7 +64,7 @@ export default defineConfig(({ mode, command }) => {
           vite: {
             build: {
               outDir: "build/main",
-              sourcemap: isDev
+              sourcemap: isDev ? "inline" : false
             }
           }
         }
