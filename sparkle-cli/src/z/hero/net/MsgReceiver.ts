@@ -1,12 +1,18 @@
-import msgDispatcher from "@/z/hero/net/ResMsgDispatcher.ts";
+import msgDispatcher, {
+  type ListenerKey
+} from "@/z/hero/net/ResMsgDispatcher.ts";
 import type { LoginRoleRes } from "@/z/hero/net/types/ResInterface.ts";
 import ResMsgType from "@/z/hero/net/types/ResMsgType.ts";
 
 type MsgHandler<T> = (resData: T, resMsgType: number) => void;
 
-class MsgReceiver {
+export class MsgReceiver {
+  static removeListener(key: ListenerKey) {
+    msgDispatcher.removeListener(key);
+  }
+
   onReceiveLoginRole(handler: MsgHandler<LoginRoleRes>) {
-    msgDispatcher.addListener(ResMsgType.LoginRole, handler);
+    return msgDispatcher.addListener(ResMsgType.LoginRole, handler);
   }
 }
 
