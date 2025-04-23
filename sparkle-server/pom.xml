@@ -46,11 +46,33 @@
             <optional>true</optional>
         </dependency>
 
+        <!--junit5-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2-extension-spring6</artifactId>
             <version>2.0.56</version>
         </dependency>
+
+        <!--
+            为什么有了fastjson2还要引入Gson？
+            主要是我使用fastjson在实现已定义解析规则时有一些问题搞不定,比如设置fieldBased但是不出效果，必须要结合getter方法，另外
+            在测试使用fastjson2自定义的解析器时机器卡死了几次(也可能是当时机器问题);
+            总之目前二者并存，hero模块使用Gson来处理ws连接的json自定义解析(主要是处理long值到bigint的转换),springboot项目中的mvc
+            整合的是fastjson
+            详情见com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil
+        -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
     </dependencies>
 
     <!-- dependencyManagement下的依赖不会直接传递给子模块， 它只是用来管理版本-->

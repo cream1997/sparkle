@@ -12,8 +12,7 @@ import java.lang.reflect.Type;
  * 为什么有了fastjson2还要使用Gson来实现
  * 主要是我使用fastjson在实现已定义解析规则时有一些问题搞不定,比如设置fieldBased但是不出效果，必须要结合getter方法，另外
  * 在测试使用fastjson2自定义的解析器时经常卡死，目前二者并存，hero模块使用Gson来处理ws连接的json自定义解析主要是处理long值到bigint的转换
- * 详情见com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil
- * todo 后续尝试用fastjson2实现，并将common中的Gson依赖删除，同时删除LongTypeAdapter；亦或者将使用fastjson2的部分改为Gson,然后将fastjson2删除;总之目前二者共存
+ * todo 后续尝试用fastjson2实现，并将Gson依赖删除，同时删除LongTypeAdapter；亦或者将使用fastjson2的部分改为Gson,然后将fastjson2删除;总之目前二者共存
  */
 public class JsonCustomLongCodecUtil {
 
