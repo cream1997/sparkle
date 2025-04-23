@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.object.game;
+package com.cream.sparkle.hero.game.logic;
 
 public class Role {
     public final RoleBasic basic;

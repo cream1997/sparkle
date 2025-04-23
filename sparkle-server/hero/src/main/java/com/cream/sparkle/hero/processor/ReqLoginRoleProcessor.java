@@ -1,11 +1,11 @@
 package com.cream.sparkle.hero.processor;
 
 import com.cream.sparkle.hero.context.Context;
+import com.cream.sparkle.hero.game.logic.Role;
 import com.cream.sparkle.hero.manager.MapManager;
 import com.cream.sparkle.hero.manager.RoleManager;
 import com.cream.sparkle.hero.net.constants.ReqMsgType;
 import com.cream.sparkle.hero.net.msg.res.LoginRoleRes;
-import com.cream.sparkle.hero.object.game.Role;
 import com.cream.sparkle.hero.processor.base.MsgProcessor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;

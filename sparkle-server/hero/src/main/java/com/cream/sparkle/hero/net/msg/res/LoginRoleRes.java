@@ -1,8 +1,8 @@
 package com.cream.sparkle.hero.net.msg.res;
 
+import com.cream.sparkle.hero.game.logic.Role;
 import com.cream.sparkle.hero.net.constants.ResMsgType;
 import com.cream.sparkle.hero.net.msg.BaseRes;
-import com.cream.sparkle.hero.object.game.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

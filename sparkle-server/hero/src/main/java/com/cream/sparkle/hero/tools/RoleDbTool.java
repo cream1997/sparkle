@@ -1,7 +1,7 @@
 package com.cream.sparkle.hero.tools;
 
 import com.cream.sparkle.common.bean.tools.ExtendChunkDataTool;
-import com.cream.sparkle.hero.object.game.Role;
+import com.cream.sparkle.hero.game.logic.Role;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

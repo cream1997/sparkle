@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.object.game;
+package com.cream.sparkle.hero.game.logic;
 
 import com.cream.sparkle.common.utils.Times;
 import lombok.Getter;

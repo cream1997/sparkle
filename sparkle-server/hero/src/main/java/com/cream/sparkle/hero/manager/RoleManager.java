@@ -1,6 +1,6 @@
 package com.cream.sparkle.hero.manager;
 
-import com.cream.sparkle.hero.object.game.Role;
+import com.cream.sparkle.hero.game.logic.Role;
 import com.cream.sparkle.hero.tools.RoleDbTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
