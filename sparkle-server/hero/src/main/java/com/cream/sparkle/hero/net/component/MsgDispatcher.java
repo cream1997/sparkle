@@ -66,14 +66,14 @@ public class MsgDispatcher {
             try {
                 data = JsonCustomLongCodecUtil.fromJsonElement(dataJsonElement.getAsJsonObject(), dataType);
             } catch (Exception e) {
-                log.error("请求消息数据转换异常", e);
+                log.error("请求消息数据转换异常,msgType:{}", msgType, e);
                 return;
             }
         } else {
             try {
                 data = primitiveConvert(dataJsonElement.getAsJsonPrimitive());
             } catch (Err e) {
-                log.error("类型转换异常", e);
+                log.error("基本类型转换异常,msgType:{}", msgType, e);
                 return;
             }
         }
@@ -82,7 +82,7 @@ public class MsgDispatcher {
         try {
             processor.process(id, data);
         } catch (Exception e) {
-            log.error("消息处理执行异常", e);
+            log.error("消息处理执行异常,msgType:{}", msgType, e);
         }
     }
 
@@ -99,7 +99,7 @@ public class MsgDispatcher {
         } else if (jsonPrimitive.isString()) {
             return jsonPrimitive.getAsString();
         } else {
-            throw new Err("暂不支持的类型：" + jsonPrimitive);
+            throw new Err("类型无法转换目前只支持boolean、int、long、String这些基本类型的转换; value:" + jsonPrimitive);
         }
     }
 }

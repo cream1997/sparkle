@@ -31,13 +31,15 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         String reqMsgJsonStr = msg.text();
+        JsonObject jsonObject;
         try {
-            JsonObject jsonObject = JsonParser.parseString(reqMsgJsonStr).getAsJsonObject();
-            long uid = TokenValidator.getUIdAfterLogin(ctx.channel());
-            this.msgDispatcher.dispatchReqMsg(uid, jsonObject);
+            jsonObject = JsonParser.parseString(reqMsgJsonStr).getAsJsonObject();
         } catch (Exception e) {
             log.error("收到请求消息后,json解析异常; json:{}", reqMsgJsonStr, e);
+            return;
         }
+        long uid = TokenValidator.getUIdAfterLogin(ctx.channel());
+        this.msgDispatcher.dispatchReqMsg(uid, jsonObject);
     }
 
     @Override
