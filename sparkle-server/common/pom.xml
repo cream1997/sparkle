@@ -67,5 +67,15 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.17.0</version>
         </dependency>
+
+        <!--为什么有了fastjson2还要引入Gson？
+        主要是我使用fastjson在实现已定义解析规则时有一些问题搞不定,比如设置fieldBased但是不出效果，必须要结合getter方法，另外
+        在测试使用fastjson2自定义的解析器时经常卡死，目前二者并存，hero模块使用Gson来处理ws连接的json自定义解析主要是处理long值到bigint的转换
+        详情见com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.0</version>
+        </dependency>
     </dependencies>
 </project>
