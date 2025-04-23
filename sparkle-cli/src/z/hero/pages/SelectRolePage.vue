@@ -47,12 +47,13 @@ function getAllRole() {
 }
 
 function enterRole(role: Role) {
-  router.push(HeroPagePath.HeroHome);
-  /**
-   * todo 这里目前需要用BigInt转换一下,因为角色列表和创建角色目前用的是http请求，而http请求目前是将long转为了string;
-   * 后续需要将http请求也修改为自定义规则
-   */
-  msgSender.sendLoginRole(BigInt(role.basic.id));
+  router.push(HeroPagePath.HeroHome).then(() => {
+    /**
+     * todo 这里目前需要用BigInt转换一下,因为角色列表和创建角色目前用的是http请求，而http请求目前是将long转为了string;
+     * 后续需要将http请求也修改为自定义规则
+     */
+    msgSender.sendLoginRole(BigInt(role.basic.id));
+  });
 }
 
 onMounted(() => {
