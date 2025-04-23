@@ -2,6 +2,7 @@
 import WebSocket from "ws";
 import { mainWin } from "../manager/WindowManager.ts";
 import IpcChannelsOfHero from "../../common/channels/IpcChannelsOfHero.ts";
+import { JsonSafeParse, JsonSafeStringify } from "../../common/JsonTool.ts";
 
 const WsConfig = {
   RECONNECT_INTERVAL: 5000, // 重试间隔（毫秒）
@@ -79,7 +80,7 @@ export default class GameWebSocket {
   // 处理消息
   handleMessage(data: any) {
     try {
-      const message = JSON.parse(data);
+      const message = JsonSafeParse(data);
       this._onReceiveMsg(message);
     } catch (error) {
       console.error("[WS] Message parsing error:", error);
@@ -115,7 +116,7 @@ export default class GameWebSocket {
    */
   send(data: any) {
     if (this.ws?.readyState === WebSocket.OPEN) {
-      this.ws.send(JSON.stringify(data));
+      this.ws.send(JsonSafeStringify(data));
     }
   }
 

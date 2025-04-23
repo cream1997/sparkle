@@ -9,6 +9,10 @@ import useWatchTokenHook from "@/hooks/useWatchTokenHook.ts";
 import msgDispatcher from "@/z/hero/net/ResMsgDispatcher.ts";
 import msgSender from "@/z/hero/net/MsgSender.ts";
 import IpcChannelsOfHero from "../../../../common/channels/IpcChannelsOfHero.ts";
+import { useRouter } from "vue-router";
+import { HeroPagePath } from "@/router/RouterConst.ts";
+
+const router = useRouter();
 
 useWatchTokenHook();
 
@@ -44,6 +48,7 @@ function getAllRole() {
 
 function enterRole(role: Role) {
   msgSender.sendLoginRole(+role.basic.id);
+  router.push(HeroPagePath.HeroHome);
 }
 
 onMounted(() => {

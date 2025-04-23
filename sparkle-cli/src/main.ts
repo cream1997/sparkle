@@ -43,7 +43,7 @@ function handleError(err: {
   vm?: ComponentPublicInstance | null;
 }) {
   err.time = new Date();
-  console.error(err);
+  console.error(err.info);
   Tip.err(err.info);
   // todo 错误记录，比如记录本地日志或者发给服务器
   sendErrToServer(err);

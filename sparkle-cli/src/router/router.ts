@@ -69,6 +69,14 @@ const routes = [
               [HeroSubPageViewName]: () =>
                 import("@/z/hero/pages/SelectRolePage.vue")
             }
+          },
+          {
+            name: HeroPageName.HeroHome,
+            path: HeroPagePath.HeroHome,
+            components: {
+              [HeroSubPageViewName]: () =>
+                import("@/z/hero/pages/HeroHomePage.vue")
+            }
           }
         ]
       },

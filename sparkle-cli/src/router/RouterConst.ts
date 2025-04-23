@@ -13,7 +13,8 @@ export const BasePagePath = {
 export const HeroPagePath = {
   LoginGame: `${BasePagePath.Hero}/Login`,
   GameServerList: `${BasePagePath.Hero}/ServerList`,
-  SelectRole: `${BasePagePath.Hero}/SelectRole`
+  SelectRole: `${BasePagePath.Hero}/SelectRole`,
+  HeroHome: `${BasePagePath.Hero}/HeroHome`
 } as const;
 
 export const ToolPagePath = {
