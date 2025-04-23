@@ -1,7 +1,6 @@
 package com.cream.sparkle.hero.context;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONWriter;
+import com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil;
 import com.cream.sparkle.hero.manager.MapManager;
 import com.cream.sparkle.hero.net.component.LinkContainer;
 import com.cream.sparkle.hero.net.msg.BaseRes;
@@ -38,7 +37,7 @@ public class Context {
         Channel channel = linkContainer.getChannelByUid(uid);
         Objects.requireNonNull(channel);
         DataWrapper dataWrapper = new DataWrapper(resMsg.msgType().value, resMsg);
-        String jsonString = JSON.toJSONString(dataWrapper, JSONWriter.Feature.FieldBased);
+        String jsonString = JsonCustomLongCodecUtil.toJson(dataWrapper);
         channel.writeAndFlush(new TextWebSocketFrame(jsonString));
     }
 

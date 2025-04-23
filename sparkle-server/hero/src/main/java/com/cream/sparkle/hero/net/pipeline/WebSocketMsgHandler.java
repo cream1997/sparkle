@@ -1,10 +1,10 @@
 package com.cream.sparkle.hero.net.pipeline;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.cream.sparkle.hero.net.component.LinkContainer;
 import com.cream.sparkle.hero.net.component.MsgDispatcher;
 import com.cream.sparkle.hero.net.constants.DisconnectReason;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -30,10 +30,14 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        log.info("Received message: {}", msg.text());
-        JSONObject parseMsg = (JSONObject) JSON.parse(msg.text());
-        long uid = TokenValidator.getUIdAfterLogin(ctx.channel());
-        this.msgDispatcher.dispatchReqMsg(uid, parseMsg);
+        String reqMsgJsonStr = msg.text();
+        try {
+            JsonObject jsonObject = JsonParser.parseString(reqMsgJsonStr).getAsJsonObject();
+            long uid = TokenValidator.getUIdAfterLogin(ctx.channel());
+            this.msgDispatcher.dispatchReqMsg(uid, jsonObject);
+        } catch (Exception e) {
+            log.error("收到请求消息后,json解析异常; json:{}", reqMsgJsonStr, e);
+        }
     }
 
     @Override

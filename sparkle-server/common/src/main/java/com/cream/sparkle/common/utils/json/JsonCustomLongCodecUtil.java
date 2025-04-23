@@ -3,7 +3,10 @@ package com.cream.sparkle.common.utils.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+
+import java.lang.reflect.Type;
 
 /**
  * 为什么有了fastjson2还要使用Gson来实现
@@ -30,6 +33,21 @@ public class JsonCustomLongCodecUtil {
     public static <T> T fromJson(String json, Class<T> classOfT) throws JsonSyntaxException {
         return gson.fromJson(json, classOfT);
     }
+
+    /**
+     * 注意返回的是被包装的子类而非原始的T
+     */
+    public static <T> T fromJsonElement(JsonElement jsonElement, Class<T> classOfT) throws JsonSyntaxException {
+        return gson.fromJson(jsonElement, classOfT);
+    }
+
+    /**
+     * 注意返回的是被包装的子类而非原始的T
+     */
+    public static <T> T fromJsonElement(JsonElement jsonElement, Type type) throws JsonSyntaxException {
+        return gson.fromJson(jsonElement, type);
+    }
+
 
     public static String toJson(Object src) {
         return gson.toJson(src);

@@ -1,8 +1,12 @@
 package com.cream.sparkle.hero.net.component;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.cream.sparkle.common.error.Err;
+import com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil;
 import com.cream.sparkle.hero.net.constants.ReqMsgType;
 import com.cream.sparkle.hero.processor.base.MsgProcessor;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,15 +34,12 @@ public class MsgDispatcher {
         log.info("注册请求消息处理器:{}", reqMsgProcessor);
     }
 
-    public void dispatchReqMsg(long uid, JSONObject reqMsg) {
-        Integer msgType = null;
+    public void dispatchReqMsg(long uid, JsonObject reqMsg) {
+        int msgType;
         try {
-            msgType = (Integer) reqMsg.get(MsgTypeJsonKey);
-        } catch (ClassCastException ignored) {
-        }
-        // null是可以强转为Integer,所以这里还需判断一下
-        if (msgType == null) {
-            log.error("请求消息类型格式错误, msgType:{}", reqMsg.get(MsgTypeJsonKey));
+            msgType = reqMsg.get(MsgTypeJsonKey).getAsInt();
+        } catch (Exception e) {
+            log.error("请求消息类型格式错误, msgType:{}", reqMsg.get(MsgTypeJsonKey), e);
             return;
         }
         MsgProcessor<?> reqMsgProcessor = this.reqMsgType2Processor.get(msgType);
@@ -53,22 +54,52 @@ public class MsgDispatcher {
         } else {
             id = this.linkContainer.getRidByUid(uid);
         }
-        Object data = reqMsg.get(DataJsonKey);
-        if (data == null) {
+        JsonElement dataJsonElement = reqMsg.get(DataJsonKey);
+        if (dataJsonElement.isJsonNull()) {
             reqMsgProcessor.process(id);
             return;
         }
-        if (data instanceof JSONObject jsonObject) {
+        Object data;
+        if (dataJsonElement.isJsonObject()) {
             //数据是非基本类型(String、Long...)需要转换
             Type dataType = reqMsgProcessor.getDataType();
             try {
-                data = jsonObject.to(dataType);
+                data = JsonCustomLongCodecUtil.fromJsonElement(dataJsonElement.getAsJsonObject(), dataType);
             } catch (Exception e) {
                 log.error("请求消息数据转换异常", e);
+                return;
+            }
+        } else {
+            try {
+                data = primitiveConvert(dataJsonElement.getAsJsonPrimitive());
+            } catch (Err e) {
+                log.error("类型转换异常", e);
+                return;
             }
         }
         @SuppressWarnings("unchecked")
         MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
-        processor.process(id, data);
+        try {
+            processor.process(id, data);
+        } catch (Exception e) {
+            log.error("消息处理执行异常", e);
+        }
+    }
+
+    private Object primitiveConvert(JsonPrimitive jsonPrimitive) throws Err {
+        if (jsonPrimitive.isBoolean()) {
+            return jsonPrimitive.getAsBoolean();
+        } else if (jsonPrimitive.isNumber()) {
+            long number = jsonPrimitive.getAsLong();
+            if (number >= Integer.MIN_VALUE && number <= Integer.MAX_VALUE) {
+                return (int) number;
+            } else {
+                return number;
+            }
+        } else if (jsonPrimitive.isString()) {
+            return jsonPrimitive.getAsString();
+        } else {
+            throw new Err("暂不支持的类型：" + jsonPrimitive);
+        }
     }
 }
