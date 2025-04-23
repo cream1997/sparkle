@@ -27,23 +27,14 @@ public class JsonCustomLongCodecUtil {
         return builder.create();
     }
 
-    /**
-     * 注意返回的是被包装的子类而非原始的T
-     */
     public static <T> T fromJson(String json, Class<T> classOfT) throws JsonSyntaxException {
         return gson.fromJson(json, classOfT);
     }
 
-    /**
-     * 注意返回的是被包装的子类而非原始的T
-     */
     public static <T> T fromJsonElement(JsonElement jsonElement, Class<T> classOfT) throws JsonSyntaxException {
         return gson.fromJson(jsonElement, classOfT);
     }
 
-    /**
-     * 注意返回的是被包装的子类而非原始的T
-     */
     public static <T> T fromJsonElement(JsonElement jsonElement, Type type) throws JsonSyntaxException {
         return gson.fromJson(jsonElement, type);
     }
