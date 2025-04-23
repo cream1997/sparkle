@@ -8,8 +8,8 @@ export interface Role {
 }
 
 export interface RoleBasic {
-  id: string;
-  uid: string;
+  id: bigint;
+  uid: bigint;
   name: string;
   level: number;
   hp: number;
@@ -17,7 +17,7 @@ export interface RoleBasic {
   mapId: number;
   x: number;
   y: number;
-  createTime: string;
-  loginTime: string;
-  logoutTime: string;
+  createTime: bigint;
+  loginTime: bigint;
+  logoutTime: bigint;
 }
