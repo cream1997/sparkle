@@ -1,4 +1,5 @@
 import type ResMsgType from "@/z/hero/net/types/ResMsgType.ts";
+import geneId from "../../../../common/tools/IdTool.ts";
 
 type ResMsgListener = (data: any, msgType: number) => void;
 export type ListenerKey = { msgType: ResMsgType; id: number };
@@ -15,11 +16,8 @@ class ResMsgDispatcher {
       allId2Listener = new Map<number, ResMsgListener>();
       this.msgType2Listeners.set(msgType, allId2Listener);
     }
-    // 使用Date.now做id会不会重复？
-    const id = Date.now();
+    const id = geneId();
     if (allId2Listener.has(id)) {
-      // 一般不会重复，因为注册消息监听器不是接受消息，非常不频繁；重复了一定是有问题了
-      // 这里也不要重复了，就再简单的调用下Date.now获取，因为不严谨，严谨的话还需要递归检查，直到不重复；这里直接抛异常就可以了
       throw new Error("添加响应消息监听时id重复");
     }
     allId2Listener.set(id, listener);
