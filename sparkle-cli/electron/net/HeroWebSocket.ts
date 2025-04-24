@@ -2,7 +2,10 @@
 import WebSocket from "ws";
 import { mainWin } from "../manager/WindowManager.ts";
 import IpcChannelsOfHero from "../../common/channels/IpcChannelsOfHero.ts";
-import { JsonSafeParse, JsonSafeStringify } from "../../common/JsonTool.ts";
+import {
+  JsonSafeParse,
+  JsonSafeStringify
+} from "../../common/tools/JsonTool.ts";
 
 const WsConfig = {
   RECONNECT_INTERVAL: 5000, // 重试间隔（毫秒）

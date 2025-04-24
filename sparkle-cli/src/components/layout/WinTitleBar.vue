@@ -8,7 +8,7 @@ import unTopSvg from "@/assets/icon/unTop.svg";
 import restoreSvg from "@/assets/icon/restore.svg";
 import { ref } from "vue";
 import IpcChannels from "../../../common/channels/IpcChannels.ts";
-import { WinOpType } from "../../../common/CommonConst.ts";
+import { WinOpType } from "../../../common/constants/CommonConst.ts";
 
 defineProps({
   showTop: {

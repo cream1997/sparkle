@@ -1,6 +1,6 @@
 import { ipcMain } from "electron";
 import IpcChannels from "../../../common/channels/IpcChannels.ts";
-import { WinOpType } from "../../../common/CommonConst.ts";
+import { WinOpType } from "../../../common/constants/CommonConst.ts";
 import { mainWin } from "../../manager/WindowManager.ts";
 
 export default function listenWinOption() {

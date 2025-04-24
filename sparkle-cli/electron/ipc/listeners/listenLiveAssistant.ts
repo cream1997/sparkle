@@ -3,7 +3,7 @@ import IpcChannels from "../../../common/channels/IpcChannels.ts";
 import { getAppRootDir } from "../../config/AppStore.ts";
 import * as path from "node:path";
 import * as fs from "node:fs";
-import { jiaMi, jieMi } from "../../../common/CommonTools.ts";
+import { jiaMi, jieMi } from "../../../common/tools/CommonTools.ts";
 
 let key: string | null;
 let filePath: string | null;

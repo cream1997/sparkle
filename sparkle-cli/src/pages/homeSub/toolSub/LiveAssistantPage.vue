@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, reactive, ref, toRaw } from "vue";
 import Tip from "@/tools/Tip.ts";
 import IpcChannels from "../../../../common/channels/IpcChannels.ts";
 import Confirm from "@/tools/Confirm.ts";
-import { arrToMap, mapToArr } from "@/../common/CommonTools.ts";
+import { arrToMap, mapToArr } from "../../../../common/tools/CommonTools.ts";
 import LiveAssistantHeaderComponent from "@/components/tool/live/LiveAssistantHeaderComponent.vue";
 import LiveAssistantFooterComponent from "@/components/tool/live/LiveAssistantFooterComponent.vue";
 
