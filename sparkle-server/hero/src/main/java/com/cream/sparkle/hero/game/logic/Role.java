@@ -6,4 +6,8 @@ public class Role {
     public Role(long id, long uid, String name) {
         this.basic = new RoleBasic(id, uid, name);
     }
+
+    public long getRid() {
+        return basic.id;
+    }
 }

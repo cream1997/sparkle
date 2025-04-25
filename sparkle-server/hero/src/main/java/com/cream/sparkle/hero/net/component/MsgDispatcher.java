@@ -24,12 +24,10 @@ public class MsgDispatcher {
 
     private final ConcurrentHashMap<Integer, MsgProcessor<?>> reqMsgType2Processor = new ConcurrentHashMap<>();
     private final LinkContainer linkContainer;
-    private final ThreadRouter threadRouter;
 
     @Autowired
-    public MsgDispatcher(LinkContainer linkContainer, ThreadRouter threadRouter) {
+    public MsgDispatcher(LinkContainer linkContainer) {
         this.linkContainer = linkContainer;
-        this.threadRouter = threadRouter;
     }
 
     public void registryReqMsgProcessor(MsgProcessor<?> reqMsgProcessor) {
@@ -67,9 +65,9 @@ public class MsgDispatcher {
         }
         // 线程路由
         switch (reqMsgProcessor) {
-            case LogicThreadMsgProcessor<?> ignored1 -> threadRouter.routing2Logic(id, processTask);
-            case MapThreadMsgProcessor<?> ignored2 -> threadRouter.routing2Map(id, processTask);
-            case LoginMsgProcessor<?> ignored3 -> threadRouter.routing2Common(processTask);
+            case LogicThreadMsgProcessor<?> ignored1 -> ThreadRouter.routing2Logic(id, processTask);
+            case MapThreadMsgProcessor<?> ignored2 -> ThreadRouter.routing2Map(id, processTask);
+            case LoginMsgProcessor<?> ignored3 -> ThreadRouter.routing2Common(processTask);
             default -> log.error("消息处理器类型错误, processor:{}", reqMsgProcessor);
         }
     }

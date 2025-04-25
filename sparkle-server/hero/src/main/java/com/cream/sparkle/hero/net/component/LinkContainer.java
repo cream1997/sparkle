@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,9 +15,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class LinkContainer {
 
-    private final Map<Long, Channel> Uid2Channel = new ConcurrentHashMap<>();
-    private final Map<Long, Long> Uid2Rid = new ConcurrentHashMap<>();
-    private final Map<Long, Long> Rid2Uid = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Channel> Uid2Channel = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Long> Uid2Rid = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, Long> Rid2Uid = new ConcurrentHashMap<>();
 
 
     private final MapManager mapManager;

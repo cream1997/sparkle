@@ -1,4 +1,4 @@
-package com.cream.sparkle.hero.context.thread.task;
+package com.cream.sparkle.hero.context.thread.queue;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,9 +8,11 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public abstract class TaskQueue {
 
-    private final LinkedBlockingQueue<FutureTask<?>> allTask = new LinkedBlockingQueue<>(100);
+    // 队列任务数量告警阈值
+    private static final int AlarmThreshold = 100;
+    private final LinkedBlockingQueue<FutureTask<?>> allTask = new LinkedBlockingQueue<>();
     private volatile boolean activeFlag = false;
-    private final ReentrantLock lock = new ReentrantLock();
+    private final ReentrantLock activeLock = new ReentrantLock();
 
     public <T> Future<T> addTask(Callable<T> task) {
         FutureTask<T> futureTask = new FutureTask<>(task);
@@ -22,14 +24,15 @@ public abstract class TaskQueue {
     }
 
     private <T> Future<T> addTask(FutureTask<T> futureTask) {
-        try {
-            allTask.add(futureTask);
-        } catch (IllegalStateException e) {
-            // 队列会出现满了的情况，一定是程序哪里出现了问题，导致生产的消息处理不过来
-            log.error("队列已满, 请检查程序", e);
-            return null;
+        allTask.add(futureTask);
+
+        final int taskSize = allTask.size();
+        if (taskSize >= AlarmThreshold) {
+            // 队列堆积很多任务，一定是程序哪里出现了问题，导致生产的消息处理不过来
+            log.error("队列堆积任务过多, 请检查程序; 数量:{}", taskSize);
         }
-        lock.lock();
+
+        activeLock.lock();
         try {
             if (!activeFlag) {
                 activeFlag = true;
@@ -38,7 +41,7 @@ public abstract class TaskQueue {
                 executorService.execute(this::processTask);
             }
         } finally {
-            lock.unlock();
+            activeLock.unlock();
         }
         return futureTask;
     }
@@ -57,7 +60,7 @@ public abstract class TaskQueue {
                 }
             }
         } finally {
-            lock.lock();
+            activeLock.lock();
             try {
                 // 处理完成后移除活动标志
                 activeFlag = false;
@@ -69,11 +72,10 @@ public abstract class TaskQueue {
                     executorService.execute(this::processTask);
                 }
             } finally {
-                lock.unlock();
+                activeLock.unlock();
             }
         }
     }
-
 
     public abstract ExecutorService threadPool();
 }
