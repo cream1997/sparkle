@@ -9,6 +9,11 @@ import java.util.concurrent.*;
  * 使用Executors创建的线程默认是用户线程，而不是守护线程
  * 用户线程：jvm会等待所有用户线程结束后才会退出
  * 守护线程：jvm不会等待守护线程结束（一旦所有用户线程终止，jvm会直接退出，即使守护线程仍在运行，也就是可能会被强行终止）
+ * 这种区别在目前的spring应用中体现不出来；也就是说，它的区别在于用户线程如果不手动调用shutdown会阻塞main函数的结束
+ * 而目前的程序本身启动后就是持续运行的；main的结束依赖于外部的信号比如kill -9或者kill -15
+ * <p>
+ * 即使创建的是用户线程，也不用在程序结束时，手动调用shutdown；因为如果是用kill -15，jvm会自动取shutdown,
+ * 如果是kill -9直接暴力停止，手动调用的方法也执行不到
  */
 @Slf4j
 public class ExecutorsUtil {
@@ -34,34 +39,23 @@ public class ExecutorsUtil {
      */
     private static final ExecutorService MapThreadPool = ThreadToolGenerator.geneMapThreadTool();
 
-    /**
-     * 因为创建的都是用户线程，在应用退出后，需要调用shutdown(启动有序关闭：停止接受新任务，但会继续执行已提交的任务)
-     */
-    public static void shutdownAll() {
-        TmpThreadPool.shutdown();
-        ScheduledSingleThread.shutdown();
-        CommonSingleThread.shutdown();
-        LogicThreadPool.shutdown();
-        MapThreadPool.shutdown();
-    }
-
-    public ScheduledFuture<?> schedule(Runnable task, long delay, TimeUnit unit) {
+    public static ScheduledFuture<?> schedule(Runnable task, long delay, TimeUnit unit) {
         return ScheduledSingleThread.schedule(task, delay, unit);
     }
 
-    public ScheduledFuture<?> runFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit) {
+    public static ScheduledFuture<?> runFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit) {
         return ScheduledSingleThread.scheduleAtFixedRate(task, initialDelay, period, unit);
     }
 
-    public ScheduledFuture<?> runFixedDelay(Runnable task, long initialDelay, long period, TimeUnit unit) {
+    public static ScheduledFuture<?> runFixedDelay(Runnable task, long initialDelay, long period, TimeUnit unit) {
         return ScheduledSingleThread.scheduleWithFixedDelay(task, initialDelay, period, unit);
     }
 
-    public <T> Future<T> submit(Callable<T> task) {
+    public static <T> Future<T> submit(Callable<T> task) {
         return TmpThreadPool.submit(task);
     }
 
-    public void execute(Runnable runnable) {
+    public static void execute(Runnable runnable) {
         TmpThreadPool.execute(runnable);
     }
 }
