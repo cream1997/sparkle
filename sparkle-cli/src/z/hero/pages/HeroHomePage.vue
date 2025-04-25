@@ -8,7 +8,7 @@ useWatchTokenHook();
 
 onMounted(() => {
   const listenerKey = msgReceiver.onReceiveLoginRole((res: LoginRoleRes) => {
-    console.log("收到响应");
+    console.log("收到响应", res);
   });
 
   onUnmounted(() => {

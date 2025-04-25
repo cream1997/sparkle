@@ -40,7 +40,7 @@ public class MsgDispatcher {
         try {
             msgType = getMsgType(reqMsg);
             reqMsgProcessor = getMsgProcessor(msgType);
-            payloadData = getPayloadData(reqMsg, msgType, reqMsgProcessor);
+            payloadData = getPayloadData(reqMsg, reqMsgProcessor);
         } catch (Err e) {
             log.error("解析消息异常", e);
             return;
@@ -84,7 +84,7 @@ public class MsgDispatcher {
     /**
      * 获取荷载的数据
      */
-    private Object getPayloadData(JsonObject reqMsg, int msgType, MsgProcessor<?> reqMsgProcessor) throws Err {
+    private Object getPayloadData(JsonObject reqMsg, MsgProcessor<?> reqMsgProcessor) throws Err {
         // 获取消息处理指定的荷载类型
         Type needDataType = reqMsgProcessor.getDataType();
         // 获取实际发送的荷载数据
@@ -98,13 +98,12 @@ public class MsgDispatcher {
                 return null;
             } else if (needDataType == Boolean.class) {
                 return dataJsonElement.getAsBoolean();
-            } else if (needDataType == Long.class) {
-                return dataJsonElement.getAsLong();
             } else if (needDataType == Integer.class) {
                 return dataJsonElement.getAsInt();
             } else if (needDataType == String.class) {
                 return dataJsonElement.getAsString();
             } else {
+                // 这里包括了needDataType是Long,因为Long有特殊转换,它是以{_isLong:true,_longStr:"xxx"}的形式传递过来的
                 return JsonCustomLongCodecUtil.fromJsonElement(dataJsonElement.getAsJsonObject(), needDataType);
             }
         } catch (Exception e) {
