@@ -2,7 +2,9 @@ package com.cream.sparkle.hero.net.component;
 
 import com.cream.sparkle.common.error.Err;
 import com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil;
-import com.cream.sparkle.hero.net.constants.ReqMsgType;
+import com.cream.sparkle.hero.processor.base.LogicThreadMsgProcessor;
+import com.cream.sparkle.hero.processor.base.LoginMsgProcessor;
+import com.cream.sparkle.hero.processor.base.MapThreadMsgProcessor;
 import com.cream.sparkle.hero.processor.base.MsgProcessor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,10 +24,12 @@ public class MsgDispatcher {
 
     private final ConcurrentHashMap<Integer, MsgProcessor<?>> reqMsgType2Processor = new ConcurrentHashMap<>();
     private final LinkContainer linkContainer;
+    private final ThreadRouter threadRouter;
 
     @Autowired
-    public MsgDispatcher(LinkContainer linkContainer) {
+    public MsgDispatcher(LinkContainer linkContainer, ThreadRouter threadRouter) {
         this.linkContainer = linkContainer;
+        this.threadRouter = threadRouter;
     }
 
     public void registryReqMsgProcessor(MsgProcessor<?> reqMsgProcessor) {
@@ -45,15 +49,28 @@ public class MsgDispatcher {
             log.error("解析消息异常", e);
             return;
         }
-        // 对于登录前id设置为uid，对于登录后id设置为rid
-        long idParam = msgType == ReqMsgType.LoginRole.value ? uid : this.linkContainer.getRidByUid(uid);
+
         @SuppressWarnings("unchecked")
         MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
         Runnable processTask;
-        if (payloadData == null) {
-            processTask = () -> processor.process(idParam);
+        // 对于登录前id设置为uid，对于登录后id设置为rid
+        long id;
+        if (reqMsgProcessor instanceof LoginMsgProcessor<?>) {
+            id = uid;
         } else {
-            processTask = () -> processor.process(idParam, payloadData);
+            id = this.linkContainer.getRidByUid(uid);
+        }
+        if (payloadData == null) {
+            processTask = () -> processor.process(id);
+        } else {
+            processTask = () -> processor.process(id, payloadData);
+        }
+        // 线程路由
+        switch (reqMsgProcessor) {
+            case LogicThreadMsgProcessor<?> ignored1 -> threadRouter.routing2Logic(id, processTask);
+            case MapThreadMsgProcessor<?> ignored2 -> threadRouter.routing2Map(id, processTask);
+            case LoginMsgProcessor<?> ignored3 -> threadRouter.routing2Common(processTask);
+            default -> log.error("消息处理器类型错误, processor:{}", reqMsgProcessor);
         }
     }
 

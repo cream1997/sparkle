@@ -6,14 +6,14 @@ import com.cream.sparkle.hero.manager.MapManager;
 import com.cream.sparkle.hero.manager.RoleManager;
 import com.cream.sparkle.hero.net.constants.ReqMsgType;
 import com.cream.sparkle.hero.net.msg.res.LoginRoleRes;
-import com.cream.sparkle.hero.processor.base.MsgProcessor;
+import com.cream.sparkle.hero.processor.base.LoginMsgProcessor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ReqLoginRoleProcessor extends MsgProcessor<Long> {
+public class ReqLoginRoleProcessor extends LoginMsgProcessor<Long> {
 
     private final RoleManager roleManager;
     private final MapManager mapManager;

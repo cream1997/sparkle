@@ -29,7 +29,7 @@ public class ExecutorsUtil {
     /**
      * 通用线程(单线程)
      */
-    private static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();
+    public static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();
     /**
      * 游戏逻辑线程池(固定数量)
      */
