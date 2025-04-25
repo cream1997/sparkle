@@ -33,11 +33,11 @@ public class ExecutorsUtil {
     /**
      * 游戏逻辑线程池(固定数量)
      */
-    private static final ExecutorService LogicThreadPool = ThreadToolGenerator.geneLogicThreadTool();
+    public static final ExecutorService LogicThreadPool = ThreadToolGenerator.geneLogicThreadTool();
     /**
      * 地图线程池(固定数量)
      */
-    private static final ExecutorService MapThreadPool = ThreadToolGenerator.geneMapThreadTool();
+    public static final ExecutorService MapThreadPool = ThreadToolGenerator.geneMapThreadTool();
 
     public static ScheduledFuture<?> schedule(Runnable task, long delay, TimeUnit unit) {
         return ScheduledSingleThread.schedule(task, delay, unit);

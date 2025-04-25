@@ -46,22 +46,14 @@ public class MsgDispatcher {
             return;
         }
         // 对于登录前id设置为uid，对于登录后id设置为rid
-        long id;
-        if (msgType == ReqMsgType.LoginRole.value) {
-            id = uid;
-        } else {
-            id = this.linkContainer.getRidByUid(uid);
-        }
+        long idParam = msgType == ReqMsgType.LoginRole.value ? uid : this.linkContainer.getRidByUid(uid);
+        @SuppressWarnings("unchecked")
+        MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
+        Runnable processTask;
         if (payloadData == null) {
-            reqMsgProcessor.process(id);
+            processTask = () -> processor.process(idParam);
         } else {
-            @SuppressWarnings("unchecked")
-            MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
-            try {
-                processor.process(id, payloadData);
-            } catch (Exception e) {
-                log.error("消息处理执行异常,msgType:{}", msgType, e);
-            }
+            processTask = () -> processor.process(idParam, payloadData);
         }
     }
 
