@@ -6,7 +6,6 @@ import com.cream.sparkle.hero.net.constants.ReqMsgType;
 import com.cream.sparkle.hero.processor.base.MsgProcessor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,15 +35,14 @@ public class MsgDispatcher {
 
     public void dispatchReqMsg(long uid, JsonObject reqMsg) {
         int msgType;
+        MsgProcessor<?> reqMsgProcessor;
+        Object payloadData;
         try {
-            msgType = reqMsg.get(MsgTypeJsonKey).getAsInt();
-        } catch (Exception e) {
-            log.error("请求消息类型格式错误, msgType:{}", reqMsg.get(MsgTypeJsonKey), e);
-            return;
-        }
-        MsgProcessor<?> reqMsgProcessor = this.reqMsgType2Processor.get(msgType);
-        if (reqMsgProcessor == null) {
-            log.error("未找到对应类型的请求消息处理器,msgType:{}", msgType);
+            msgType = getMsgType(reqMsg);
+            reqMsgProcessor = getMsgProcessor(msgType);
+            payloadData = getPayloadData(reqMsg, msgType, reqMsgProcessor);
+        } catch (Err e) {
+            log.error("解析消息异常", e);
             return;
         }
         // 对于登录前id设置为uid，对于登录后id设置为rid
@@ -54,52 +52,63 @@ public class MsgDispatcher {
         } else {
             id = this.linkContainer.getRidByUid(uid);
         }
-        JsonElement dataJsonElement = reqMsg.get(DataJsonKey);
-        if (dataJsonElement.isJsonNull()) {
+        if (payloadData == null) {
             reqMsgProcessor.process(id);
-            return;
-        }
-        Object data;
-        if (dataJsonElement.isJsonObject()) {
-            //数据是非基本类型(String、Long...)需要转换
-            Type dataType = reqMsgProcessor.getDataType();
-            try {
-                data = JsonCustomLongCodecUtil.fromJsonElement(dataJsonElement.getAsJsonObject(), dataType);
-            } catch (Exception e) {
-                log.error("请求消息数据转换异常,msgType:{}", msgType, e);
-                return;
-            }
         } else {
+            @SuppressWarnings("unchecked")
+            MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
             try {
-                data = primitiveConvert(dataJsonElement.getAsJsonPrimitive());
-            } catch (Err e) {
-                log.error("基本类型转换异常,msgType:{}", msgType, e);
-                return;
+                processor.process(id, payloadData);
+            } catch (Exception e) {
+                log.error("消息处理执行异常,msgType:{}", msgType, e);
             }
-        }
-        @SuppressWarnings("unchecked")
-        MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
-        try {
-            processor.process(id, data);
-        } catch (Exception e) {
-            log.error("消息处理执行异常,msgType:{}", msgType, e);
         }
     }
 
-    private Object primitiveConvert(JsonPrimitive jsonPrimitive) throws Err {
-        if (jsonPrimitive.isBoolean()) {
-            return jsonPrimitive.getAsBoolean();
-        } else if (jsonPrimitive.isNumber()) {
-            long number = jsonPrimitive.getAsLong();
-            if (number >= Integer.MIN_VALUE && number <= Integer.MAX_VALUE) {
-                return (int) number;
+    private int getMsgType(JsonObject reqMsg) throws Err {
+        try {
+            return reqMsg.get(MsgTypeJsonKey).getAsInt();
+        } catch (Exception e) {
+            throw new Err("请求消息类型格式错误, msgType:" + reqMsg.get(MsgTypeJsonKey), e);
+        }
+    }
+
+    private MsgProcessor<?> getMsgProcessor(int msgType) throws Err {
+        MsgProcessor<?> reqMsgProcessor = this.reqMsgType2Processor.get(msgType);
+        if (reqMsgProcessor == null) {
+            throw new Err("未找到对应类型的请求消息处理器,msgType:" + msgType);
+        }
+        return reqMsgProcessor;
+    }
+
+    /**
+     * 获取荷载的数据
+     */
+    private Object getPayloadData(JsonObject reqMsg, int msgType, MsgProcessor<?> reqMsgProcessor) throws Err {
+        // 获取消息处理指定的荷载类型
+        Type needDataType = reqMsgProcessor.getDataType();
+        // 获取实际发送的荷载数据
+        JsonElement dataJsonElement = reqMsg.get(DataJsonKey);
+        try {
+            if (needDataType == Void.class) { //指定无需荷载数据
+                // 校验
+                if (!dataJsonElement.isJsonNull()) {
+                    throw new Err("消息处理指定无需荷载数据, 实际请求荷载不为空");
+                }
+                return null;
+            } else if (needDataType == Boolean.class) {
+                return dataJsonElement.getAsBoolean();
+            } else if (needDataType == Long.class) {
+                return dataJsonElement.getAsLong();
+            } else if (needDataType == Integer.class) {
+                return dataJsonElement.getAsInt();
+            } else if (needDataType == String.class) {
+                return dataJsonElement.getAsString();
             } else {
-                return number;
+                return JsonCustomLongCodecUtil.fromJsonElement(dataJsonElement.getAsJsonObject(), needDataType);
             }
-        } else if (jsonPrimitive.isString()) {
-            return jsonPrimitive.getAsString();
-        } else {
-            throw new Err("类型无法转换目前只支持boolean、int、long、String这些基本类型的转换; value:" + jsonPrimitive);
+        } catch (Exception e) {
+            throw new Err("获取荷载数据异常", e);
         }
     }
 }
