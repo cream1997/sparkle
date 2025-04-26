@@ -67,7 +67,7 @@ public class MsgDispatcher {
         switch (reqMsgProcessor) {
             case RoleThreadMsgProcessor<?> ignored1 -> ThreadRouter.routing2Role(id, processTask);
             case MapThreadMsgProcessor<?> ignored2 -> ThreadRouter.routing2Map(id, processTask);
-            case LoginMsgProcessor<?> ignored3 -> ThreadRouter.routing2Login(processTask);
+            case LoginMsgProcessor<?> ignored3 -> ThreadRouter.routing2Login(id, processTask);
             default -> log.error("消息处理器类型错误, processor:{}", reqMsgProcessor);
         }
     }

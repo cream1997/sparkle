@@ -54,8 +54,9 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("客户端断开: {}", ctx.channel().id().asShortText());
+        long uid = TokenValidator.getUIdAfterLogin(ctx.channel());
         try {
-            ThreadRouter.routing2Login(() -> this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect))
+            ThreadRouter.routing2Login(uid, () -> this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect))
                     .get();
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -29,7 +29,7 @@ public class ExecutorsUtil {
     /**
      * 登录线程(单线程)
      */
-    public static final ExecutorService LoginSingleThread = ThreadToolGenerator.geneLoginSingleThread();
+    public static final ExecutorService LoginThreadPool = ThreadToolGenerator.geneLoginThreadPool();
     /**
      * 通用线程(单线程)
      */
