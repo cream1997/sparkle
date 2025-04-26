@@ -4,6 +4,7 @@ import com.cream.sparkle.common.error.Err;
 import com.cream.sparkle.common.utils.JwtUtil;
 import com.cream.sparkle.common.utils.Nulls;
 import com.cream.sparkle.hero.net.component.LinkContainer;
+import com.cream.sparkle.hero.net.component.ThreadRouter;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -59,8 +60,14 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
         }
         // 验证成功，存入id
         ctx.channel().attr(UID_KEY).set(idAndQx.id);
-        this.linkContainer.handleNewLink(ctx.channel());
-        ctx.fireChannelRead(msg);
+        try {
+            ThreadRouter.routing2Login(() -> {
+                this.linkContainer.handleNewLink(ctx.channel());
+            }).get();
+            ctx.fireChannelRead(msg);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean isVerified(Channel channel) {

@@ -27,7 +27,7 @@ public class LinkContainer {
         this.mapManager = mapManager;
     }
 
-    public synchronized void handleNewLink(Channel channel) {
+    public void handleNewLink(Channel channel) {
         long uid = TokenValidator.getUIdAfterLogin(channel);
         Channel oldChannel = Uid2Channel.get(uid);
         if (oldChannel != null) {
@@ -46,7 +46,7 @@ public class LinkContainer {
     /**
      * 处理断开
      */
-    public synchronized void handleDisconnect(Channel channel, DisconnectReason reason) {
+    public void handleDisconnect(Channel channel, DisconnectReason reason) {
         if (!Uid2Channel.containsValue(channel)) {
             return;
         }
@@ -99,10 +99,6 @@ public class LinkContainer {
     }
 
     public Channel getChannelByUid(long uid) {
-        Channel channel = Uid2Channel.get(uid);
-        if (channel == null) {
-            log.error("使用uid获取channel为空, uid:{}", uid);
-        }
-        return channel;
+        return Uid2Channel.get(uid);
     }
 }

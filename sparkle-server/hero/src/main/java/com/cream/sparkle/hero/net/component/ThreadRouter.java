@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 
 /**
  * 消息处理的线程路由器
@@ -36,5 +37,9 @@ public class ThreadRouter {
 
     public static void routing2Common(Runnable runnable) {
         ExecutorsUtil.CommonSingleThread.execute(runnable);
+    }
+
+    public static Future<Void> routing2Login(Runnable runnable) {
+        return ExecutorsUtil.LoginSingleThread.submit(runnable, null);
     }
 }

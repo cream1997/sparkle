@@ -2,6 +2,7 @@ package com.cream.sparkle.hero.net.pipeline;
 
 import com.cream.sparkle.hero.net.component.LinkContainer;
 import com.cream.sparkle.hero.net.component.MsgDispatcher;
+import com.cream.sparkle.hero.net.component.ThreadRouter;
 import com.cream.sparkle.hero.net.constants.DisconnectReason;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -51,7 +52,12 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("客户端断开: {}", ctx.channel().id().asShortText());
-        this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect);
+        try {
+            ThreadRouter.routing2Login(() -> this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect))
+                    .get();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         super.channelInactive(ctx);
     }
 

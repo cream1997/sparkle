@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class ThreadToolGenerator {
 
+    private static final String LOGIN_THREAD_NAME = "Hero-Login-Thread";
     private static final String COMMON_THREAD_NAME = "Hero-Common-Thread";
     private static final String ScheduledThread_NAME = "Hero-Scheduled-Thread";
     private static final String TmpThreadNamePrefix = "Hero-Tmp-Thread-";
@@ -19,6 +20,14 @@ public class ThreadToolGenerator {
     private static final AtomicInteger TmpThreadNum = new AtomicInteger(0);
     private static final AtomicInteger LogicThreadNum = new AtomicInteger(0);
     private static final AtomicInteger MapThreadNum = new AtomicInteger(0);
+
+
+    public static ExecutorService geneLoginSingleThread() {
+        return Executors.newSingleThreadExecutor(r -> {
+            log.info("创建登录线程: {}", LOGIN_THREAD_NAME);
+            return new Thread(r, LOGIN_THREAD_NAME);
+        });
+    }
 
 
     public static ExecutorService geneCommonSingleThread() {

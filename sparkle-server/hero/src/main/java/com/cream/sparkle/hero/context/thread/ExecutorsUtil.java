@@ -27,6 +27,10 @@ public class ExecutorsUtil {
      */
     private static final ScheduledExecutorService ScheduledSingleThread = ThreadToolGenerator.geneScheduledSingleThread();
     /**
+     * 登录线程(单线程)
+     */
+    public static final ExecutorService LoginSingleThread = ThreadToolGenerator.geneLoginSingleThread();
+    /**
      * 通用线程(单线程)
      */
     public static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();

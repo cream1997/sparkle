@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
-
 @Slf4j
 @Component
 public class Context {
@@ -35,10 +33,11 @@ public class Context {
 
     public static void sendMsgByUid(long uid, BaseRes resMsg) {
         Channel channel = linkContainer.getChannelByUid(uid);
-        Objects.requireNonNull(channel);
-        DataWrapper dataWrapper = new DataWrapper(resMsg.msgType().value, resMsg);
-        String jsonString = JsonCustomLongCodecUtil.toJson(dataWrapper);
-        channel.writeAndFlush(new TextWebSocketFrame(jsonString));
+        if (channel != null) {
+            DataWrapper dataWrapper = new DataWrapper(resMsg.msgType().value, resMsg);
+            String jsonString = JsonCustomLongCodecUtil.toJson(dataWrapper);
+            channel.writeAndFlush(new TextWebSocketFrame(jsonString));
+        }
     }
 
     private record DataWrapper(int msgType, BaseRes data) {
