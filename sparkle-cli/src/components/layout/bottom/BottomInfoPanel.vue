@@ -8,7 +8,7 @@ import BottomMainArea from "@/components/layout/bottom/BottomMainArea.vue";
     <main>
       <BottomMainArea></BottomMainArea>
     </main>
-    <aside>...</aside>
+    <aside class="right">...</aside>
   </div>
 </template>
 
@@ -32,7 +32,11 @@ import BottomMainArea from "@/components/layout/bottom/BottomMainArea.vue";
 
   > aside {
     width: 100px;
-    border-left: 1px solid lightgray;
+    padding: 0 2px;
+
+    &.right {
+      border-left: 1px solid lightgray;
+    }
   }
 }
 </style>

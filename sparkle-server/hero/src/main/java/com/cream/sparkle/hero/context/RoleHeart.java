@@ -13,6 +13,6 @@ public class RoleHeart {
     }
 
     public void heartPerSecond() {
-        log.debug("玩家：{}, 心跳执行", role.basic.getName());
+//        log.debug("玩家：{}, 心跳执行", role.basic.getName());
     }
 }
