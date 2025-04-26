@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.SocketException;
+
 @Slf4j
 @ChannelHandler.Sharable
 @Component
@@ -64,7 +66,12 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("Exception caught: ", cause);
+        if (cause instanceof SocketException socketException && socketException.getMessage().equals("Connection reset")) {
+            // todo 应该可以忽略
+            log.debug("客户端异常断开连接;比如直接杀死进程");
+        } else {
+            log.error("Exception caught: ", cause);
+        }
         ctx.close();
     }
 }
