@@ -1,5 +1,6 @@
 package com.cream.sparkle.hero.context.thread.queue;
 
+import com.cream.sparkle.common.utils.Times;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
@@ -13,6 +14,7 @@ public abstract class TaskQueue {
     private final LinkedBlockingQueue<FutureTask<?>> allTask = new LinkedBlockingQueue<>();
     private volatile boolean activeFlag = false;
     private final ReentrantLock activeLock = new ReentrantLock();
+    private long lastRunTaskTime;
 
     public <T> Future<T> addTask(Callable<T> task) {
         FutureTask<T> futureTask = new FutureTask<>(task);
@@ -20,10 +22,16 @@ public abstract class TaskQueue {
     }
 
     public Future<Void> addTask(Runnable task) {
-        return addTask(new FutureTask<>(task, null));
+        if (task instanceof FutureTask<?> futureTask) {
+            @SuppressWarnings("unchecked")
+            FutureTask<Void> voidFutureTask = (FutureTask<Void>) futureTask;
+            return addTask(voidFutureTask);
+        } else {
+            return addTask(new FutureTask<>(task, null));
+        }
     }
 
-    private <T> Future<T> addTask(FutureTask<T> futureTask) {
+    public <T> Future<T> addTask(FutureTask<T> futureTask) {
         allTask.add(futureTask);
 
         final int taskSize = allTask.size();
@@ -54,6 +62,7 @@ public abstract class TaskQueue {
                     break; // 队列为空，结束处理
                 }
                 try {
+                    lastRunTaskTime = Times.now();
                     task.run();
                 } catch (Exception e) {
                     log.error("任务执行异常", e);
@@ -75,6 +84,14 @@ public abstract class TaskQueue {
                 activeLock.unlock();
             }
         }
+    }
+
+    /**
+     * 是否空闲
+     */
+    public boolean isIdle() {
+        // todo 时间先设置的短一些，长时间观察是否有bug
+        return allTask.isEmpty() && (Times.now() - lastRunTaskTime > Times.ONE_MINUTE);
     }
 
     public abstract ExecutorService threadPool();
