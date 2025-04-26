@@ -38,6 +38,7 @@ public class LinkContainer {
              */
             handleDisconnect(oldChannel, DisconnectReason.DingHao);
             // 断开旧连接
+            // fixme 依赖上面方法的阻塞
             oldChannel.close();
         }
         Uid2Channel.put(uid, channel);
@@ -51,10 +52,12 @@ public class LinkContainer {
             return;
         }
         long uid = TokenValidator.getUIdAfterLogin(channel);
+        // fixme 获取rid操作依赖登录设置的阻塞
         long rid = getRidByUidMayNull(uid);
         if (rid != 0) {
             this.loginManager.logout(rid);
         }
+        // fixme 依赖上面logout的阻塞
         Uid2Channel.remove(uid);
     }
 
