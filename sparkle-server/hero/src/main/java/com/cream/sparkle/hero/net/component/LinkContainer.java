@@ -6,6 +6,7 @@ import com.cream.sparkle.hero.net.pipeline.TokenValidator;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class LinkContainer {
     private final LoginManager loginManager;
 
     @Autowired
-    public LinkContainer(LoginManager loginManager) {
+    public LinkContainer(@Lazy LoginManager loginManager) {
         this.loginManager = loginManager;
     }
 
