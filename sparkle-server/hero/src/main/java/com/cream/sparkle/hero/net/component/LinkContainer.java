@@ -27,7 +27,7 @@ public class LinkContainer {
         this.mapManager = mapManager;
     }
 
-    public void putChannel(Channel channel) {
+    public synchronized void handleNewLink(Channel channel) {
         long uid = TokenValidator.getUIdAfterLogin(channel);
         Channel oldChannel = Uid2Channel.get(uid);
         if (oldChannel != null) {
@@ -44,38 +44,19 @@ public class LinkContainer {
     }
 
     /**
-     * @param channel 要删除的channel
-     */
-    public void removeChannel(Channel channel) {
-        long uid = TokenValidator.getUIdAfterLogin(channel);
-        /*
-         * 之所以要这样判断一下，是因为在顶号时，oldChannel.close()会出发一个异步的channelInactive，里面有个removeChannel的操作
-         * 而在oldChannel.close()后还有个put new channel操作,它会先于异步的removeChannel，导致先put后remove
-         */
-        if (channel == Uid2Channel.get(uid)) {
-            Uid2Channel.remove(uid);
-            long rid = getRidByUidMayNull(uid);
-            if (rid != 0) {
-                removeRid(rid);
-            }
-        }
-    }
-
-    public boolean containsChannel(Channel channel) {
-        long uid = TokenValidator.getUIdAfterLogin(channel);
-        return channel == Uid2Channel.get(uid);
-    }
-
-    /**
      * 处理断开
      */
-    public void handleDisconnect(Channel channel, DisconnectReason reason) {
+    public synchronized void handleDisconnect(Channel channel, DisconnectReason reason) {
+        if (!Uid2Channel.containsValue(channel)) {
+            return;
+        }
         long uid = TokenValidator.getUIdAfterLogin(channel);
         long rid = getRidByUidMayNull(uid);
         if (rid != 0) {
             this.mapManager.exitMap(rid);
+            removeRid(rid);
         }
-        removeChannel(channel);
+        Uid2Channel.remove(uid);
     }
 
     public long getUidByRid(long rid) {

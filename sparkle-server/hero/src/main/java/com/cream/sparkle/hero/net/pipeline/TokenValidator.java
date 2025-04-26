@@ -59,7 +59,7 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
         }
         // 验证成功，存入id
         ctx.channel().attr(UID_KEY).set(idAndQx.id);
-        this.linkContainer.putChannel(ctx.channel());
+        this.linkContainer.handleNewLink(ctx.channel());
         ctx.fireChannelRead(msg);
     }
 

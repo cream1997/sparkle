@@ -51,13 +51,7 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         log.info("客户端断开: {}", ctx.channel().id().asShortText());
-        /*
-         * 这里要判断一下，因为顶号的断开不在这里执行(断开不能统一在这里执行，会有线程问题)，这里不能重复执行；
-         * 因为这个方法的执行是由netty线程执行的,如果重复执行，有可能导致顶号的新号刚登陆的地图被退出了，总之,判断一下最大程度规避风险
-         */
-        if (linkContainer.containsChannel(ctx.channel())) {
-            this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect);
-        }
+        this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect);
         super.channelInactive(ctx);
     }
 
