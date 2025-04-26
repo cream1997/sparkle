@@ -35,9 +35,9 @@ public class ExecutorsUtil {
      */
     public static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();
     /**
-     * 游戏逻辑线程池(固定数量)
+     * 游戏玩家线程池(固定数量)
      */
-    public static final ExecutorService LogicThreadPool = ThreadToolGenerator.geneLogicThreadTool();
+    public static final ExecutorService RoleThreadPool = ThreadToolGenerator.geneRoleThreadTool();
     /**
      * 地图线程池(固定数量)
      */

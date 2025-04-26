@@ -3,7 +3,7 @@ package com.cream.sparkle.hero.manager;
 import com.cream.sparkle.hero.context.Context;
 import com.cream.sparkle.hero.context.ExecutorsUtil;
 import com.cream.sparkle.hero.context.RoleHeart;
-import com.cream.sparkle.hero.game.logic.Role;
+import com.cream.sparkle.hero.game.role.Role;
 import com.cream.sparkle.hero.net.component.LinkContainer;
 import com.cream.sparkle.hero.net.component.ThreadRouter;
 import com.cream.sparkle.hero.net.msg.res.LoginRoleRes;
@@ -30,7 +30,7 @@ public class LoginManager {
         this.linkContainer = linkContainer;
         this.roleDbTool = roleDbTool;
         ExecutorsUtil.runFixedDelay(() -> rid2RoleHeart.forEach((rid, roleHeart) -> {
-            ThreadRouter.routing2Logic(rid, roleHeart::heartPerSecond);
+            ThreadRouter.routing2Role(rid, roleHeart::heartPerSecond);
         }), 0, 1, TimeUnit.SECONDS);
     }
 
@@ -49,7 +49,7 @@ public class LoginManager {
             return;
         }
         linkContainer.setRid(uid, rid);
-        Future<Void> loginThreadLoginFuture = ThreadRouter.routing2Logic(rid, () -> {
+        Future<Void> loginThreadLoginFuture = ThreadRouter.routing2Role(rid, () -> {
             // todo 返回登录需要返回的信息
 
         });
@@ -70,7 +70,7 @@ public class LoginManager {
     }
 
     public void logoutRole(long rid) {
-        Future<Void> logicThreadFuture = ThreadRouter.routing2Logic(rid, () -> {
+        Future<Void> logicThreadFuture = ThreadRouter.routing2Role(rid, () -> {
 
         });
         Future<Void> mapThreadFuture = ThreadRouter.routing2Map(rid, () -> {

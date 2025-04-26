@@ -3,7 +3,7 @@ package com.cream.sparkle.hero.service;
 import com.cream.sparkle.common.error.TipErr;
 import com.cream.sparkle.common.utils.Nulls;
 import com.cream.sparkle.common.utils.Times;
-import com.cream.sparkle.hero.game.logic.Role;
+import com.cream.sparkle.hero.game.role.Role;
 import com.cream.sparkle.hero.tools.RoleDbTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

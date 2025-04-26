@@ -1,7 +1,7 @@
 package com.cream.sparkle.hero;
 
 import com.cream.sparkle.common.utils.Times;
-import com.cream.sparkle.hero.game.logic.Role;
+import com.cream.sparkle.hero.game.role.Role;
 import com.cream.sparkle.hero.tools.RoleDbTool;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

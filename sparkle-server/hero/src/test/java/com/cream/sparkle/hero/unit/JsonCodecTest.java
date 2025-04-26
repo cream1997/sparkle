@@ -1,7 +1,7 @@
 package com.cream.sparkle.hero.unit;
 
 import com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil;
-import com.cream.sparkle.hero.game.logic.Role;
+import com.cream.sparkle.hero.game.role.Role;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Test;

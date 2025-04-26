@@ -14,11 +14,11 @@ public class ThreadToolGenerator {
     private static final String COMMON_THREAD_NAME = "Hero-Common-Thread";
     private static final String ScheduledThread_NAME = "Hero-Scheduled-Thread";
     private static final String TmpThreadNamePrefix = "Hero-Tmp-Thread-";
-    private static final String LogicThreadNamePrefix = "Hero-Logic-Thread-";
+    private static final String RoleThreadNamePrefix = "Hero-Role-Thread-";
     private static final String MapThreadNamePrefix = "Hero-Map-Thread-";
 
     private static final AtomicInteger TmpThreadNum = new AtomicInteger(0);
-    private static final AtomicInteger LogicThreadNum = new AtomicInteger(0);
+    private static final AtomicInteger RoleThreadNum = new AtomicInteger(0);
     private static final AtomicInteger MapThreadNum = new AtomicInteger(0);
 
 
@@ -55,10 +55,10 @@ public class ThreadToolGenerator {
     /**
      * todo 数量待定
      */
-    public static ExecutorService geneLogicThreadTool() {
+    public static ExecutorService geneRoleThreadTool() {
         return Executors.newFixedThreadPool(16, r -> {
-            String name = LogicThreadNamePrefix + LogicThreadNum.getAndIncrement();
-            log.info("创建游戏逻辑线程: {}", name);
+            String name = RoleThreadNamePrefix + RoleThreadNum.getAndIncrement();
+            log.info("创建游戏玩家线程: {}", name);
             return new Thread(r, name);
         });
     }

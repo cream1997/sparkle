@@ -1,7 +1,7 @@
 package com.cream.sparkle.hero.net.component;
 
 import com.cream.sparkle.hero.context.ExecutorsUtil;
-import com.cream.sparkle.hero.context.thread.queue.LogicThreadTaskQueue;
+import com.cream.sparkle.hero.context.thread.queue.RoleThreadTaskQueue;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +19,14 @@ public class ThreadRouter {
     /**
      * 暂时不清理这个队列，因为一旦要加上清理逻辑，又需要加锁；可预见这个队列数量不会太大
      */
-    private static final ConcurrentHashMap<Long, LogicThreadTaskQueue> rid2LogicThreadTaskQueue = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, RoleThreadTaskQueue> rid2RoleThreadTaskQueue = new ConcurrentHashMap<>();
 
     /**
      * 路由至逻辑线程
      */
-    public static Future<Void> routing2Logic(long rid, Runnable task) {
-        LogicThreadTaskQueue logicThreadTaskQueue = rid2LogicThreadTaskQueue.computeIfAbsent(rid, k -> new LogicThreadTaskQueue());
-        return logicThreadTaskQueue.addTask(task);
+    public static Future<Void> routing2Role(long rid, Runnable task) {
+        RoleThreadTaskQueue roleThreadTaskQueue = rid2RoleThreadTaskQueue.computeIfAbsent(rid, k -> new RoleThreadTaskQueue());
+        return roleThreadTaskQueue.addTask(task);
     }
 
     /**

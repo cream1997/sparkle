@@ -1,6 +1,6 @@
 package com.cream.sparkle.hero.context;
 
-import com.cream.sparkle.hero.game.logic.Role;
+import com.cream.sparkle.hero.game.role.Role;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

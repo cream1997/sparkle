@@ -1,7 +1,7 @@
 package com.cream.sparkle.hero.controller;
 
 import com.cream.sparkle.common.utils.HttpCtxUtil;
-import com.cream.sparkle.hero.game.logic.Role;
+import com.cream.sparkle.hero.game.role.Role;
 import com.cream.sparkle.hero.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

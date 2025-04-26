@@ -2,10 +2,10 @@ package com.cream.sparkle.hero.net.component;
 
 import com.cream.sparkle.common.error.Err;
 import com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil;
-import com.cream.sparkle.hero.processor.base.LogicThreadMsgProcessor;
 import com.cream.sparkle.hero.processor.base.LoginMsgProcessor;
 import com.cream.sparkle.hero.processor.base.MapThreadMsgProcessor;
 import com.cream.sparkle.hero.processor.base.MsgProcessor;
+import com.cream.sparkle.hero.processor.base.RoleThreadMsgProcessor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,7 @@ public class MsgDispatcher {
         }
         // 线程路由
         switch (reqMsgProcessor) {
-            case LogicThreadMsgProcessor<?> ignored1 -> ThreadRouter.routing2Logic(id, processTask);
+            case RoleThreadMsgProcessor<?> ignored1 -> ThreadRouter.routing2Role(id, processTask);
             case MapThreadMsgProcessor<?> ignored2 -> ThreadRouter.routing2Map(id, processTask);
             case LoginMsgProcessor<?> ignored3 -> ThreadRouter.routing2Login(processTask);
             default -> log.error("消息处理器类型错误, processor:{}", reqMsgProcessor);
