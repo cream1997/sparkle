@@ -13,7 +13,7 @@ public class RoleBasic {
     private int level;
     private int hp;
     private int mp;
-    private int mapId;
+    private long mapId;
     private int x;
     private int y;
     private final long createTime;

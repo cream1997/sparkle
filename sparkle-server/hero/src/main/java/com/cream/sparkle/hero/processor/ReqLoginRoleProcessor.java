@@ -23,7 +23,7 @@ public class ReqLoginRoleProcessor extends LoginMsgProcessor<Long> {
      */
     @Override
     public void process(long uid, @NonNull Long rid) {
-        this.loginManager.loginRole(uid, rid);
+        this.loginManager.login(uid, rid);
     }
 
     @Override

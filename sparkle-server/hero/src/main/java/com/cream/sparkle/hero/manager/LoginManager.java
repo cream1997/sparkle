@@ -1,102 +1,44 @@
 package com.cream.sparkle.hero.manager;
 
-import com.cream.sparkle.hero.context.Context;
-import com.cream.sparkle.hero.context.ExecutorsUtil;
-import com.cream.sparkle.hero.context.RoleHeart;
-import com.cream.sparkle.hero.game.role.Role;
-import com.cream.sparkle.hero.net.component.LinkContainer;
 import com.cream.sparkle.hero.net.component.ThreadRouter;
-import com.cream.sparkle.hero.net.msg.res.LoginRoleRes;
-import com.cream.sparkle.hero.tools.RoleDbTool;
-import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * 主要的功能是将登录线程和玩家线程串联到一起
+ */
 @Slf4j
 @Component
 public class LoginManager {
 
-    private final ConcurrentHashMap<Long, RoleHeart> rid2RoleHeart = new ConcurrentHashMap<>();
-    private final LinkContainer linkContainer;
-    private final RoleDbTool roleDbTool;
+
+    private final RoleManager roleManager;
 
     @Autowired
-    public LoginManager(LinkContainer linkContainer, RoleDbTool roleDbTool) {
-        this.linkContainer = linkContainer;
-        this.roleDbTool = roleDbTool;
-        ExecutorsUtil.runFixedDelay(() -> rid2RoleHeart.forEach((rid, roleHeart) -> {
-            ThreadRouter.routing2Role(rid, roleHeart::heartPerSecond);
-        }), 0, 1, TimeUnit.SECONDS);
+    public LoginManager(RoleManager roleManager) {
+        this.roleManager = roleManager;
     }
 
-    private Role getRole(long rid) {
-        return this.roleDbTool.selectRole(rid);
-    }
-
-    public void loginRole(long uid, long rid) {
-        Channel channel = linkContainer.getChannelByUid(uid);
-        if (channel == null) {
-            log.error("执行登录前已断开连接; uid:{}, rid:{}", uid, rid);
-            return;
-        }
-        Role role = getRole(rid);
-        if (role == null) {
-            return;
-        }
-        linkContainer.setRid(uid, rid);
-        Future<Void> loginThreadLoginFuture = ThreadRouter.routing2Role(rid, () -> {
-            // todo 返回登录需要返回的信息
-
-        });
-        Future<Void> mapThreadLoginFuture = ThreadRouter.routing2Map(rid, () -> {
-            // todo 登录地图
-        });
+    public void login(long uid, long rid) {
+        Future<Void> loginThreadLoginFuture = ThreadRouter.routing2Role(rid, () -> roleManager.enterRole(uid, rid));
         try {
+            // 阻塞操作，主要的目的是保证线程一致性(登录线程与玩家线程)
             loginThreadLoginFuture.get();
-            mapThreadLoginFuture.get();
-
         } catch (Exception e) {
-            log.error("登录失败", e);
+            log.error("登录异常", e);
         }
-        // 整个登录成功后，开启玩家心跳
-        registerRoleHeart(role);
-        LoginRoleRes loginRoleRes = new LoginRoleRes(role, 0, "", 0, 0);
-        Context.sendMsgByUid(uid, loginRoleRes);
     }
 
-    public void logoutRole(long rid) {
-        Future<Void> logicThreadFuture = ThreadRouter.routing2Role(rid, () -> {
-
-        });
-        Future<Void> mapThreadFuture = ThreadRouter.routing2Map(rid, () -> {
-
-        });
+    public void logout(long rid) {
+        Future<Void> logicThreadFuture = ThreadRouter.routing2Role(rid, () -> roleManager.exitRole(rid));
         try {
+            // 阻塞操作，主要的目的是保证线程一致性(登录线程与玩家线程)
             logicThreadFuture.get();
-            mapThreadFuture.get();
         } catch (Exception e) {
-            log.error("退出失败", e);
-        }
-        removeRoleHeart(rid);
-        linkContainer.removeRid(rid);
-    }
-
-    public void registerRoleHeart(Role role) {
-        RoleHeart roleHeart = rid2RoleHeart.putIfAbsent(role.getRid(), new RoleHeart(role));
-        if (roleHeart != null) {
-            log.error("玩家心跳已存在; rid:{}", role.getRid());
-        }
-    }
-
-    public void removeRoleHeart(long rid) {
-        RoleHeart remove = rid2RoleHeart.remove(rid);
-        if (remove == null) {
-            log.error("删除玩家心跳时,心跳不存在;rid:{}", rid);
+            log.error("退出异常", e);
         }
     }
 }

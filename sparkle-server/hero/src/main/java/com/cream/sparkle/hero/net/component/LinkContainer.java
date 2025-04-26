@@ -53,7 +53,7 @@ public class LinkContainer {
         long uid = TokenValidator.getUIdAfterLogin(channel);
         long rid = getRidByUidMayNull(uid);
         if (rid != 0) {
-            this.loginManager.logoutRole(rid);
+            this.loginManager.logout(rid);
         }
         Uid2Channel.remove(uid);
     }
