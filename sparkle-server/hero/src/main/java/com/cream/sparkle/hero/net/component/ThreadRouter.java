@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 /**
  * 消息处理的线程路由器
@@ -23,20 +24,23 @@ public class ThreadRouter {
     /**
      * 路由至逻辑线程
      */
-    public static void routing2Logic(long rid, Runnable task) {
+    public static Future<Void> routing2Logic(long rid, Runnable task) {
         LogicThreadTaskQueue logicThreadTaskQueue = rid2LogicThreadTaskQueue.computeIfAbsent(rid, k -> new LogicThreadTaskQueue());
-        logicThreadTaskQueue.addTask(task);
+        return logicThreadTaskQueue.addTask(task);
     }
 
     /**
      * 路由到地图线程
      */
-    public static void routing2Map(long rid, Runnable task) {
-
+    public static Future<Void> routing2Map(long rid, Runnable task) {
+        FutureTask<Void> voidFutureTask = new FutureTask<>(() -> {
+        }, null);
+        voidFutureTask.run();
+        return voidFutureTask;
     }
 
-    public static void routing2Common(Runnable runnable) {
-        ExecutorsUtil.CommonSingleThread.execute(runnable);
+    public static Future<Void> routing2Common(Runnable runnable) {
+        return ExecutorsUtil.CommonSingleThread.submit(runnable, null);
     }
 
     public static Future<Void> routing2Login(Runnable runnable) {

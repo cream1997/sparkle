@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -35,9 +35,7 @@ public class LoginManager {
     }
 
     private Role getRole(long rid) {
-        Role role = this.roleDbTool.selectRole(rid);
-        Objects.requireNonNull(role);
-        return role;
+        return this.roleDbTool.selectRole(rid);
     }
 
     public void loginRole(long uid, long rid) {
@@ -47,21 +45,45 @@ public class LoginManager {
             return;
         }
         Role role = getRole(rid);
+        if (role == null) {
+            return;
+        }
         linkContainer.setRid(uid, rid);
-        // 返回登录需要返回的信息
+        Future<Void> loginThreadLoginFuture = ThreadRouter.routing2Logic(rid, () -> {
+            // todo 返回登录需要返回的信息
 
-        // 登录地图
-        // todo 登录...
-        // todo 登录成功设置rid
-        LoginRoleRes loginRoleRes = new LoginRoleRes(role, 0, "", 0, 0);
-        Context.sendMsgByUid(uid, loginRoleRes);
+        });
+        Future<Void> mapThreadLoginFuture = ThreadRouter.routing2Map(rid, () -> {
+            // todo 登录地图
+        });
+        try {
+            loginThreadLoginFuture.get();
+            mapThreadLoginFuture.get();
 
+        } catch (Exception e) {
+            log.error("登录失败", e);
+        }
         // 整个登录成功后，开启玩家心跳
         registerRoleHeart(role);
+        LoginRoleRes loginRoleRes = new LoginRoleRes(role, 0, "", 0, 0);
+        Context.sendMsgByUid(uid, loginRoleRes);
     }
 
-    public void logoutRole(long uid, long rid) {
+    public void logoutRole(long rid) {
+        Future<Void> logicThreadFuture = ThreadRouter.routing2Logic(rid, () -> {
+
+        });
+        Future<Void> mapThreadFuture = ThreadRouter.routing2Map(rid, () -> {
+
+        });
+        try {
+            logicThreadFuture.get();
+            mapThreadFuture.get();
+        } catch (Exception e) {
+            log.error("退出失败", e);
+        }
         removeRoleHeart(rid);
+        linkContainer.removeRid(rid);
     }
 
     public void registerRoleHeart(Role role) {
