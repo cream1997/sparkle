@@ -60,6 +60,10 @@ public class LoginManager {
         registerRoleHeart(role);
     }
 
+    public void logoutRole(long uid, long rid) {
+        removeRoleHeart(rid);
+    }
+
     public void registerRoleHeart(Role role) {
         RoleHeart roleHeart = rid2RoleHeart.putIfAbsent(role.getRid(), new RoleHeart(role));
         if (roleHeart != null) {

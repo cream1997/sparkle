@@ -1,6 +1,6 @@
 package com.cream.sparkle.hero.net.component;
 
-import com.cream.sparkle.hero.manager.MapManager;
+import com.cream.sparkle.hero.manager.LoginManager;
 import com.cream.sparkle.hero.net.constants.DisconnectReason;
 import com.cream.sparkle.hero.net.pipeline.TokenValidator;
 import io.netty.channel.Channel;
@@ -19,12 +19,11 @@ public class LinkContainer {
     private final ConcurrentHashMap<Long, Long> Uid2Rid = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Long> Rid2Uid = new ConcurrentHashMap<>();
 
-
-    private final MapManager mapManager;
+    private final LoginManager loginManager;
 
     @Autowired
-    public LinkContainer(MapManager mapManager) {
-        this.mapManager = mapManager;
+    public LinkContainer(LoginManager loginManager) {
+        this.loginManager = loginManager;
     }
 
     public void handleNewLink(Channel channel) {
@@ -53,7 +52,7 @@ public class LinkContainer {
         long uid = TokenValidator.getUIdAfterLogin(channel);
         long rid = getRidByUidMayNull(uid);
         if (rid != 0) {
-            this.mapManager.exitMap(rid);
+            this.loginManager.logoutRole(uid, rid);
             removeRid(rid);
         }
         Uid2Channel.remove(uid);
