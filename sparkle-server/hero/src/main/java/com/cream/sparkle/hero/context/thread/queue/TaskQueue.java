@@ -91,7 +91,7 @@ public abstract class TaskQueue {
      */
     public boolean isIdle() {
         // todo 时间先设置的短一些，长时间观察是否有bug
-        return allTask.isEmpty() && (Times.now() - lastRunTaskTime > Times.ONE_MINUTE);
+        return !activeFlag && allTask.isEmpty() && (Times.now() - lastRunTaskTime > Times.ONE_MINUTE);
     }
 
     public abstract ExecutorService threadPool();
