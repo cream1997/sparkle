@@ -61,7 +61,7 @@ public class TokenValidator extends ChannelInboundHandlerAdapter {
         // 验证成功，存入id
         ctx.channel().attr(UID_KEY).set(idAndQx.id);
         try {
-            ThreadRouter.routing2Login(idAndQx.id, () -> this.linkContainer.handleNewLink(ctx.channel())).get();
+            ThreadRouter.routing2User(idAndQx.id, () -> this.linkContainer.handleNewLink(ctx.channel())).get();
             ctx.fireChannelRead(msg);
         } catch (Exception e) {
             throw new RuntimeException(e);

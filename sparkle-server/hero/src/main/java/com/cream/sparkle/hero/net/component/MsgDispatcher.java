@@ -5,7 +5,6 @@ import com.cream.sparkle.common.utils.json.JsonCustomLongCodecUtil;
 import com.cream.sparkle.hero.processor.base.LoginMsgProcessor;
 import com.cream.sparkle.hero.processor.base.MapThreadMsgProcessor;
 import com.cream.sparkle.hero.processor.base.MsgProcessor;
-import com.cream.sparkle.hero.processor.base.RoleThreadMsgProcessor;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
@@ -47,28 +46,31 @@ public class MsgDispatcher {
             log.error("解析消息异常", e);
             return;
         }
-
         @SuppressWarnings("unchecked")
         MsgProcessor<Object> processor = (MsgProcessor<Object>) reqMsgProcessor;
-        Runnable processTask;
+        ThreadRouter.routing2User(uid, () -> dispatchReqMsg0(uid, processor, payloadData));
+    }
+
+    private void dispatchReqMsg0(long uid, MsgProcessor<Object> processor, Object payloadData) {
         // 对于登录前id设置为uid，对于登录后id设置为rid
         long id;
-        if (reqMsgProcessor instanceof LoginMsgProcessor<?>) {
+        if (processor instanceof LoginMsgProcessor<?>) {
             id = uid;
         } else {
+            // 依赖线程环境
             id = this.linkContainer.getRidByUid(uid);
         }
+        Runnable processTask;
         if (payloadData == null) {
             processTask = () -> processor.process(id);
         } else {
             processTask = () -> processor.process(id, payloadData);
         }
         // 线程路由
-        switch (reqMsgProcessor) {
-            case RoleThreadMsgProcessor<?> ignored1 -> ThreadRouter.routing2Role(id, processTask);
-            case MapThreadMsgProcessor<?> ignored2 -> ThreadRouter.routing2MapByRid(id, processTask);
-            case LoginMsgProcessor<?> ignored3 -> ThreadRouter.routing2Login(id, processTask);
-            default -> log.error("消息处理器类型错误, processor:{}", reqMsgProcessor);
+        if (processor instanceof MapThreadMsgProcessor<?>) {
+            ThreadRouter.routing2MapByUid(uid, processTask);
+        } else {
+            processTask.run();
         }
     }
 

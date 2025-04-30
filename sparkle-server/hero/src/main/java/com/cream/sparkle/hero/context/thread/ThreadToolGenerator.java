@@ -14,27 +14,14 @@ public class ThreadToolGenerator {
     private static final String ScheduledThread_NAME = "Hero-Scheduled-Thread";
     private static final String TmpThreadNamePrefix = "Hero-Tmp-Thread-";
 
-    private static final String LoginThreadNamePrefix = "Hero-Login-Thread-";
-    private static final String RoleThreadNamePrefix = "Hero-Role-Thread-";
+    private static final String UserThreadNamePrefix = "Hero-User-Thread-";
     private static final String MapThreadNamePrefix = "Hero-Map-Thread-";
 
     private static final AtomicInteger TmpThreadNum = new AtomicInteger(0);
 
-    private static final AtomicInteger LoginThreadNum = new AtomicInteger(0);
-    private static final AtomicInteger RoleThreadNum = new AtomicInteger(0);
+    private static final AtomicInteger UserThreadNum = new AtomicInteger(0);
     private static final AtomicInteger MapThreadNum = new AtomicInteger(0);
 
-
-    /**
-     * todo 数量待定
-     */
-    public static ExecutorService geneLoginThreadPool() {
-        return Executors.newFixedThreadPool(6, r -> {
-            String name = LoginThreadNamePrefix + LoginThreadNum.getAndIncrement();
-            log.info("创建登录线程: {}", name);
-            return new Thread(r, name);
-        });
-    }
 
     public static ExecutorService geneCommonSingleThread() {
         return Executors.newSingleThreadExecutor(r -> {
@@ -61,10 +48,10 @@ public class ThreadToolGenerator {
     /**
      * todo 数量待定
      */
-    public static ExecutorService geneRoleThreadTool() {
+    public static ExecutorService geneUserThreadTool() {
         return Executors.newFixedThreadPool(16, r -> {
-            String name = RoleThreadNamePrefix + RoleThreadNum.getAndIncrement();
-            log.info("创建游戏玩家线程: {}", name);
+            String name = UserThreadNamePrefix + UserThreadNum.getAndIncrement();
+            log.info("创建游戏用户线程: {}", name);
             return new Thread(r, name);
         });
     }

@@ -27,17 +27,13 @@ public class ExecutorsUtil {
      */
     private static final ScheduledExecutorService ScheduledSingleThread = ThreadToolGenerator.geneScheduledSingleThread();
     /**
-     * 登录线程(单线程)
-     */
-    public static final ExecutorService LoginThreadPool = ThreadToolGenerator.geneLoginThreadPool();
-    /**
      * 通用线程(单线程)
      */
     public static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();
     /**
-     * 游戏玩家线程池(固定数量)
+     * 游戏用户线程池(固定数量)
      */
-    public static final ExecutorService RoleThreadPool = ThreadToolGenerator.geneRoleThreadTool();
+    public static final ExecutorService UserThreadPool = ThreadToolGenerator.geneUserThreadTool();
     /**
      * 地图线程池(固定数量)
      */

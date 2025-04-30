@@ -1,6 +1,6 @@
 package com.cream.sparkle.hero.processor;
 
-import com.cream.sparkle.hero.manager.LoginManager;
+import com.cream.sparkle.hero.manager.RoleManager;
 import com.cream.sparkle.hero.net.constants.ReqMsgType;
 import com.cream.sparkle.hero.processor.base.LoginMsgProcessor;
 import lombok.NonNull;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 public class ReqLoginRoleProcessor extends LoginMsgProcessor<Long> {
 
 
-    private final LoginManager loginManager;
+    private final RoleManager roleManager;
 
-    public ReqLoginRoleProcessor(LoginManager loginManager) {
-        this.loginManager = loginManager;
+    public ReqLoginRoleProcessor(RoleManager roleManager) {
+        this.roleManager = roleManager;
     }
 
     /**
@@ -23,7 +23,7 @@ public class ReqLoginRoleProcessor extends LoginMsgProcessor<Long> {
      */
     @Override
     public void process(long uid, @NonNull Long rid) {
-        this.loginManager.login(uid, rid);
+        this.roleManager.enterRole(uid, rid);
     }
 
     @Override

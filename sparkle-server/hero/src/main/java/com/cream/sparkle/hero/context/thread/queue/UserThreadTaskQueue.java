@@ -1,13 +1,13 @@
 package com.cream.sparkle.hero.context.thread.queue;
 
+
 import com.cream.sparkle.hero.context.ExecutorsUtil;
 
 import java.util.concurrent.ExecutorService;
 
-public class LoginThreadTaskQueue extends TaskQueue {
-
+public class UserThreadTaskQueue extends TaskQueue {
     @Override
     public ExecutorService threadPool() {
-        return ExecutorsUtil.LoginThreadPool;
+        return ExecutorsUtil.UserThreadPool;
     }
 }

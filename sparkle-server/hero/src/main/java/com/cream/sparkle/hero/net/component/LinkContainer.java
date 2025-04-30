@@ -1,6 +1,6 @@
 package com.cream.sparkle.hero.net.component;
 
-import com.cream.sparkle.hero.manager.LoginManager;
+import com.cream.sparkle.hero.manager.RoleManager;
 import com.cream.sparkle.hero.net.constants.DisconnectReason;
 import com.cream.sparkle.hero.net.pipeline.TokenValidator;
 import io.netty.channel.Channel;
@@ -20,11 +20,11 @@ public class LinkContainer {
     private final ConcurrentHashMap<Long, Long> Uid2Rid = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<Long, Long> Rid2Uid = new ConcurrentHashMap<>();
 
-    private final LoginManager loginManager;
+    private final RoleManager roleManager;
 
     @Autowired
-    public LinkContainer(@Lazy LoginManager loginManager) {
-        this.loginManager = loginManager;
+    public LinkContainer(@Lazy RoleManager roleManager) {
+        this.roleManager = roleManager;
     }
 
     public void handleNewLink(Channel channel) {
@@ -32,14 +32,14 @@ public class LinkContainer {
         Channel oldChannel = Uid2Channel.get(uid);
         if (oldChannel != null) {
             log.info("顶号，uid:{}", uid);
+            // todo 通知客户端顶号
+            // 断开旧连接
+            oldChannel.close();
             /*
              * 旧连接断开处理;不能依赖于oldChannel.close()触发的channelInactive去处理断开,因为它是异步的;
              * 即使像这样oldChannel.close().sync()调用也不能阻止这种异步;所以在断开连接前主动调用
              */
             handleDisconnect(oldChannel, DisconnectReason.DingHao);
-            // 断开旧连接
-            // fixme 依赖上面方法的阻塞
-            oldChannel.close();
         }
         Uid2Channel.put(uid, channel);
     }
@@ -52,13 +52,12 @@ public class LinkContainer {
             return;
         }
         long uid = TokenValidator.getUIdAfterLogin(channel);
-        // fixme 获取rid操作依赖登录设置的阻塞
+        Uid2Channel.remove(uid);
+
         long rid = getRidByUidMayNull(uid);
         if (rid != 0) {
-            this.loginManager.logout(rid);
+            this.roleManager.exitRole(rid);
         }
-        // fixme 依赖上面logout的阻塞
-        Uid2Channel.remove(uid);
     }
 
     public long getUidByRid(long rid) {

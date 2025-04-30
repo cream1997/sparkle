@@ -56,7 +56,7 @@ public class WebSocketMsgHandler extends SimpleChannelInboundHandler<TextWebSock
         log.info("客户端断开: {}", ctx.channel().id().asShortText());
         long uid = TokenValidator.getUIdAfterLogin(ctx.channel());
         try {
-            ThreadRouter.routing2Login(uid, () -> this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect))
+            ThreadRouter.routing2User(uid, () -> this.linkContainer.handleDisconnect(ctx.channel(), DisconnectReason.NetDisconnect))
                     .get();
         } catch (Exception e) {
             throw new RuntimeException(e);

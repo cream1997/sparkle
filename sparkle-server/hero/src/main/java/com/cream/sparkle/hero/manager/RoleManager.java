@@ -26,15 +26,15 @@ public class RoleManager {
     private final LinkContainer linkContainer;
     private final RoleDbTool roleDbTool;
     private final MapManager mapManager;
-    private final ConcurrentHashMap<Long, RoleHeart> rid2RoleHeart = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, RoleHeart> uid2RoleHeart = new ConcurrentHashMap<>();
 
     @Autowired
     public RoleManager(LinkContainer linkContainer, RoleDbTool roleDbTool, MapManager mapManager) {
         this.linkContainer = linkContainer;
         this.roleDbTool = roleDbTool;
         this.mapManager = mapManager;
-        ExecutorsUtil.runFixedDelay(() -> rid2RoleHeart.forEach((rid, roleHeart) -> {
-            ThreadRouter.routing2Role(rid, roleHeart::heartPerSecond);
+        ExecutorsUtil.runFixedDelay(() -> uid2RoleHeart.forEach((uid, roleHeart) -> {
+            ThreadRouter.routing2User(uid, roleHeart::heartPerSecond);
         }), 0, 1, TimeUnit.SECONDS);
     }
 
@@ -46,6 +46,8 @@ public class RoleManager {
 
 
     public void enterRole(long uid, long rid) {
+        // todo 检查是否已登录其他角色
+
         Channel channel = linkContainer.getChannelByUid(uid);
         if (channel == null) {
             log.error("执行登录前已断开连接; uid:{}, rid:{}", uid, rid);
@@ -58,6 +60,7 @@ public class RoleManager {
         linkContainer.setRid(uid, rid);
         // todo 返回登录需要返回的信息
         long mapId = role.basic.getMapId();
+        // 目前凡是涉及到地图切换的操作都阻塞等待完成; 这样能简单保证数据的一致性; 后续如果遇到性能瓶颈再考虑优化
         Future<Void> mapThreadLoginFuture = ThreadRouter.routing2MapByMapId(mapId, () -> {
             // todo 登录地图
             mapManager.loginMap(role);
@@ -93,14 +96,14 @@ public class RoleManager {
     }
 
     private void registerRoleHeart(Role role) {
-        RoleHeart roleHeart = rid2RoleHeart.putIfAbsent(role.getRid(), new RoleHeart(role));
+        RoleHeart roleHeart = uid2RoleHeart.putIfAbsent(role.basic.uid, new RoleHeart(role));
         if (roleHeart != null) {
             log.error("玩家心跳已存在; rid:{}", role.getRid());
         }
     }
 
     private void removeRoleHeart(long rid) {
-        RoleHeart remove = rid2RoleHeart.remove(rid);
+        RoleHeart remove = uid2RoleHeart.remove(rid);
         if (remove == null) {
             log.error("删除玩家心跳时,心跳不存在;rid:{}", rid);
         }
