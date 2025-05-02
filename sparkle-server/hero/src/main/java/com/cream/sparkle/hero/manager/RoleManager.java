@@ -2,13 +2,13 @@ package com.cream.sparkle.hero.manager;
 
 import com.cream.sparkle.common.error.RunErr;
 import com.cream.sparkle.hero.context.Context;
-import com.cream.sparkle.hero.context.ExecutorsUtil;
 import com.cream.sparkle.hero.context.RoleHeart;
 import com.cream.sparkle.hero.game.role.Role;
 import com.cream.sparkle.hero.net.component.LinkContainer;
 import com.cream.sparkle.hero.net.component.ThreadRouter;
 import com.cream.sparkle.hero.net.msg.res.LoginRoleRes;
 import com.cream.sparkle.hero.tools.RoleDbTool;
+import com.cream.sparkle.hero.utils.Schedules;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class RoleManager {
         this.linkContainer = linkContainer;
         this.roleDbTool = roleDbTool;
         this.mapManager = mapManager;
-        ExecutorsUtil.runFixedDelay(() -> uid2RoleHeart.forEach((uid, roleHeart) -> {
+        Schedules.runFixedDelay(() -> uid2RoleHeart.forEach((uid, roleHeart) -> {
             ThreadRouter.routing2User(uid, roleHeart::heartPerSecond);
         }), 0, 1, TimeUnit.SECONDS);
     }

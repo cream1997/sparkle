@@ -10,13 +10,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class ThreadToolGenerator {
 
+    private static final int CUP_CORE = Runtime.getRuntime().availableProcessors();
     private static final String COMMON_THREAD_NAME = "Hero-Common-Thread";
-    private static final String ScheduledThread_NAME = "Hero-Scheduled-Thread";
+    private static final String ScheduledThreadNamePrefix = "Hero-Scheduled-Thread-";
     private static final String TmpThreadNamePrefix = "Hero-Tmp-Thread-";
 
     private static final String UserThreadNamePrefix = "Hero-User-Thread-";
     private static final String MapThreadNamePrefix = "Hero-Map-Thread-";
 
+    private static final AtomicInteger ScheduledThreadNum = new AtomicInteger(0);
     private static final AtomicInteger TmpThreadNum = new AtomicInteger(0);
 
     private static final AtomicInteger UserThreadNum = new AtomicInteger(0);
@@ -30,10 +32,14 @@ public class ThreadToolGenerator {
         });
     }
 
-    public static ScheduledExecutorService geneScheduledSingleThread() {
-        return Executors.newSingleThreadScheduledExecutor(r -> {
-            log.info("创建定时任务线程: {}", ScheduledThread_NAME);
-            return new Thread(r, ScheduledThread_NAME);
+    /**
+     * todo数量待定
+     */
+    public static ScheduledExecutorService geneScheduledThreadPool() {
+        return Executors.newScheduledThreadPool(4, r -> {
+            String name = ScheduledThreadNamePrefix + ScheduledThreadNum.getAndIncrement();
+            log.info("创建定时任务线程:{}", name);
+            return new Thread(r, name);
         });
     }
 
@@ -49,7 +55,7 @@ public class ThreadToolGenerator {
      * todo 数量待定
      */
     public static ExecutorService geneUserThreadTool() {
-        return Executors.newFixedThreadPool(16, r -> {
+        return Executors.newFixedThreadPool(CUP_CORE * 2, r -> {
             String name = UserThreadNamePrefix + UserThreadNum.getAndIncrement();
             log.info("创建游戏用户线程: {}", name);
             return new Thread(r, name);
@@ -60,7 +66,7 @@ public class ThreadToolGenerator {
      * todo 数量待定
      */
     public static ExecutorService geneMapThreadTool() {
-        return Executors.newFixedThreadPool(16, r -> {
+        return Executors.newFixedThreadPool(CUP_CORE * 2, r -> {
             String name = MapThreadNamePrefix + MapThreadNum.getAndIncrement();
             log.info("创建地图线程: {}", name);
             return new Thread(r, name);

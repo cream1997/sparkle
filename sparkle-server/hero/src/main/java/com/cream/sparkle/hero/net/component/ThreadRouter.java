@@ -5,6 +5,7 @@ import com.cream.sparkle.hero.context.thread.queue.TaskQueue;
 import com.cream.sparkle.hero.context.thread.queue.UserThreadTaskQueue;
 import com.cream.sparkle.hero.game.scene.GameMap;
 import com.cream.sparkle.hero.manager.MapManager;
+import com.cream.sparkle.hero.utils.Schedules;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +27,7 @@ public class ThreadRouter {
     public ThreadRouter(MapManager mapManager) {
         ThreadRouter.mapManager = mapManager;
         // todo 先设置一个比较短的时间，观察是否有bug;后续可以改为比较长的时间
-        ExecutorsUtil.runFixedDelay(this::cleanIdleQueue, 5, 5, TimeUnit.MINUTES);
+        Schedules.runFixedDelay(this::cleanIdleQueue, 5, 5, TimeUnit.MINUTES);
     }
 
     private void cleanIdleQueue() {

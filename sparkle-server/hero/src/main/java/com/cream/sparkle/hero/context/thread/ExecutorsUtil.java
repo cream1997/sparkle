@@ -3,7 +3,8 @@ package com.cream.sparkle.hero.context;
 import com.cream.sparkle.hero.context.thread.ThreadToolGenerator;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * 使用Executors创建的线程默认是用户线程，而不是守护线程
@@ -19,17 +20,9 @@ import java.util.concurrent.*;
 public class ExecutorsUtil {
 
     /**
-     * 临时线程池(使用时创建,数量无上限)
+     * 定时任务线程池(固定数量)
      */
-    private static final ExecutorService TmpThreadPool = ThreadToolGenerator.geneTmpThreadPool();
-    /**
-     * 定时任务线程(单线程)
-     */
-    private static final ScheduledExecutorService ScheduledSingleThread = ThreadToolGenerator.geneScheduledSingleThread();
-    /**
-     * 通用线程(单线程)
-     */
-    public static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();
+    public static final ScheduledExecutorService ScheduledThreadPool = ThreadToolGenerator.geneScheduledThreadPool();
     /**
      * 游戏用户线程池(固定数量)
      */
@@ -38,24 +31,12 @@ public class ExecutorsUtil {
      * 地图线程池(固定数量)
      */
     public static final ExecutorService MapThreadPool = ThreadToolGenerator.geneMapThreadTool();
-
-    public static ScheduledFuture<?> schedule(Runnable task, long delay, TimeUnit unit) {
-        return ScheduledSingleThread.schedule(task, delay, unit);
-    }
-
-    public static ScheduledFuture<?> runFixedRate(Runnable task, long initialDelay, long period, TimeUnit unit) {
-        return ScheduledSingleThread.scheduleAtFixedRate(task, initialDelay, period, unit);
-    }
-
-    public static ScheduledFuture<?> runFixedDelay(Runnable task, long initialDelay, long period, TimeUnit unit) {
-        return ScheduledSingleThread.scheduleWithFixedDelay(task, initialDelay, period, unit);
-    }
-
-    public static <T> Future<T> submit(Callable<T> task) {
-        return TmpThreadPool.submit(task);
-    }
-
-    public static void execute(Runnable runnable) {
-        TmpThreadPool.execute(runnable);
-    }
+    /**
+     * 临时线程池(使用时创建,数量无上限)
+     */
+    public static final ExecutorService TmpThreadPool = ThreadToolGenerator.geneTmpThreadPool();
+    /**
+     * 通用线程(单线程)
+     */
+    public static final ExecutorService CommonSingleThread = ThreadToolGenerator.geneCommonSingleThread();
 }
