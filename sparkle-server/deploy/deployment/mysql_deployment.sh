@@ -84,6 +84,10 @@ install_mysql() {
     TEMP_PASSWORD=$(grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
     echo -e "${RED}[重要] 临时root密码: $TEMP_PASSWORD${NC}"
 
+    # 先用ALTER USER修改密码（必须第一步执行）,因为必须要先修改一次密码才能修改密码策略，这个临时密码要强健一点不然设置不成功
+    mysql --connect-expired-password -u root -p"$TEMP_PASSWORD" -e \
+    "ALTER USER 'root'@'localhost' IDENTIFIED BY 'TempPass@123';" 2>/dev/null
+    TEMP_PASSWORD="TempPass@123"
     # 修改密码策略
     mysql --connect-expired-password -u root -p"$TEMP_PASSWORD" -e \
         "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=4;" 2>/dev/null
