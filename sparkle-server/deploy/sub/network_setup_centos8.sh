@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# 此脚本适用于centos8
 # 红色错误输出
 error_echo() {
     echo -e "\033[31m错误：$1\033[0m" >&2
