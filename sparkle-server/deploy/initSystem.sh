@@ -36,12 +36,10 @@ setup_yum_mirror() {
     echo "正在备份并替换 AlmaLinux 镜像源为阿里云..."
 
     # 替换镜像源地址
-    sed -e 's|^mirrorlist=|#mirrorlist=|g' \
-        -e 's|^# baseurl=https://repo.almalinux.org|baseurl=https://mirrors.aliyun.com|g' \
-        -i.bak \
-        /etc/yum.repos.d/almalinux*.repo
-
-    if [ $? -eq 0 ]; then
+    if sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+           -e 's|^# baseurl=https://repo.almalinux.org|baseurl=https://mirrors.aliyun.com|g' \
+           -i.bak \
+           /etc/yum.repos.d/almalinux*.repo; then
         echo -e "\033[1;32m✔ 镜像源替换成功\033[0m"
     else
         error_echo "错误：镜像源替换失败"
@@ -50,8 +48,8 @@ setup_yum_mirror() {
 
     # 更新 dnf 缓存
     echo "正在更新 dnf 缓存..."
-    dnf makecache
-    if [ $? -eq 0 ]; then
+
+    if dnf makecache; then
         echo -e "\033[1;32m✔ dnf 缓存更新完成\033[0m"
     else
         error_echo "错误：dnf 缓存更新失败"
@@ -71,8 +69,7 @@ install_vim() {
         echo -e "\033[33m⚠ 未检测到 vim，正在尝试安装...\033[0m"
 
         # 使用 dnf 安装
-        dnf install -y vim
-        if [ $? -eq 0 ]; then
+        if dnf install -y vim; then
             echo -e "\033[1;32m✔ vim 安装成功\033[0m"
         else
             error_echo "错误：vim 安装失败"
@@ -94,8 +91,7 @@ check_install_jdk21() {
         echo -e "\033[33m⚠ 未检测到 JDK 21，正在尝试安装...\033[0m"
 
         # 使用 dnf 安装 OpenJDK 21
-        dnf install -y java-21-openjdk-devel
-        if [ $? -eq 0 ]; then
+        if dnf install -y java-21-openjdk-devel; then
             echo -e "\033[1;32m✔ JDK 21 安装成功\033[0m"
         else
             error_echo "错误：JDK 21 安装失败"
@@ -108,17 +104,17 @@ check_install_jdk21() {
 setup_java_env() {
     echo "正在配置 JDK 环境变量..."
 
-    cat > /etc/profile.d/java.sh << 'EOF'
+    cat > /etc/profile.d/custom_java.sh << 'EOF'
 export JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:/bin/java::")
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 EOF
 
     # 设置权限
-    chmod 644 /etc/profile.d/java.sh
+    chmod 644 /etc/profile.d/custom_java.sh
 
     # 立即加载环境变量
-    source /etc/profile.d/java.sh
+    source /etc/profile.d/custom_java.sh
 
     echo -e "\033[1;32m✔ JDK 环境变量配置完成！\033[0m"
 }
