@@ -27,21 +27,46 @@ install_prepare() {
 
 # 修改MySQL配置
 configure_mysql() {
-    echo -e "${GREEN}[信息] 配置MySQL远程访问...${NC}"
-    # 兼容不同配置文件路径
+    echo -e "${GREEN}[信息] 配置MySQL远程访问与密码策略...${NC}"
     CONFIG_FILES=("/etc/my.cnf" "/etc/mysql/my.cnf" "/etc/my.cnf.d/server.cnf")
     for file in "${CONFIG_FILES[@]}"; do
         if [ -f "$file" ]; then
-            sed -i 's/^bind-address.*/bind-address = 0.0.0.0/' "$file"
+            # 配置 bind-address
+            if ! grep -q "^bind-address" "$file"; then
+                echo "bind-address=0.0.0.0" >> "$file"
+            else
+                sed -i 's/^bind-address.*/bind-address=0.0.0.0/' "$file"
+            fi
+
+            # 添加或更新密码策略配置(否则重启密码策略就恢复成默认了)
+            if ! grep -q "^validate_password.policy" "$file"; then
+                echo "validate_password.policy=LOW" >> "$file"
+            else
+                sed -i 's/^validate_password.policy.*/validate_password.policy=LOW/' "$file"
+            fi
+
+            if ! grep -q "^validate_password.length" "$file"; then
+                echo "validate_password.length=4" >> "$file"
+            else
+                sed -i 's/^validate_password.length.*/validate_password.length=4/' "$file"
+            fi
+
             systemctl restart mysqld
             return 0
         fi
     done
-    # 未找到配置文件时新建
+
+    # 如果没有找到任何配置文件，则创建 /etc/my.cnf 并写入配置
     echo -e "${YELLOW}[警告] 创建新配置文件/etc/my.cnf${NC}"
-    echo -e "[mysqld]\nbind-address = 0.0.0.0" > /etc/my.cnf
+    cat > /etc/my.cnf <<EOF
+[mysqld]
+bind-address=0.0.0.0
+validate_password.policy=LOW
+validate_password.length=4
+EOF
     systemctl restart mysqld
 }
+
 
 # 安全配置向导
 secure_installation() {
@@ -52,19 +77,21 @@ secure_installation() {
     spawn mysql_secure_installation
     expect \"Enter password for user root:\"
     send \"$TEMP_PASSWORD\r\"
+    expect \"Change the password for root ? *\"
+    send \"y\r\"
     expect \"New password:\"
     send \"123456\r\"
     expect \"Re-enter new password:\"
     send \"123456\r\"
-    expect \"Change the password for root ? *\"
+    expect \"Do you wish to continue with the password provided?*\"
     send \"y\r\"
     expect \"Remove anonymous users? *\"
     send \"y\r\"
     expect \"Disallow root login remotely? *\"
     send \"n\r\"
-    expect \"Remove test database? *\"
+    expect \"Remove test database and access to it? *\"
     send \"y\r\"
-    expect \"Reload privilege tables? *\"
+    expect \"Reload privilege tables now? *\"
     send \"y\r\"
     expect eof
     "
@@ -82,7 +109,6 @@ install_mysql() {
 
     systemctl enable --now mysqld
     TEMP_PASSWORD=$(grep 'temporary password' /var/log/mysqld.log | awk '{print $NF}')
-    echo -e "${RED}[重要] 临时root密码: $TEMP_PASSWORD${NC}"
 
     # 先用ALTER USER修改密码（必须第一步执行）,因为必须要先修改一次密码才能修改密码策略，这个临时密码要强健一点不然设置不成功
     mysql --connect-expired-password -u root -p"$TEMP_PASSWORD" -e \
@@ -91,7 +117,8 @@ install_mysql() {
     # 修改密码策略
     mysql --connect-expired-password -u root -p"$TEMP_PASSWORD" -e \
         "SET GLOBAL validate_password.policy=LOW; SET GLOBAL validate_password.length=4;" 2>/dev/null
-
+    # 安全向导如果运行错误，就可以用这个临时密码登录
+    echo -e "${RED} 临时root密码: $TEMP_PASSWORD${NC}"
     secure_installation
 
     configure_mysql
