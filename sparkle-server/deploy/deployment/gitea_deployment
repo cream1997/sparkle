@@ -1,5 +1,6 @@
 #!/bin/bash
 # Gitea安装脚本 for AlmaLinux 9
+# 下载gitea二进制文件可能会很慢，建议本地下载好上传到服务器然后注释下载的部分
 # 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
