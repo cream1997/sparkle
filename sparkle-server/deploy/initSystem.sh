@@ -17,8 +17,10 @@ setup_global_prompt_color() {
 
 # 全局彩色提示符配置
 if [ "$PS1" ]; then
-    # 使用 tput 定义颜色（粉色加粗）
-    PS1="$(tput bold)$(tput setaf 5)[\u@\h \W]\\$ $(tput sgr0)"
+    # 使用 tput 定义颜色（粉色加粗）,暂时注释，发现会导致xShell输入不换行
+    # PS1="$(tput bold)$(tput setaf 5)[\u@\h \W]\\$ $(tput sgr0)"
+    # 先使用传统的方式
+    PS1="\[\e[1;35m\][\u@\h \W]\\$ \[\e[0m\]"
     export PS1
 fi
 EOF
