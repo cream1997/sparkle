@@ -1,2 +1,222 @@
 #!/bin/bash
-# 运行此脚本前,请确保已经安装了git和mysql及wget
+# Gitea安装脚本 for AlmaLinux 9
+# 颜色定义
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # 恢复默认颜色
+
+# 检查root权限
+if [ "$(id -u)" -ne 0 ]; then
+    echo -e "${RED}错误：此脚本必须以root用户运行！${NC}"
+    exit 1
+fi
+
+# 检查必要软件是否已安装
+check_dependency() {
+    local cmd=$1
+    local name=$2
+    if ! command -v $cmd &> /dev/null; then
+        echo -e "${RED}错误：未检测到${name}，请先安装${name}！${NC}"
+        exit 1
+    fi
+}
+
+echo -e "${GREEN}[1/9] 正在检查系统依赖...${NC}"
+check_dependency mysql "MySQL"
+check_dependency git "Git"
+check_dependency wget "wget"
+
+# 检查bash-completion
+if ! rpm -q bash-completion &> /dev/null; then
+    echo -e "${YELLOW}警告：bash-completion未安装，自动补全功能将不可用${NC}"
+    read -p "是否要安装bash-completion? (y/n) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        dnf install -y bash-completion
+        echo -e "${GREEN}bash-completion安装成功${NC}"
+    else
+        echo -e "${YELLOW}跳过bash-completion安装${NC}"
+    fi
+fi
+
+# 变量配置
+MYSQL_BIND_ADDRESS="203.0.113.3"
+GITEA_VERSION="1.23.7"
+GITEA_USER="git"
+GITEA_DB_USER="gitea"
+GITEA_DB_PASSWORD="gitea"
+GITEA_DB_NAME="giteadb"
+GITEA_WORK_DIR="/var/lib/gitea"
+GITEA_PORT="3000"
+
+# 安装前确认
+echo -e "\n${YELLOW}即将安装Gitea ${GITEA_VERSION}到AlmaLinux 9系统${NC}"
+echo -e "配置参数:"
+echo -e "  MySQL绑定地址: ${MYSQL_BIND_ADDRESS}"
+echo -e "  Gitea工作目录: ${GITEA_WORK_DIR}"
+echo -e "  Gitea数据库: ${GITEA_DB_USER}/${GITEA_DB_PASSWORD}@${GITEA_DB_NAME}"
+echo -e "  Gitea端口: ${GITEA_PORT}"
+read -p "是否继续? (y/n) " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo -e "${RED}安装已取消${NC}"
+    exit 1
+fi
+
+# 2. 配置防火墙
+echo -e "\n${GREEN}[2/9] 配置防火墙...${NC}"
+if systemctl is-active --quiet firewalld; then
+    echo -e "检测到firewalld正在运行，正在添加Gitea端口(${GITEA_PORT})例外..."
+    firewall-cmd --permanent --add-port=${GITEA_PORT}/tcp
+    firewall-cmd --reload
+    echo -e "${GREEN}防火墙已配置，已开放端口: ${GITEA_PORT}${NC}"
+else
+    echo -e "${YELLOW}警告：firewalld未运行，请确保端口${GITEA_PORT}已开放${NC}"
+fi
+
+# 3. 配置MySQL
+echo -e "\n${GREEN}[3/9] 配置MySQL数据库...${NC}"
+
+# 配置MySQL绑定地址, 暂时不需要这一步
+#if [ -f /etc/my.cnf.d/mysql-server.cnf ]; then
+#    sed -i "s/^#bind-address/bind-address/" /etc/my.cnf.d/mysql-server.cnf
+#    sed -i "s/^bind-address.*/bind-address = ${MYSQL_BIND_ADDRESS}/" /etc/my.cnf.d/mysql-server.cnf
+#    systemctl restart mysqld
+#    echo -e "${GREEN}MySQL绑定地址已配置为: ${MYSQL_BIND_ADDRESS}${NC}"
+#else
+#    echo -e "${YELLOW}警告：未找到MySQL配置文件，跳过绑定地址配置${NC}"
+#fi
+
+# 创建数据库和用户
+mysql -u root -p'xxx' <<-EOSQL
+    CREATE USER '${GITEA_DB_USER}' IDENTIFIED BY '${GITEA_DB_PASSWORD}';
+    CREATE DATABASE ${GITEA_DB_NAME} CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_bin';
+    GRANT ALL PRIVILEGES ON ${GITEA_DB_NAME}.* TO '${GITEA_DB_USER}';
+    FLUSH PRIVILEGES;
+EOSQL
+echo -e "${GREEN}MySQL数据库和用户已创建${NC}"
+
+# 4. 创建系统用户和目录
+echo -e "\n${GREEN}[4/9] 创建系统用户和目录...${NC}"
+if ! id -u ${GITEA_USER} >/dev/null 2>&1; then
+    groupadd --system ${GITEA_USER}
+    adduser \
+       --system \
+       --shell /bin/bash \
+       --comment 'Git Version Control' \
+       --gid ${GITEA_USER} \
+       --home-dir /home/${GITEA_USER} \
+       --create-home \
+       ${GITEA_USER}
+    echo -e "${GREEN}系统用户 ${GITEA_USER} 已创建${NC}"
+else
+    echo -e "${YELLOW}系统用户 ${GITEA_USER} 已存在，跳过创建${NC}"
+fi
+
+mkdir -p ${GITEA_WORK_DIR}/{custom,data,log}
+chown -R ${GITEA_USER}:${GITEA_USER} ${GITEA_WORK_DIR}/
+chmod -R 750 ${GITEA_WORK_DIR}/
+mkdir -p /etc/gitea
+chown root:${GITEA_USER} /etc/gitea
+chmod 770 /etc/gitea
+echo -e "${GREEN}Gitea工作目录已创建${NC}"
+
+# 5. 下载Gitea
+echo -e "\n${GREEN}[5/9] 下载Gitea...${NC}"
+wget -O gitea https://dl.gitea.com/gitea/${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64
+chmod +x gitea
+echo -e "${GREEN}Gitea已下载并设置为可执行${NC}"
+
+# 6. 验证签名
+echo -e "\n${GREEN}[6/9] 验证Gitea签名...${NC}"
+gpg --keyserver keys.openpgp.org --recv 7C9E68152594688862D62AF62D9AE806EC1592E2
+wget -O gitea.asc https://dl.gitea.com/gitea/${GITEA_VERSION}/gitea-${GITEA_VERSION}-linux-amd64.asc
+gpg --verify gitea.asc gitea || {
+    echo -e "${RED}Gitea签名验证失败！${NC}"
+    read -p "是否继续安装? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+}
+echo -e "${GREEN}Gitea签名验证通过${NC}"
+
+# 7. 安装Gitea
+echo -e "\n${GREEN}[7/9] 安装Gitea...${NC}"
+cp gitea /usr/local/bin/gitea
+echo -e "${GREEN}Gitea已安装到/usr/local/bin${NC}"
+
+# 8. 配置bash自动补全
+echo -e "\n${GREEN}[8/9] 配置bash自动补全...${NC}"
+if rpm -q bash-completion &> /dev/null; then
+    cat > /usr/share/bash-completion/completions/gitea <<'EOF'
+#! /bin/bash
+# Heavily inspired by https://github.com/urfave/cli
+
+_cli_bash_autocomplete() {
+  if [[ "${COMP_WORDS[0]}" != "source" ]]; then
+    local cur opts base
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    if [[ "$cur" == "-"* ]]; then
+      opts=$( ${COMP_WORDS[@]:0:$COMP_CWORD} ${cur} --generate-bash-completion )
+    else
+      opts=$( ${COMP_WORDS[@]:0:$COMP_CWORD} --generate-bash-completion )
+    fi
+    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    return 0
+  fi
+}
+
+if [ -z "$PROG" ] && [ ! "$(command -v gitea &> /dev/null)" ] ; then
+  complete -o bashdefault -o default -o nospace -F _cli_bash_autocomplete gitea
+elif [ -z "$PROG" ]; then
+  complete -o bashdefault -o default -o nospace -F _cli_bash_autocomplete ./gitea
+  complete -o bashdefault -o default -o nospace -F _cli_bash_autocomplete "$PWD/gitea"
+else
+  complete -o bashdefault -o default -o nospace -F _cli_bash_autocomplete "$PROG"
+  unset PROG
+fi
+EOF
+    echo -e "${GREEN}Gitea bash自动补全已配置${NC}"
+else
+    echo -e "${YELLOW}跳过bash自动补全配置，bash-completion未安装${NC}"
+fi
+
+# 9. 创建systemd服务
+echo -e "\n${GREEN}[9/9] 创建systemd服务...${NC}"
+cat > /etc/systemd/system/gitea.service <<EOF
+[Unit]
+Description=Gitea (Git with a cup of tea)
+After=network.target mysql.service
+
+[Service]
+RestartSec=2s
+Type=simple
+User=${GITEA_USER}
+Group=${GITEA_USER}
+WorkingDirectory=${GITEA_WORK_DIR}
+ExecStart=/usr/local/bin/gitea web --config /etc/gitea/app.ini
+Restart=always
+Environment=USER=${GITEA_USER} HOME=/home/${GITEA_USER} GITEA_WORK_DIR=${GITEA_WORK_DIR}
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable --now gitea
+
+# 安装完成
+echo -e "\n${GREEN}Gitea安装完成！${NC}"
+echo -e "请访问: http://$(hostname -I | awk '{print $1}'):${GITEA_PORT} 完成初始配置"
+echo -e "\n${YELLOW}重要安全提示:${NC}"
+echo -e "  1. 安装完成后建议执行:"
+echo -e "     chmod 750 /etc/gitea"
+echo -e "     chmod 640 /etc/gitea/app.ini"
+echo -e "  2. 建议修改默认数据库密码"
+echo -e "\n服务管理命令:"
+echo -e "  systemctl status gitea    # 查看服务状态"
+echo -e "  systemctl restart gitea   # 重启服务"
+echo -e "  journalctl -u gitea -f    # 查看日志"
