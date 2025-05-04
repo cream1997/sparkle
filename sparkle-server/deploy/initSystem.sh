@@ -119,6 +119,27 @@ EOF
     echo -e "\033[1;32m✔ JDK 环境变量配置完成！\033[0m"
 }
 
+# 检查并安装 wget
+install_wget() {
+    echo "正在检查是否已安装 wget..."
+
+    # 检查是否已安装
+    if command -v wget &>/dev/null; then
+        echo -e "\033[1;32m✔ wget 已安装\033[0m"
+        return 0
+    else
+        echo -e "\033[33m⚠ 未检测到 wget，正在尝试安装...\033[0m"
+
+        # 使用 dnf 安装 wget
+        if dnf install -y wget; then
+            echo -e "\033[1;32m✔ wget 安装成功\033[0m"
+        else
+            error_echo "错误：wget 安装失败"
+            return 1
+        fi
+    fi
+}
+
 # 全局彩色提示符配置
 if ! setup_global_prompt_color; then
     error_echo "警告：提示符颜色配置失败，但脚本继续运行..."
@@ -142,4 +163,9 @@ fi
 # 配置 JDK 环境变量
 if ! setup_java_env; then
     error_echo "警告：JDK 环境变量配置失败，但脚本继续运行..."
+fi
+
+# 检查并安装 wget
+if ! install_wget; then
+    error_echo "警告：wget 安装失败，但脚本继续运行..."
 fi
